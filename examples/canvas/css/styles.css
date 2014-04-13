@@ -1,0 +1,23 @@
+
+/* Box-Sizing */
+*, *:after, *::before {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body, div, canvas {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Cabin', 'Open-Sans', sans-serif;
+    color: #474747;
+	font-weight: normal;
+}
+
+.chart-container {
+	position: relative;
+}
+

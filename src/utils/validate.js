@@ -1,6 +1,6 @@
 /**
 *
-*	CHART: validate
+*	FIGURE: validate
 *
 *
 *
