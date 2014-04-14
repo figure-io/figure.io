@@ -59,6 +59,13 @@ var Data = function( data ) {
 	this._config = {};
 	this._data = data;
 
+	this._xMin = null;
+	this._xMax = null;
+	this._yMin = null;
+	this._yMax = null;
+	this._zMin = null;
+	this._zMax = null;
+
 	// ACCESSORS:
 	this._xValue = function( d ) { return d[ 0 ]; };
 	this._yValue = function( d ) { return d[ 1 ]; };
@@ -132,6 +139,44 @@ Data.prototype.linspace = function ( min, max, increment ) {
 }; // end METHOD linspace()
 
 /**
+* METHOD: min( data, accessor )
+*	Determines the min data value.
+*
+* @param {array} data - data over which the min is determined
+* @param {function} accessor - data accessor specifying how to access data values
+*
+* @returns {number} min data value
+*/
+Data.prototype.min = function( data, accessor ) {
+
+	return d3.min( data, function ( dataset ) {
+		return d3.min( dataset, function ( d ) {
+			return accessor( d );
+		});
+	});
+
+}; // end METHOD min()
+
+/**
+* METHOD: max( data, accessor )
+*	Determines the max data value.
+*
+* @param {array} data - data over which the max is determined
+* @param {function} accessor - data accessor specifying how to access data values
+*
+* @returns {number} max data value
+*/
+Data.prototype.max = function( data, accessor ) {
+
+	return d3.max( data, function ( dataset ) {
+		return d3.max( dataset, function ( d ) {
+			return accessor( d );
+		});
+	});
+
+}; // end METHOD max()
+
+/**
 * METHOD: histc( accessor, edges )
 *	Generates a counts vector where a count represents the number of data points falling in a bin defined by a pair of edges in the edge vector.
 *
@@ -157,17 +202,13 @@ Data.prototype.histc = function( accessor, edges ) {
 
 	if ( !edges.length ) {
 		
-		min = d3.min( data, function ( dataset ) {
-			return d3.min( dataset, function ( d ) {
+		min = this.min( data, function ( d ) {
 				return d;
 			});
-		});
 
-		max = d3.max( data, function ( dataset ) {
-			return d3.max( dataset, function ( d ) {
+		max = this.max( data, function ( d ) {
 				return d;
 			});
-		});
 
 		binWidth = ( max - min ) / ( numEdges - 1 );
 
@@ -235,17 +276,13 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 	if ( !xEdges.length ) {
 		
-		min = d3.min( data, function ( dataset ) {
-			return d3.min( dataset, function ( d ) {
+		min = this.min( data, function ( d ) {
 				return d[ 0 ];
 			});
-		});
 
-		max = d3.max( data, function ( dataset ) {
-			return d3.max( dataset, function ( d ) {
+		max = this.max( data, function ( d ) {
 				return d[ 0 ];
 			});
-		});
 
 		binWidth = ( max - min ) / ( xNumEdges - 1 );
 
@@ -255,17 +292,13 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 	if ( !yEdges.length ) {
 		
-		min = d3.min( data, function ( dataset ) {
-			return d3.min( dataset, function ( d ) {
+		min = this.min( data, function ( d ) {
 				return d[ 1 ];
 			});
-		});
 
-		max = d3.max( data, function ( dataset ) {
-			return d3.max( dataset, function ( d ) {
+		max = this.max( data, function ( d ) {
 				return d[ 1 ];
 			});
-		});
 
 		binWidth = ( max - min ) / ( yNumEdges - 1 );
 
