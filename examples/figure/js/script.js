@@ -21,14 +21,16 @@
 
 	// [2] Instantiate a new canvas generator and configure:
 	canvas = xfig.canvas( figure )
-		.width( 600 )
-		.height( 600 );
+		.width( 1200 )
+		.height( 1000 );
 
 	// Create the canvas:
 	canvas.create();
 
 	// [3] Instantiate a new graph generator and configure:
 	graph = xfig.graph( canvas )
+		.width( 600 )
+		.height( 400 )
 		.position({
 			'left': 90,
 			'right': 20,
@@ -53,20 +55,21 @@
 		// Transform the data:
 		data.transform( 2 );
 
+		// Bind the data instance to the graph:
+		graph.data( data )
+			.yMax( data.max( data.data(), function ( d ) {
+				return d[ 1 ];
+			}));
+
 		// [5] Instantiate a new area generator and configure:
-		area = xfig.area( graph );
+		area = xfig.area( graph )
+			.interpolation( 'basis' )
+			.labels( [ 'data 0' ] );
 
 		// Create the area:
-		area.create( data );
+		area.create();
 
 	});
-
-	// graph._root.append( 'svg:rect' )
-	// 	.attr( 'x', 0 )
-	// 	.attr( 'y', 0 )
-	// 	.attr( 'width', 20 )
-	// 	.attr( 'height', 20 )
-	// 	.attr( 'fill', '#474747' );
 
 })();
 

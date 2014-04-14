@@ -62,7 +62,11 @@ var Canvas = function( figure ) {
 	};
 
 	// REGISTER //
-	figure._config.canvas = this._config;
+	if ( figure._config.hasOwnProperty( 'canvas' )  ) {
+		figure._config.canvas.push( this._config );
+	} else {
+		figure._config.canvas = [ this._config ];
+	}
 
 	return this;
 
@@ -73,6 +77,8 @@ var Canvas = function( figure ) {
 *	Creates a new canvas element. If a type is supplied, appends a canvas element of the specified type to a root figure element. If no type is supplied, defaults to svg canvas.
 *
 * @param {string} type - canvas type to be created.
+*
+* @returns {object} canvas instance
 */
 Canvas.prototype.create = function( type ) {
 
@@ -136,7 +142,7 @@ Canvas.prototype.create = function( type ) {
 *
 * @param {number} width - desired canvas width.
 * 
-* @returns {number} canvas width.
+* @returns {object|number} canvas instance or canvas width.
 */
 Canvas.prototype.width = function( value ) {
 	var self = this,
@@ -165,7 +171,7 @@ Canvas.prototype.width = function( value ) {
 *
 * @param {number} height - desired canvas height.
 * 
-* @returns {number} - canvas height.
+* @returns {object|number} canvas instance or canvas height.
 */
 Canvas.prototype.height = function( value ) {
 	var self = this,
@@ -191,6 +197,8 @@ Canvas.prototype.height = function( value ) {
 /**
 * METHOD: parent()
 *	Returns the canvas parent.
+*
+* @returns {object} parent instance
 */
 Canvas.prototype.parent = function() {
 	return this._parent;
@@ -199,6 +207,8 @@ Canvas.prototype.parent = function() {
 /**
 * METHOD: config()
 *	Returns the canvas configuration as a JSON blob.
+*
+* @returns {string} configuration blob
 */
 Canvas.prototype.config = function() {
 	// Prevent direct tampering with the config object:
@@ -208,6 +218,8 @@ Canvas.prototype.config = function() {
 /**
 * METHOD: children()
 *	Returns the canvas children.
+*
+* @returns {object} canvas children
 */
 Canvas.prototype.children = function() {
 	return this._children;

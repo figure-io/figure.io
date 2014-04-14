@@ -86,6 +86,8 @@ Figure.prototype.create = function( selection ) {
 /**
 * METHOD: parent()
 *	Returns the figure parent.
+*
+* @returns {object} parent DOM element
 */
 Figure.prototype.parent = function() {
 	return this._parent;
@@ -94,6 +96,8 @@ Figure.prototype.parent = function() {
 /**
 * METHOD: config()
 *	Returns the figure configuration as a JSON blob.
+*
+* @returns {object} configuration blob
 */
 Figure.prototype.config = function() {
 	// Prevent direct tampering with the config object:
@@ -103,6 +107,8 @@ Figure.prototype.config = function() {
 /**
 * METHOD: children()
 *	Returns the figure children.
+*
+* @returns {object} figure children
 */
 Figure.prototype.children = function() {
 	return this._children;

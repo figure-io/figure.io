@@ -80,6 +80,8 @@ var Data = function( data ) {
 *	Transform raw data into a format amenable to graph generation.
 *
 * @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
+* 
+* @returns {object} data instance
 */
 Data.prototype.transform = function( dim ) {
 
@@ -183,6 +185,7 @@ Data.prototype.max = function( data, accessor ) {
 * @param {function} accessor - data accessor specifying the data to bin
 * @param {array} edges - (optional) 1d vector of edges defining bins; if not provided, a default edge vector is created of 21 bins where the start and end edge are defined by the data.
 *
+* @returns {object} data instance
 */
 Data.prototype.histc = function( accessor, edges ) {
 
@@ -252,6 +255,7 @@ Data.prototype.histc = function( accessor, edges ) {
 * @param {array} xEdges - (optional) 1d vector of edges defining bins along the first dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
 * @param {array} yEdges - (optional) 1d vector of edges defining bins along the second dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
 *
+* @returns {object} data instance
 */
 Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
@@ -420,6 +424,8 @@ Data.prototype.z = function( fcn ) {
 /**
 * METHOD: config()
 *	Returns the data configuration as a JSON blob.
+* 
+* @returns {object} configuration blob
 */
 Data.prototype.config = function() {
 	// Prevent direct tampering with the config object:

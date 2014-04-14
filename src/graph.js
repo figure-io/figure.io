@@ -27,6 +27,7 @@
 *	DEPENDENCIES:
 *		[1] d3.js
 *		[2] validate.js
+*		[3] data.js
 *
 *
 *	LICENSE:
@@ -55,10 +56,11 @@ var Graph = function( canvas ) {
 
 	this._parent = canvas;
 	this._root = undefined;
+	this._children = {};
 
 	this._config = {
-		"height": null,
-		"width": null,
+		"height": 400,
+		"width": 600,
 		"position": {
 			"top": 80,
 			"right": 20,
@@ -71,50 +73,79 @@ var Graph = function( canvas ) {
 				"name": "x",
 				"type": "linear",
 				"domain": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 1
 				},
 				"range": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 600
 				}
 			},
 			{
 				"name": "y",
 				"type": "linear",
 				"domain": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 1
 				},
 				"range": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 400
 				}
 			},
 			{
 				"name": "z",
 				"type": "linear",
 				"domain": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 1
 				},
 				"range": {
-					"min": null,
-					"max": null
+					"min": 0,
+					"max": 1
 				}
 			}
 		]
 	};
 
+	// DATA //
 	this._data = null;
 
 	// SCALES //
-	this._xScale = d3.scale.linear();
-	this._yScale = d3.scale.linear();
-	this._zScale = d3.scale.linear();
+	this._xScale = d3.scale.linear()
+		.domain([
+			this._config.scales[ 0 ].domain.min,
+			this._config.scales[ 0 ].domain.max
+		])
+		.range([
+			this._config.scales[ 0 ].range.min,
+			this._config.scales[ 0 ].range.max
+		]);
+	this._yScale = d3.scale.linear()
+		.domain([
+			this._config.scales[ 1 ].domain.min,
+			this._config.scales[ 1 ].domain.max
+		])
+		.range([
+			this._config.scales[ 1 ].range.max,
+			this._config.scales[ 1 ].range.min
+		]);
+	this._zScale = d3.scale.linear()
+		.domain([
+			this._config.scales[ 2 ].domain.min,
+			this._config.scales[ 2 ].domain.max
+		])
+		.range([
+			this._config.scales[ 2 ].range.min,
+			this._config.scales[ 2 ].range.max
+		]);
 
 	// REGISTER //
-	canvas._config.graph = this._config;
+	if ( canvas._config.hasOwnProperty( 'graph' ) ) {
+		canvas._config.graph.push( this._config );
+	} else {
+		canvas._config.graph = [ this._config ];
+	}
 
 	return this;
 
@@ -130,18 +161,44 @@ Graph.prototype.create = function( type ) {
 
 	// VARIABLES //
 	var selection = this._parent._root,
-		position = this._config.position;
+		position = this._config.position,
+		width = this._config.width,
+		height = this._config.height,
+		clipPath,
+		id = Date.now();
 
 	// GRAPH //
+
+	// Create the clip-path:
+	clipPath = selection.append( 'svg:defs' )
+		.append( 'svg:clipPath' )
+			.attr( 'id', id );
+
+	clipPath.append( 'svg:rect' )
+		.attr( 'class', 'clipPath' )
+		.attr( 'width', width )
+		.attr( 'height', height );
 
 	// Create the graph element:
 	this._root = selection.append( 'svg:g' )
 		.attr( 'property', 'graph' )
 		.attr( 'class', 'graph' )
 		.attr( 'data-graph-type', ( type ) ? type : 'none' )
+		.attr( 'data-clipPath', id )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
+	// Create the background:
+	if ( this._config.background ) {
+		this._children.background = this._root.append( 'svg:rect' )
+			.attr( 'class', 'background' )
+			.attr( 'x', 0 )
+			.attr( 'y', 0 )
+			.attr( 'width', width )
+			.attr( 'height', height );
+	} // end IF (background)
+
 	// REGISTER //
+	this._parent._children.clipPath = clipPath;
 	this._parent._children.graph = this._root;
 
 	return this;
@@ -149,15 +206,88 @@ Graph.prototype.create = function( type ) {
 }; // end METHOD create()
 
 /**
+* METHOD: width( value )
+*	Width setter and getter. If a value is supplied, defines the graph width. If no value is supplied, returns the graph view width.
+*
+* @param {number} width - desired graph view width.
+* 
+* @returns {object|number} graph instance or graph view width.
+*/
+Graph.prototype.width = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.width;
+	}
+
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+		Validator( value, rules, set );
+	}
+	
+	return this;
+
+	function set( errors ) {
+		var arr;
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		self._config.width = value;
+		self._config.scales[ 0 ].range.max = value;
+
+		arr = self._xScale.range();
+		self._xScale.range( [ arr[0], value ] );
+	}
+}; // end METHOD width()
+
+/**
+* METHOD: height( value )
+*	Height setter and getter. If a value is supplied, defines the graph view height. If no value is supplied, returns the graph view height.
+*
+* @param {number} height - desired graph view height.
+* 
+* @returns {object|number} graph instance or graph view height.
+*/
+Graph.prototype.height = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.height;
+	}
+
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+		Validator( value, rules, set );
+	}
+	
+	return this;
+
+	function set( errors ) {
+		var arr;
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		self._config.height = value;
+		self._config.scales[ 1 ].range.max = value;
+
+		arr = self._yScale.range();
+		self._yScale.range( [ value, arr[1] ] );
+	}
+}; // end METHOD height()
+
+/**
 * METHOD: xMin( value )
 *	xMin setter and getter. If a value is supplied, defines the graph xMin. If no value is supplied, returns the graph xMin.
 *
 * @param {number} xMin - desired graph xMin.
 * 
-* @returns {number} graph xMin.
+* @returns {object|number} graph instance or graph xMin.
 */
 Graph.prototype.xMin = function( value ) {
-	var domain = this._config.scales[ 0 ].domain;
+	var self = this,
+		domain = this._config.scales[ 0 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -171,13 +301,17 @@ Graph.prototype.xMin = function( value ) {
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.min = value;
+
+		arr = self._xScale.domain();
+		self._xScale.domain( [ value, arr[1] ] );
 	}
-};
+}; // end METHOD xMin()
 
 /**
 * METHOD: xMax( value )
@@ -185,10 +319,11 @@ Graph.prototype.xMin = function( value ) {
 *
 * @param {number} xMax - desired graph xMax.
 * 
-* @returns {number} graph xMax.
+* @returns {object|number} graph instance or graph xMax.
 */
 Graph.prototype.xMax = function( value ) {
-	var domain = this._config.scales[ 0 ].domain;
+	var self = this,
+		domain = this._config.scales[ 0 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -202,13 +337,17 @@ Graph.prototype.xMax = function( value ) {
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.max = value;
+
+		arr = self._xScale.domain();
+		self._xScale.domain( [ arr[0], value ] );
 	}
-};
+}; // end METHOD xMax()
 
 /**
 * METHOD: yMin( value )
@@ -216,10 +355,11 @@ Graph.prototype.xMax = function( value ) {
 *
 * @param {number} yMin - desired graph yMin.
 * 
-* @returns {number} graph yMin.
+* @returns {object|number} graph instance or graph yMin.
 */
 Graph.prototype.yMin = function( value ) {
-	var domain = this._config.scales[ 1 ].domain;
+	var self = this,
+		domain = this._config.scales[ 1 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -233,13 +373,17 @@ Graph.prototype.yMin = function( value ) {
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.min = value;
+
+		arr = self._yScale.domain();
+		self._yScale.domain( [ value, arr[1] ] );
 	}
-};
+}; // end METHOD yMin()
 
 /**
 * METHOD: yMax( value )
@@ -247,10 +391,11 @@ Graph.prototype.yMin = function( value ) {
 *
 * @param {number} yMax - desired graph yMax.
 * 
-* @returns {number} graph yMax.
+* @returns {object|number} graph instace or graph yMax.
 */
 Graph.prototype.yMax = function( value ) {
-	var domain = this._config.scales[ 1 ].domain;
+	var self = this,
+		domain = this._config.scales[ 1 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -260,17 +405,21 @@ Graph.prototype.yMax = function( value ) {
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
 		Validator( value, rules, set );
 	}
-	
+
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.max = value;
+
+		arr = self._yScale.domain();
+		self._yScale.domain( [ arr[0], value ] );
 	}
-};
+}; // end METHOD yMax()
 
 /**
 * METHOD: zMin( value )
@@ -278,10 +427,11 @@ Graph.prototype.yMax = function( value ) {
 *
 * @param {number} zMin - desired graph zMin.
 * 
-* @returns {number} graph zMin.
+* @returns {object|number} graph instance or graph zMin.
 */
 Graph.prototype.zMin = function( value ) {
-	var domain = this._config.scales[ 2 ].domain;
+	var self = this,
+		domain = this._config.scales[ 2 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -295,13 +445,17 @@ Graph.prototype.zMin = function( value ) {
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.min = value;
+
+		arr = self._zScale.domain();
+		self._zScale.domain( [ value, arr[1] ] );
 	}
-};
+}; // end METHOD zMin()
 
 /**
 * METHOD: zMax( value )
@@ -309,10 +463,11 @@ Graph.prototype.zMin = function( value ) {
 *
 * @param {number} zMax - desired graph zMax.
 * 
-* @returns {number} graph zMax.
+* @returns {object|number} graph instance or graph zMax.
 */
 Graph.prototype.zMax = function( value ) {
-	var domain = this._config.scales[ 2 ].domain;
+	var self = this,
+		domain = this._config.scales[ 2 ].domain;
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -326,19 +481,25 @@ Graph.prototype.zMax = function( value ) {
 	return this;
 
 	function set( errors ) {
+		var arr;
 		if ( errors ) {
 			console.error( errors );
 			return;
 		}
 		domain.max = value;
+		
+		arr = self._zScale.domain();
+		self._zScale.domain( [ arr[0], value ] );
 	}
-};
+}; // end METHOD zMax()
 
 /**
 * METHOD: position( value )
 *	Convenience method to set multple position values. If a value is supplied, defines the graph position. If no value is supplied, returns the graph position.
 *
 * @param {object} value - object with the following properties: left, right, top, bottom. All values assigned to properties should be numbers.
+* 
+* @returns {object|object} graph instance or position object
 */
 Graph.prototype.position = function( value ) {
 	var position = this._config.position,
@@ -374,13 +535,15 @@ Graph.prototype.position = function( value ) {
 		position = value;
 	}
 
-};
+}; // end METHOD position()
 
 /**
 * METHOD: left( value )
 *	position-left setter and getter. If a value is supplied, defines the graph position-left. If no value is supplied, returns the graph position-left.
 *
 * @param {number} value - desired graph position-left.
+* 
+* @returns {object|number} - graph instance or position left value
 */
 
 Graph.prototype.left = function( value ) {
@@ -402,13 +565,15 @@ Graph.prototype.left = function( value ) {
 		}
 		position.left = value;
 	}
-};
+}; // end METHOD left()
 
 /**
 * METHOD: right( value )
 *	position-right setter and getter. If a value is supplied, defines the graph position-right. If no value is supplied, returns the graph position-right.
 *
 * @param {number} value - desired graph position-right.
+* 
+* @returns {object|number} - graph instance or position right value
 */
 
 Graph.prototype.right = function( value ) {
@@ -430,13 +595,15 @@ Graph.prototype.right = function( value ) {
 		}
 		position.right = value;
 	}
-};
+}; // end METHOD right()
 
 /**
 * METHOD: top( value )
 *	position-top setter and getter. If a value is supplied, defines the graph position-top. If no value is supplied, returns the graph position-top.
 *
 * @param {number} value - desired graph position-top.
+* 
+* @returns {object|number} - graph instance or position top value
 */
 
 Graph.prototype.top = function( value ) {
@@ -458,13 +625,15 @@ Graph.prototype.top = function( value ) {
 		}
 		position.top = value;
 	}
-};
+}; // end METHOD top()
 
 /**
 * METHOD: bottom( value )
 *	position-bottom setter and getter. If a value is supplied, defines the graph position-bottom. If no value is supplied, returns the graph position-bottom.
 *
 * @param {number} value - desired graph position-bottom.
+* 
+* @returns {object|number} - graph instance or position bottom value
 */
 
 Graph.prototype.bottom = function( value ) {
@@ -486,11 +655,37 @@ Graph.prototype.bottom = function( value ) {
 		}
 		position.bottom = value;
 	}
-};
+}; // end METHOD bottom()
+
+/**
+* METHOD: data( data )
+*	Graph data setter and getter. If data is supplied, sets the graph's current active dataset. If no data is supplied, returns the graph's current active dataset.
+*
+* @param {object} data - data instance
+* 
+* @returns {object|object} - graph instance or current active dataset
+*/
+Graph.prototype.data = function( data ) {
+
+	if ( !arguments.length ) {
+		return this._data;
+	}
+
+	if ( !( data instanceof Data ) ) {
+		throw new Error( 'invalid input argument. Input argument must be an instance of Data.' );
+	}
+
+	this._data = data._data;
+
+	return this;
+
+}; // end METHOD data()
 
 /**
 * METHOD: parent()
 *	Returns the graph parent.
+*
+* @returns {object} parent instance
 */
 Graph.prototype.parent = function() {
 	return this._parent;
@@ -499,6 +694,8 @@ Graph.prototype.parent = function() {
 /**
 * METHOD: config()
 *	Returns the graph configuration as a JSON blob.
+* 
+* @returns {object} configuration blob
 */
 Graph.prototype.config = function() {
 	// Prevent direct tampering with the config object:
@@ -508,6 +705,8 @@ Graph.prototype.config = function() {
 /**
 * METHOD: children()
 *	Returns the graph children.
+*
+* @returns {object} graph children
 */
 Graph.prototype.children = function() {
 	return this._children;

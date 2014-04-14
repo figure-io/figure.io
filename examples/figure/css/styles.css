@@ -31,3 +31,16 @@ body {
 	left: 0;
 }
 
+.graph .background {
+	fill: none;
+	stroke: none;
+}
+
+.graph .area {
+	fill: #474747;
+	stroke: none;
+	fill-opacity: 1;
+}
+
+
+
