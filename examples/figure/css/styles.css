@@ -17,7 +17,17 @@ body {
 	font-weight: normal;
 }
 
+.main {
+	position: relative;
+}
+
 .chart-container {
 	position: relative;
+}
+
+.canvas {
+	position: relative;
+	top: 0;
+	left: 0;
 }
 

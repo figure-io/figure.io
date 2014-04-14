@@ -25,7 +25,7 @@
 *
 *
 *	DEPENDENCIES:
-*		[1] d3.js
+*		[1] validate.js
 *
 *
 *	LICENSE:
@@ -45,100 +45,55 @@
 
 /**
 * FUNCTION: Figure()
-*	Figure constructor. When invoked, creates a new figure instance.
+*	Figure constructor. Creates a new figure instance.
 */
 var Figure = function() {
 
-	// PRIVATE VARIABLES //
+	// INSTANCE ATTRIBUTES //
 
-	var // ELEMENT:
-		root,
+	this._config = {};
+	this._children = {};
+	this._root = undefined;
 
-		// DIMENSIONS //
-		width = 500,
-		height = 500;
+	return this;
 
+}; // end FUNCTION Figure()
 
-	// PUBLIC OBJECT //
+/**
+* METHOD: create( selection )
+*	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, no figure is created.
+*
+* @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
+* 
+* @returns {object} figure instance
+*/
+Figure.prototype.create = function( selection ) {
+	var figure, elements;
+	if ( !arguments.length ) {
+		return;
+	}
+	figure = document.createElement( 'figure' );
+	figure.setAttribute( 'property', 'figure' );
+	figure.className += 'chart-container';
+	selection.appendChild( figure );
+	elements = selection.querySelectorAll( '.chart-container' );
+	this._root = elements[ elements.length - 1 ];
+	return this;
+}; // end METHOD create()
 
-	/**
-	* FUNCTION: figure( selection )
-	*	Appends a figure element to a selection. If no selection is provided, returns the root figure element. If no figure element has been created, returns undefined.
-	*
-	* @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
-	* 
-	* @returns {object} root figure element.
-	*/
-	function figure( selection ) {
-		if ( !root ) {
-			root = document.createElement( 'figure' );
-			root.setAttribute( 'property', 'figure' );
-			root.className += 'chart-container';
-			selection.appendChild( root );
-			return this;
-		}
-		return root;
-	} // end FUNCTION figure()
+/**
+* METHOD: config()
+*	Returns the figure configuration as a JSON blob.
+*/
+Figure.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
 
-
-	// METHODS //
-
-	/**
-	* METHOD: width( value )
-	*	width setter and getter. If a value is supplied, defines the figure width. If no value is supplied, returns the figure width.
-	*
-	* @param {number} width - desired figure width.
-	* 
-	* @returns {number} figure width.
-	*/
-	figure.width = function( value ) {
-		var rules = 'number';
-
-		if ( !arguments.length ) {
-			return width;
-		}
-		
-		validate( value, rules, set );
-
-		return figure;
-
-		function set( errors ) {
-			if ( errors ) {
-				console.error( errors );
-				return;
-			}
-			width = value;
-		}
-	};
-
-	/**
-	* METHOD: height( value )
-	*	Height setter and getter. If a value is supplied, defines the figure height. If no value is supplied, returns the figure height.
-	*
-	* @param {number} height - desired figure height.
-	* 
-	* @returns {number} - figure height.
-	*/
-	figure.height = function( value ) {
-		var rules = 'number';
-
-		if ( !arguments.length ) {
-			return height;
-		}
-		
-		validate( value, rules, set );
-
-		return figure;
-
-		function set( errors ) {
-			if ( errors ) {
-				console.error( errors );
-				return;
-			}
-			height = value;
-		}
-	};
-
-	return figure;
-
-}; // end FIGURE
+/**
+* METHOD: children()
+*	Returns the figure children.
+*/
+Figure.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
