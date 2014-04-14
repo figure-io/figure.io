@@ -7,7 +7,8 @@
 		figure,
 		canvas,
 		graph,
-		data;
+		data,
+		area;
 
 	// [0] Select the element to which to append the figure:
 	_selection = document.querySelector( '.main' );
@@ -41,25 +42,31 @@
 	// Create the graph:
 	graph.create();
 
-	// [4] Get data:
+	// Get data:
 	d3.json( 'data/data.json', function ( error, json ) {
 
-		// [4.1] Instantiate a new data generator and configure:
+		// [4] Instantiate a new data generator and configure:
 		data = xfig.data( json )
 			.x( function( d ) { return d[ 0 ]; } )
 			.y( function( d ) { return d[ 1 ]; } );
 
-		// [4.2] Transform the data:
+		// Transform the data:
 		data.transform( 2 );
+
+		// [5] Instantiate a new area generator and configure:
+		area = xfig.area( graph );
+
+		// Create the area:
+		area.create( data );
 
 	});
 
-	graph._root.append( 'svg:rect' )
-		.attr( 'x', 0 )
-		.attr( 'y', 0 )
-		.attr( 'width', 20 )
-		.attr( 'height', 20 )
-		.attr( 'fill', '#474747' );
+	// graph._root.append( 'svg:rect' )
+	// 	.attr( 'x', 0 )
+	// 	.attr( 'y', 0 )
+	// 	.attr( 'width', 20 )
+	// 	.attr( 'height', 20 )
+	// 	.attr( 'fill', '#474747' );
 
 })();
 

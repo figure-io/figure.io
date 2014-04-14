@@ -61,7 +61,7 @@ xfig.graph = function( canvas ) {
 		throw new Error( 'canvas selection not provided. Unable to initialize graph constructor.' );
 	}
 	if ( !( canvas instanceof Canvas ) ) {
-		throw new Error( 'invalid input parameter. Parameter must be a Canvas instance.' );
+		throw new Error( 'invalid input parameter. Argument must be a Canvas instance.' );
 	}
 	return new Graph( canvas );
 };
@@ -74,4 +74,14 @@ xfig.data = function( data ) {
 		throw new Error( 'invalid input parameter. Input data must be an Array.' );
 	}
 	return new Data( data );
+};
+
+xfig.area = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'graph not provided. Unable to initialize area constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Area( graph );
 };
