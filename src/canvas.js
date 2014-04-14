@@ -189,6 +189,14 @@ Canvas.prototype.height = function( value ) {
 }; // end METHOD height()
 
 /**
+* METHOD: parent()
+*	Returns the canvas parent.
+*/
+Canvas.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
 * METHOD: config()
 *	Returns the canvas configuration as a JSON blob.
 */

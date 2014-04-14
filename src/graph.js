@@ -103,9 +103,10 @@ var Graph = function( canvas ) {
 					"max": null
 				}
 			}
-		],
-		"data": null
+		]
 	};
+
+	this._data = null;
 
 	// SCALES //
 	this._xScale = d3.scale.linear();
@@ -392,7 +393,7 @@ Graph.prototype.left = function( value ) {
 
 	Validator( value, rules, set );
 
-	return chart;
+	return this;
 
 	function set( errors ) {
 		if ( errors ) {
@@ -420,7 +421,7 @@ Graph.prototype.right = function( value ) {
 
 	Validator( value, rules, set );
 
-	return chart;
+	return this;
 
 	function set( errors ) {
 		if ( errors ) {
@@ -448,7 +449,7 @@ Graph.prototype.top = function( value ) {
 
 	Validator( value, rules, set );
 
-	return chart;
+	return this;
 
 	function set( errors ) {
 		if ( errors ) {
@@ -476,7 +477,7 @@ Graph.prototype.bottom = function( value ) {
 
 	Validator( value, rules, set );
 
-	return chart;
+	return this;
 
 	function set( errors ) {
 		if ( errors ) {
@@ -486,6 +487,14 @@ Graph.prototype.bottom = function( value ) {
 		position.bottom = value;
 	}
 };
+
+/**
+* METHOD: parent()
+*	Returns the graph parent.
+*/
+Graph.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
 
 /**
 * METHOD: config()

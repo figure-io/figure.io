@@ -65,3 +65,13 @@ xfig.graph = function( canvas ) {
 	}
 	return new Graph( canvas );
 };
+
+xfig.data = function( data ) {
+	if ( !data ) {
+		throw new Error( 'data not provided. Unable to initialize data constructor.' );
+	}
+	if ( !( data instanceof Array ) ) {
+		throw new Error( 'invalid input parameter. Input data must be an Array.' );
+	}
+	return new Data( data );
+};

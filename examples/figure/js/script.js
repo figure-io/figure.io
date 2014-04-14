@@ -6,7 +6,8 @@
 	var _selection,
 		figure,
 		canvas,
-		graph;
+		graph,
+		data;
 
 	// [0] Select the element to which to append the figure:
 	_selection = document.querySelector( '.main' );
@@ -39,6 +40,19 @@
 
 	// Create the graph:
 	graph.create();
+
+	// [4] Get data:
+	d3.json( 'data/data.json', function ( error, json ) {
+
+		// [4.1] Instantiate a new data generator and configure:
+		data = xfig.data( json )
+			.x( function( d ) { return d[ 0 ]; } )
+			.y( function( d ) { return d[ 1 ]; } );
+
+		// [4.2] Transform the data:
+		data.transform( 2 );
+
+	});
 
 	graph._root.append( 'svg:rect' )
 		.attr( 'x', 0 )

@@ -52,8 +52,9 @@ var Figure = function() {
 	// INSTANCE ATTRIBUTES //
 
 	this._config = {};
-	this._children = {};
+	this._parent = undefined;
 	this._root = undefined;
+	this._children = {};
 
 	return this;
 
@@ -61,7 +62,7 @@ var Figure = function() {
 
 /**
 * METHOD: create( selection )
-*	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, no figure is created.
+*	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, a figure is appended to a newly create HTML element; to access the figure parent, use the parent method.
 *
 * @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
 * 
@@ -70,8 +71,9 @@ var Figure = function() {
 Figure.prototype.create = function( selection ) {
 	var figure, elements;
 	if ( !arguments.length ) {
-		return;
+		selection = document.createElement( 'div' );
 	}
+	this._parent = selection;
 	figure = document.createElement( 'figure' );
 	figure.setAttribute( 'property', 'figure' );
 	figure.className += 'chart-container';
@@ -80,6 +82,14 @@ Figure.prototype.create = function( selection ) {
 	this._root = elements[ elements.length - 1 ];
 	return this;
 }; // end METHOD create()
+
+/**
+* METHOD: parent()
+*	Returns the figure parent.
+*/
+Figure.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
 
 /**
 * METHOD: config()
