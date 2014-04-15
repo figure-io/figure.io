@@ -89,7 +89,8 @@ var Area = function( graph ) {
 		.x( this._transforms.x )
 		.y0( this._transforms.y0 )
 		.y1( this._transforms.y1 )
-		.interpolate( this._config.interpolation.mode );
+		.interpolate( this._config.interpolation.mode )
+		.tension( this._config.interpolation.tension );
 
 	// REGISTER //
 	if ( graph._config.hasOwnProperty( 'marks' ) ) {
@@ -179,6 +180,34 @@ Area.prototype.interpolation = function( mode ) {
 		self._path.interpolate( mode );
 	}
 }; // end METHOD interpolation()
+
+/**
+* METHOD: tension( value )
+*	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
+*
+* @param {number} value - interpolation tension; must reside within the interval [0,1].
+*/
+Area.prototype.tension = function( value ) {
+	var self = this,
+		rules = 'interval[0,1]';
+
+	if ( !arguments.length ) {
+		return this._config.interpolation.tension;
+	}
+	
+	Validator( value, rules, set );
+
+	return this;
+
+	function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		self._config.interpolation.tension = value;
+		self._path.tension( value );
+	}
+};
 
 /**
 * METHOD: labels( arr )
