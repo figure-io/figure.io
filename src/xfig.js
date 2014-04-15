@@ -76,6 +76,16 @@ xfig.data = function( data ) {
 	return new Data( data );
 };
 
+xfig.axes = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'graph not provided. Unable to initialize axes constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Axes( graph );
+};
+
 xfig.area = function( graph ) {
 	if ( !graph ) {
 		throw new Error( 'graph not provided. Unable to initialize area constructor.' );

@@ -42,5 +42,25 @@ body {
 	fill-opacity: 1;
 }
 
+.graph .axis path {
+	fill: none;
+}
+
+.graph .y.axis path {
+	stroke: none;
+}
+
+.graph .x.axis path {
+	stroke: #aaa;
+	stroke-width: 1px;
+}
+
+.graph .axis line {
+	stroke: #aaa;
+	stroke-width: 1px;
+}
+
+
+
 
 

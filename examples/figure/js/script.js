@@ -7,6 +7,7 @@
 		figure,
 		canvas,
 		graph,
+		axes,
 		data,
 		area;
 
@@ -68,6 +69,12 @@
 
 		// Create the area:
 		area.create();
+
+		// [6] Instantiate a new axes generator and configure:
+		axes = xfig.axes( graph );
+
+		// Create the axes:
+		axes.create();
 
 	});
 
