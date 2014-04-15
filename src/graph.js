@@ -596,7 +596,7 @@ Graph.prototype.zRange = function( arr ) {
 * METHOD: xScale( type, value )
 *	xScale setter and getter. If a type is provided, sets the x-scale according to the specified type. If no type is provided, returns the current x-scale type.
 *
-* @param {string} type - scale type
+* @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
 *
 * @returns {object|string} graph instance or the x-scale type
@@ -634,7 +634,7 @@ Graph.prototype.xScale = function( type, value ) {
 * METHOD: yScale( type, value )
 *	yScale setter and getter. If a type is provided, sets the y-scale according to the specified type. If no type is provided, returns the current y-scale type.
 *
-* @param {string} type - scale type
+* @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
 *
 * @returns {object|string} graph instance or the y-scale type
@@ -672,7 +672,7 @@ Graph.prototype.yScale = function( type, value ) {
 * METHOD: zScale( type, value )
 *	zScale setter and getter. If a type is provided, sets the z-scale according to the specified type. If no type is provided, returns the current z-scale type.
 *
-* @param {string} type - scale type
+* @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
 *
 * @returns {object|string} graph instance or the z-scale type
@@ -710,18 +710,22 @@ Graph.prototype.zScale = function( type, value ) {
 * METHOD: scale( type, value, clbk )
 *	Generalized scale getter.
 *
-* @param {string} type - scale type; must be either linear, log, or pow.
+* @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
 * @param {function} clbk - callback to invoke after validation and getting the specified scale. Function should take two arguments: [ errors, scale ].
 *
 * @returns {object} graph instance
 */
 Graph.prototype.scale = function( type, value, clbk ) {
-	var rules = 'string|matches[linear,log,pow]',
+	var rules = 'string|matches[linear,log,pow,category10,category20,category20b,category20c]',
 		scales = {
 			'linear': linear,
 			'log': log,
-			'pow': pow
+			'pow': pow,
+			'category10': category10,
+			'category20': category20,
+			'category20b': category20b,
+			'category20c': category20c
 		};
 
 		Validator( type, rules, onErrors );
@@ -735,19 +739,27 @@ Graph.prototype.scale = function( type, value, clbk ) {
 			}
 			clbk( null, scales[ type ]() );
 		}
-
 		function linear() {
 			return d3.scale.linear();
 		}
-
 		function log() {
 			return d3.scale.log().base( value );
 		}
-
 		function pow() {
 			return d3.scale.pow().exponent( value );
 		}
-
+		function category10() {
+			return d3.scale.category10();
+		}
+		function category20() {
+			return d3.scale.category20();
+		}
+		function category20b() {
+			return d3.scale.category20b();
+		}
+		function category20c() {
+			return d3.scale.category20c();
+		}
 }; // end METHOD scale()
 
 /**
