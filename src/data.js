@@ -51,6 +51,7 @@
 *
 * @param {array} data - input data is expected to be an array of arrays; e.g., [[[0,0],[1,1],...,[N,N]]] or [[{x:0,y:0},{x:1,y:1},...{x:N,y:N}]]. Elements in the outer array are treated as separate datasets.
 *
+* @returns {object} data instance
 */
 var Data = function( data ) {
 

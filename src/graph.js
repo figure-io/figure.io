@@ -49,6 +49,8 @@
 *	Graph constructor. Creates a new graph instance.
 *
 * @param {object} canvas - parent canvas element
+*
+* @returns {object} graph instance
 */
 var Graph = function( canvas ) {
 
@@ -164,7 +166,7 @@ Graph.prototype.create = function( type ) {
 		position = this._config.position,
 		width = this._config.width,
 		height = this._config.height,
-		clipPath,
+		clipPath, background,
 		id = Date.now();
 
 	// GRAPH //
@@ -189,7 +191,7 @@ Graph.prototype.create = function( type ) {
 
 	// Create the background:
 	if ( this._config.background ) {
-		this._children.background = this._root.append( 'svg:rect' )
+		background = this._root.append( 'svg:rect' )
 			.attr( 'class', 'background' )
 			.attr( 'x', 0 )
 			.attr( 'y', 0 )
@@ -198,8 +200,11 @@ Graph.prototype.create = function( type ) {
 	} // end IF (background)
 
 	// REGISTER //
-	this._parent._children.clipPath = clipPath;
-	this._parent._children.graph = this._root;
+	if ( this._parent._children.hasOwnProperty( 'graph' ) ) {
+		this._parent._children.graph.push( this );
+	} else {
+		this._parent._children.graph = [ this ];
+	}
 
 	return this;
 
@@ -604,29 +609,29 @@ Graph.prototype.zRange = function( arr ) {
 Graph.prototype.xScale = function( type, value ) {
 	var self = this;
 
-		if ( !arguments.length || !type ) {
-			return this._config.scales[ 0 ].type;
+	if ( !arguments.length || !type ) {
+		return this._config.scales[ 0 ].type;
+	}
+
+	this.scale( type, value, returnScale );
+
+	function returnScale( errors, scale ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
 		}
+		self._config.scales[ 0 ].type = type;
 
-		this.scale( type, value, returnScale );
-
-		function returnScale( errors, scale ) {
-			if ( errors ) {
-				console.error( errors );
-				return;
-			}
-			self._config.scales[ 0 ].type = type;
-
-			self._xScale = scale
-				.domain([
-					self._config.scales[ 0 ].domain.min,
-					self._config.scales[ 0 ].domain.max
-				])
-				.range([
-					self._config.scales[ 0 ].range.min,
-					self._config.scales[ 0 ].range.max
-				]);
-		}
+		self._xScale = scale
+			.domain([
+				self._config.scales[ 0 ].domain.min,
+				self._config.scales[ 0 ].domain.max
+			])
+			.range([
+				self._config.scales[ 0 ].range.min,
+				self._config.scales[ 0 ].range.max
+			]);
+	}
 
 }; // end METHOD xScale()
 
@@ -642,29 +647,29 @@ Graph.prototype.xScale = function( type, value ) {
 Graph.prototype.yScale = function( type, value ) {
 	var self = this;
 
-		if ( !arguments.length || !type ) {
-			return this._config.scales[ 1 ].type;
+	if ( !arguments.length || !type ) {
+		return this._config.scales[ 1 ].type;
+	}
+
+	this.scale( type, value, returnScale );
+
+	function returnScale( errors, scale ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
 		}
+		self._config.scales[ 1 ].type = type;
 
-		this.scale( type, value, returnScale );
-
-		function returnScale( errors, scale ) {
-			if ( errors ) {
-				console.error( errors );
-				return;
-			}
-			self._config.scales[ 1 ].type = type;
-
-			self._yScale = scale
-				.domain([
-					self._config.scales[ 1 ].domain.min,
-					self._config.scales[ 1 ].domain.max
-				])
-				.range([
-					self._config.scales[ 1 ].range.max,
-					self._config.scales[ 1 ].range.min
-				]);
-		}
+		self._yScale = scale
+			.domain([
+				self._config.scales[ 1 ].domain.min,
+				self._config.scales[ 1 ].domain.max
+			])
+			.range([
+				self._config.scales[ 1 ].range.max,
+				self._config.scales[ 1 ].range.min
+			]);
+	}
 
 }; // end METHOD yScale()
 
@@ -680,29 +685,29 @@ Graph.prototype.yScale = function( type, value ) {
 Graph.prototype.zScale = function( type, value ) {
 	var self = this;
 
-		if ( !arguments.length || !type ) {
-			return this._config.scales[ 2 ].type;
+	if ( !arguments.length || !type ) {
+		return this._config.scales[ 2 ].type;
+	}
+
+	this.scale( type, value, returnScale );
+
+	function returnScale( errors, scale ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
 		}
+		self._config.scales[ 2 ].type = type;
 
-		this.scale( type, value, returnScale );
-
-		function returnScale( errors, scale ) {
-			if ( errors ) {
-				console.error( errors );
-				return;
-			}
-			self._config.scales[ 2 ].type = type;
-
-			self._zScale = scale
-				.domain([
-					self._config.scales[ 2 ].domain.min,
-					self._config.scales[ 2 ].domain.max
-				])
-				.range([
-					self._config.scales[ 2 ].range.min,
-					self._config.scales[ 2 ].range.max
-				]);
-		}
+		self._zScale = scale
+			.domain([
+				self._config.scales[ 2 ].domain.min,
+				self._config.scales[ 2 ].domain.max
+			])
+			.range([
+				self._config.scales[ 2 ].range.min,
+				self._config.scales[ 2 ].range.max
+			]);
+	}
 
 }; // end METHOD zScale()
 
@@ -728,38 +733,38 @@ Graph.prototype.scale = function( type, value, clbk ) {
 			'category20c': category20c
 		};
 
-		Validator( type, rules, onErrors );
+	Validator( type, rules, onErrors );
 
-		return this;
+	return this;
 
-		function onErrors( errors ) {
-			if ( errors ) {
-				clbk( errors );
-				return;
-			}
-			clbk( null, scales[ type ]() );
+	function onErrors( errors ) {
+		if ( errors ) {
+			clbk( errors );
+			return;
 		}
-		function linear() {
-			return d3.scale.linear();
-		}
-		function log() {
-			return d3.scale.log().base( value );
-		}
-		function pow() {
-			return d3.scale.pow().exponent( value );
-		}
-		function category10() {
-			return d3.scale.category10();
-		}
-		function category20() {
-			return d3.scale.category20();
-		}
-		function category20b() {
-			return d3.scale.category20b();
-		}
-		function category20c() {
-			return d3.scale.category20c();
-		}
+		clbk( null, scales[ type ]() );
+	}
+	function linear() {
+		return d3.scale.linear();
+	}
+	function log() {
+		return d3.scale.log().base( value );
+	}
+	function pow() {
+		return d3.scale.pow().exponent( value );
+	}
+	function category10() {
+		return d3.scale.category10();
+	}
+	function category20() {
+		return d3.scale.category20();
+	}
+	function category20b() {
+		return d3.scale.category20b();
+	}
+	function category20c() {
+		return d3.scale.category20c();
+	}
 }; // end METHOD scale()
 
 /**

@@ -46,6 +46,8 @@
 /**
 * FUNCTION: Figure()
 *	Figure constructor. Creates a new figure instance.
+*
+* @returns {object} figure instance
 */
 var Figure = function() {
 

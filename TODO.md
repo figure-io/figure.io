@@ -5,7 +5,7 @@ TODO
 
 1.	Multiple canvas children (?) --> similar to Matlab hold on; or if new canvas is registered to same figure, blow the previous canvas away
 2. 	Option to pass in config object at instantiation; e.g., xfig.canvas( figure, {width:600,height:400} ).
-3. 	Config/children array or object?
+3. 	
 
 
 ### Subplot

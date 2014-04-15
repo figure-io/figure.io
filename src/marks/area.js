@@ -48,6 +48,8 @@
 *	Area constructor. Creates a new area instance.
 *
 * @param {object} graph - parent graph element
+*
+* @returns {object} area instance
 */
 var Area = function( graph ) {
 
@@ -122,7 +124,7 @@ Area.prototype.create = function() {
 		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
 
 	// Add area paths:
-	this._children = this._root.selectAll( '.area' )
+	paths = this._root.selectAll( '.area' )
 		.data( this._data )
 	  .enter().append( 'svg:path' )
 		.attr( 'property', 'area' )
@@ -131,7 +133,13 @@ Area.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	// REGISTER //
-	this._parent._children.marks = this._root;
+
+	// Marks:
+	if ( this._parent._children.hasOwnProperty( 'marks' ) ) {
+		this._parent._children.marks.push( this );
+	} else {
+		this._parent._children.marks = [ this ];
+	}
 
 	return this;
 

@@ -48,6 +48,8 @@
 *	Canvas constructor. Creates a new canvas instance.
 *
 * @param {object} figure - parent figure element
+*
+* @returns {object} canvas instance
 */
 var Canvas = function( figure ) {
 
@@ -103,7 +105,11 @@ Canvas.prototype.create = function( type ) {
 	} // end SWITCH (type)
 
 	// REGISTER //
-	this._parent._children.canvas = this._root;
+	if ( this._parent._children.hasOwnProperty( 'canvas' ) ) {
+		this._parent._children.canvas.push( this );
+	} else {
+		this._parent._children.canvas = [ this ];
+	}
 
 	return this;
 
