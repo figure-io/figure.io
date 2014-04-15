@@ -11,14 +11,22 @@ TODO
 ### Subplot
 
 1. 	Alias to graph instance, where width, height, position are auto set.
+2. 	Subplot captioning
+3. 	Plot captioning (annotations)
+
 
 
 ### Graph
 
-1. 	
+1. 	x,y,z limits: convenience method for xMin,xMax,...,zMax
 2. 	Include graph method to turn background on or off (boolean)
 3. 	
 4. 	Z analog to width (x) and height (y)
+
+### Axes
+
+1. 	tick rotation
+2. 	tick display and axes display boolean validation
 
 ### Marks
 
