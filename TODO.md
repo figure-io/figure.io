@@ -15,9 +15,9 @@ TODO
 
 ### Graph
 
-1. 	Graph method for specifying the scale type
+1. 	
 2. 	Include graph method to turn background on or off (boolean)
-3. 	Add range methods to graph: xRange, yRange, zRange. Require 2 element array of numbers.
+3. 	
 4. 	Z analog to width (x) and height (y)
 
 ### Marks
@@ -28,13 +28,16 @@ TODO
 ### Utils
 
 1. 	Update documentation for histc, hist2c, validate; split validate into its own repo
-2. 	
+2. 	Add length check in validate
 
 
 ### Validation
 
 1. 	Data methods; inputs
-
+2. 	Graph xRange, yRange, zRange: need to check for length==2
+3. 	Check if boolean
+4. 	Multi-parameter validation
+5. 	Instead of console.errors, throw an error
 
 
 ### Task Runner

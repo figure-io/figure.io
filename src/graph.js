@@ -487,11 +487,268 @@ Graph.prototype.zMax = function( value ) {
 			return;
 		}
 		domain.max = value;
-		
+
 		arr = self._zScale.domain();
 		self._zScale.domain( [ arr[0], value ] );
 	}
 }; // end METHOD zMax()
+
+/**
+* METHOD: xRange( arr )
+*	xRange setter and getter. If an array is supplied, sets the instance xRange. If no argument is supplied, gets the instance xRange.
+*
+* @param {array} arr - 2-element array defining the xRange
+*
+* @returns {object|array} graph instance or xRange
+*/
+Graph.prototype.xRange = function( arr ) {
+	var self = this,
+		range = this._config.scales[ 0 ].range;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ range.min, range.max ];
+	}
+
+	Validator( value, rules, set );
+	
+	return this;
+
+	function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		range.min = arr[ 0 ];
+		range.max = arr[ 1 ];
+
+		self._xScale.range( arr );
+	}
+}; // end METHOD xRange()
+
+/**
+* METHOD: yRange( arr )
+*	yRange setter and getter. If an array is supplied, sets the instance yRange. If no argument is supplied, gets the instance yRange.
+*
+* @param {array} arr - 2-element array defining the yRange
+*
+* @returns {object|array} graph instance or yRange
+*/
+Graph.prototype.yRange = function( arr ) {
+	var self = this,
+		range = this._config.scales[ 1 ].range;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ range.max, range.min ];
+	}
+
+	Validator( value, rules, set );
+	
+	return this;
+
+	function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		range.min = arr[ 1 ];
+		range.max = arr[ 0 ];
+
+		self._yScale.range( arr );
+	}
+}; // end METHOD yRange()
+
+/**
+* METHOD: zRange( arr )
+*	zRange setter and getter. If an array is supplied, sets the instance zRange. If no argument is supplied, gets the instance zRange.
+*
+* @param {array} arr - 2-element array defining the zRange
+*
+* @returns {object|array} graph instance or zRange
+*/
+Graph.prototype.zRange = function( arr ) {
+	var self = this,
+		range = this._config.scales[ 2 ].range;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ range.min, range.max ];
+	}
+
+	Validator( value, rules, set );
+	
+	return this;
+
+	function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			return;
+		}
+		range.min = arr[ 0 ];
+		range.max = arr[ 1 ];
+
+		self._zScale.range( arr );
+	}
+}; // end METHOD zRange()
+
+/**
+* METHOD: xScale( type, value )
+*	xScale setter and getter. If a type is provided, sets the x-scale according to the specified type. If no type is provided, returns the current x-scale type.
+*
+* @param {string} type - scale type
+* @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
+*
+* @returns {object|string} graph instance or the x-scale type
+*/
+Graph.prototype.xScale = function( type, value ) {
+	var self = this;
+
+		if ( !arguments.length || !type ) {
+			return this._config.scales[ 0 ].type;
+		}
+
+		this.scale( type, value, returnScale );
+
+		function returnScale( errors, scale ) {
+			if ( errors ) {
+				console.error( errors );
+				return;
+			}
+			self._config.scales[ 0 ].type = type;
+
+			self._xScale = scale
+				.domain([
+					self._config.scales[ 0 ].domain.min,
+					self._config.scales[ 0 ].domain.max
+				])
+				.range([
+					self._config.scales[ 0 ].range.min,
+					self._config.scales[ 0 ].range.max
+				]);
+		}
+
+}; // end METHOD xScale()
+
+/**
+* METHOD: yScale( type, value )
+*	yScale setter and getter. If a type is provided, sets the y-scale according to the specified type. If no type is provided, returns the current y-scale type.
+*
+* @param {string} type - scale type
+* @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
+*
+* @returns {object|string} graph instance or the y-scale type
+*/
+Graph.prototype.yScale = function( type, value ) {
+	var self = this;
+
+		if ( !arguments.length || !type ) {
+			return this._config.scales[ 1 ].type;
+		}
+
+		this.scale( type, value, returnScale );
+
+		function returnScale( errors, scale ) {
+			if ( errors ) {
+				console.error( errors );
+				return;
+			}
+			self._config.scales[ 1 ].type = type;
+
+			self._yScale = scale
+				.domain([
+					self._config.scales[ 1 ].domain.min,
+					self._config.scales[ 1 ].domain.max
+				])
+				.range([
+					self._config.scales[ 1 ].range.max,
+					self._config.scales[ 1 ].range.min
+				]);
+		}
+
+}; // end METHOD yScale()
+
+/**
+* METHOD: zScale( type, value )
+*	zScale setter and getter. If a type is provided, sets the z-scale according to the specified type. If no type is provided, returns the current z-scale type.
+*
+* @param {string} type - scale type
+* @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
+*
+* @returns {object|string} graph instance or the z-scale type
+*/
+Graph.prototype.zScale = function( type, value ) {
+	var self = this;
+
+		if ( !arguments.length || !type ) {
+			return this._config.scales[ 2 ].type;
+		}
+
+		this.scale( type, value, returnScale );
+
+		function returnScale( errors, scale ) {
+			if ( errors ) {
+				console.error( errors );
+				return;
+			}
+			self._config.scales[ 2 ].type = type;
+
+			self._zScale = scale
+				.domain([
+					self._config.scales[ 2 ].domain.min,
+					self._config.scales[ 2 ].domain.max
+				])
+				.range([
+					self._config.scales[ 2 ].range.min,
+					self._config.scales[ 2 ].range.max
+				]);
+		}
+
+}; // end METHOD zScale()
+
+/**
+* METHOD: scale( type, value, clbk )
+*	Generalized scale getter.
+*
+* @param {string} type - scale type; must be either linear, log, or pow.
+* @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
+* @param {function} clbk - callback to invoke after validation and getting the specified scale. Function should take two arguments: [ errors, scale ].
+*
+* @returns {object} graph instance
+*/
+Graph.prototype.scale = function( type, value, clbk ) {
+	var rules = 'string|matches[linear,log,pow]',
+		scales = {
+			'linear': linear,
+			'log': log,
+			'pow': pow
+		};
+
+		Validator( type, rules, onErrors );
+
+		return this;
+
+		function onErrors( errors ) {
+			if ( errors ) {
+				clbk( errors );
+				return;
+			}
+			clbk( null, scales[ type ]() );
+		}
+
+		function linear() {
+			return d3.scale.linear();
+		}
+
+		function log() {
+			return d3.scale.log().base( value );
+		}
+
+		function pow() {
+			return d3.scale.pow().exponent( value );
+		}
+
+}; // end METHOD scale()
 
 /**
 * METHOD: position( value )
