@@ -47,7 +47,7 @@
 * FUNCTION: Axes( graph )
 *	Axes constructor. Creates a new axes instance.
 *
-* @param {object} graph - parent graph element
+* @param {object} graph - parent graph instance
 * @returns {object} axes instance
 */
 var Axes = function( graph ) {
@@ -129,7 +129,8 @@ var Axes = function( graph ) {
 */
 Axes.prototype.create = function() {
 
-	var selection = this._parent._root,
+	var pChildren = this._parent._children,
+		selection = this._parent._root,
 		height = this._parent._config.height,
 		width = this._parent._config.width,
 		xAxis, yAxis;
@@ -181,10 +182,10 @@ Axes.prototype.create = function() {
 	}
 
 	// REGISTER //
-	if ( this._parent._children.hasOwnProperty( 'axes' ) ) {
-		this._parent._children.axes.push( this );
+	if ( pChildren.hasOwnProperty( 'axes' ) ) {
+		pChildren.axes.push( this );
 	} else {
-		this._parent._children.axes = [ this ];
+		pChildren.axes = [ this ];
 	}
 
 	return this;

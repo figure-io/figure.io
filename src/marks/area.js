@@ -47,7 +47,7 @@
 * FUNCTION: Area( graph )
 *	Area constructor. Creates a new area instance.
 *
-* @param {object} graph - parent graph element
+* @param {object} graph - parent graph instance
 * @returns {object} area instance
 */
 var Area = function( graph ) {
@@ -112,7 +112,8 @@ var Area = function( graph ) {
 */
 Area.prototype.create = function() {
 
-	var selection = this._parent._root,
+	var pChildren = this._parent._children,
+		selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
 
@@ -134,10 +135,10 @@ Area.prototype.create = function() {
 	// REGISTER //
 
 	// Marks:
-	if ( this._parent._children.hasOwnProperty( 'marks' ) ) {
-		this._parent._children.marks.push( this );
+	if ( pChildren.hasOwnProperty( 'marks' ) ) {
+		pChildren.marks.push( this );
 	} else {
-		this._parent._children.marks = [ this ];
+		pChildren.marks = [ this ];
 	}
 
 	return this;

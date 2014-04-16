@@ -9,7 +9,8 @@
 		graph,
 		axes,
 		data,
-		area;
+		area,
+		annotations;
 
 	// [0] Select the element to which to append the figure:
 	_selection = document.querySelector( '.main' );
@@ -75,6 +76,15 @@
 
 		// Create the axes:
 		axes.create();
+
+		// [7] Instantiate a new annotations generator and configure:
+		annotations = xfig.annotations( canvas );
+
+		// Create the annotations element:
+		annotations.create();
+
+		// Add a title:
+		annotations.title( 'Title' );
 
 	});
 

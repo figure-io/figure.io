@@ -48,7 +48,7 @@
 * FUNCTION: Graph( canvas )
 *	Graph constructor. Creates a new graph instance.
 *
-* @param {object} canvas - parent canvas element
+* @param {object} canvas - parent canvas instance
 * @returns {object} graph instance
 */
 var Graph = function( canvas ) {
@@ -162,7 +162,8 @@ var Graph = function( canvas ) {
 Graph.prototype.create = function( type ) {
 
 	// VARIABLES //
-	var selection = this._parent._root,
+	var pChildren = this._parent._children,
+		selection = this._parent._root,
 		position = this._config.position,
 		width = this._config.width,
 		height = this._config.height,
@@ -200,10 +201,10 @@ Graph.prototype.create = function( type ) {
 	} // end IF (background)
 
 	// REGISTER //
-	if ( this._parent._children.hasOwnProperty( 'graph' ) ) {
-		this._parent._children.graph.push( this );
+	if ( pChildren.hasOwnProperty( 'graph' ) ) {
+		pChildren.graph.push( this );
 	} else {
-		this._parent._children.graph = [ this ];
+		pChildren.graph = [ this ];
 	}
 
 	return this;
@@ -875,7 +876,6 @@ Graph.prototype.background = function( bool ) {
 
 	return this;
 
-	
 }; // end METHOD background()
 
 /**

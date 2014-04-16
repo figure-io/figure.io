@@ -17,12 +17,12 @@ TODO
 
 ### Canvas
 
-1. 	Background option
+1. 	
 
 
 ### Graph
 
-1. 	Z analog to width (x) and height (y)
+1. 	Z analog to width (x) and height (y) (???)
 
 ### Axes
 
@@ -48,7 +48,7 @@ TODO
 4. 	Multi-parameter validation
 5. 	
 6. 	Graph x,y,z domain: need to check for length==2
-7. 	Graph check if bkgd boolean
+7. 	Graph, Canvas check if bkgd boolean
 
 
 ### Task Runner

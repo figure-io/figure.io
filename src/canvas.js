@@ -47,7 +47,7 @@
 * FUNCTION: Canvas( figure )
 *	Canvas constructor. Creates a new canvas instance.
 *
-* @param {object} figure - parent figure element
+* @param {object} figure - parent figure instance
 * @returns {object} canvas instance
 */
 var Canvas = function( figure ) {
@@ -60,6 +60,7 @@ var Canvas = function( figure ) {
 	this._config = {
 		'width': 500,
 		'height': 500,
+		"background": false
 	};
 
 	// REGISTER //
@@ -83,7 +84,8 @@ var Canvas = function( figure ) {
 Canvas.prototype.create = function( type ) {
 
 	// VARIABLES //
-	var self = this;
+	var self = this,
+		pChildren = this._parent._children;
 
 	// CHECKS!!!
 	if ( !type ) {
@@ -102,10 +104,10 @@ Canvas.prototype.create = function( type ) {
 	} // end SWITCH (type)
 
 	// REGISTER //
-	if ( this._parent._children.hasOwnProperty( 'canvas' ) ) {
-		this._parent._children.canvas.push( this );
+	if ( pChildren.hasOwnProperty( 'canvas' ) ) {
+		pChildren.canvas.push( this );
 	} else {
-		this._parent._children.canvas = [ this ];
+		pChildren.canvas = [ this ];
 	}
 
 	return this;
@@ -200,6 +202,34 @@ Canvas.prototype.height = function( value ) {
 	return this;
 
 }; // end METHOD height()
+
+/**
+* METHOD: background( bool )
+*	Background display setter and getter. If a boolean is provided, sets the background display. If no boolean is provided, gets the background display. If false, when canvases are created, no background is created.
+*
+* @param {boolean} bool - boolean flag indicating whether to create a background.
+* @returns {object|boolean} canvas instance or background display
+*/
+Canvas.prototype.background = function( bool ) {
+	var self = this,
+		rules = 'boolean';
+
+	if ( !arguments.length ) {
+		return this._config.background;
+	}
+
+	// Validator( bool, rules, set );
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'background()::invalid input argument.' );
+		}
+		self._config.background = bool;
+	})();
+
+	return this;
+
+}; // end METHOD background()
 
 /**
 * METHOD: parent()
