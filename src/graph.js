@@ -49,7 +49,6 @@
 *	Graph constructor. Creates a new graph instance.
 *
 * @param {object} canvas - parent canvas element
-*
 * @returns {object} graph instance
 */
 var Graph = function( canvas ) {
@@ -158,6 +157,7 @@ var Graph = function( canvas ) {
 *	Creates a new graph element and appends to a canvas element. Option to define the graph type.
 *
 * @param {string} type - graph type
+* @returns {object} graph instance
 */
 Graph.prototype.create = function( type ) {
 
@@ -215,7 +215,6 @@ Graph.prototype.create = function( type ) {
 *	Width setter and getter. If a value is supplied, defines the graph width. If no value is supplied, returns the graph view width.
 *
 * @param {number} width - desired graph view width.
-* 
 * @returns {object|number} graph instance or graph view width.
 */
 Graph.prototype.width = function( value ) {
@@ -227,23 +226,24 @@ Graph.prototype.width = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'width()::invalid input argument. ' );
+			}
+			self._config.width = value;
+			self._config.scales[ 0 ].range.max = value;
+
+			arr = self._xScale.range();
+			self._xScale.range( [ arr[0], value ] );
+		});
+	
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config.width = value;
-		self._config.scales[ 0 ].range.max = value;
-
-		arr = self._xScale.range();
-		self._xScale.range( [ arr[0], value ] );
-	}
 }; // end METHOD width()
 
 /**
@@ -251,7 +251,6 @@ Graph.prototype.width = function( value ) {
 *	Height setter and getter. If a value is supplied, defines the graph view height. If no value is supplied, returns the graph view height.
 *
 * @param {number} height - desired graph view height.
-* 
 * @returns {object|number} graph instance or graph view height.
 */
 Graph.prototype.height = function( value ) {
@@ -263,23 +262,24 @@ Graph.prototype.height = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'height()::invalid input argument. ' );
+			}
+			self._config.height = value;
+			self._config.scales[ 1 ].range.max = value;
+
+			arr = self._yScale.range();
+			self._yScale.range( [ value, arr[1] ] );
+		});
+
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config.height = value;
-		self._config.scales[ 1 ].range.max = value;
-
-		arr = self._yScale.range();
-		self._yScale.range( [ value, arr[1] ] );
-	}
 }; // end METHOD height()
 
 /**
@@ -287,7 +287,6 @@ Graph.prototype.height = function( value ) {
 *	xMin setter and getter. If a value is supplied, defines the graph xMin. If no value is supplied, returns the graph xMin.
 *
 * @param {number} xMin - desired graph xMin.
-* 
 * @returns {object|number} graph instance or graph xMin.
 */
 Graph.prototype.xMin = function( value ) {
@@ -300,22 +299,23 @@ Graph.prototype.xMin = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'xMin()::invalid input argument. ' );
+			}
+			domain.min = value;
+
+			arr = self._xScale.domain();
+			self._xScale.domain( [ value, arr[1] ] );
+		});
+	
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		domain.min = value;
-
-		arr = self._xScale.domain();
-		self._xScale.domain( [ value, arr[1] ] );
-	}
 }; // end METHOD xMin()
 
 /**
@@ -323,7 +323,6 @@ Graph.prototype.xMin = function( value ) {
 *	xMax setter and getter. If a value is supplied, defines the graph xMax. If no value is supplied, returns the graph xMax.
 *
 * @param {number} xMax - desired graph xMax.
-* 
 * @returns {object|number} graph instance or graph xMax.
 */
 Graph.prototype.xMax = function( value ) {
@@ -336,22 +335,23 @@ Graph.prototype.xMax = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'xMax()::invalid input argument. ' );
+			}
+			domain.max = value;
+
+			arr = self._xScale.domain();
+			self._xScale.domain( [ arr[0], value ] );
+		});
+	
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		domain.max = value;
-
-		arr = self._xScale.domain();
-		self._xScale.domain( [ arr[0], value ] );
-	}
 }; // end METHOD xMax()
 
 /**
@@ -359,7 +359,6 @@ Graph.prototype.xMax = function( value ) {
 *	yMin setter and getter. If a value is supplied, defines the graph yMin. If no value is supplied, returns the graph yMin.
 *
 * @param {number} yMin - desired graph yMin.
-* 
 * @returns {object|number} graph instance or graph yMin.
 */
 Graph.prototype.yMin = function( value ) {
@@ -372,22 +371,23 @@ Graph.prototype.yMin = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'yMin()::invalid input argument. ' );
+			}
+			domain.min = value;
+
+			arr = self._yScale.domain();
+			self._yScale.domain( [ value, arr[1] ] );
+		});
+		
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		domain.min = value;
-
-		arr = self._yScale.domain();
-		self._yScale.domain( [ value, arr[1] ] );
-	}
 }; // end METHOD yMin()
 
 /**
@@ -395,7 +395,6 @@ Graph.prototype.yMin = function( value ) {
 *	yMax setter and getter. If a value is supplied, defines the graph yMax. If no value is supplied, returns the graph yMax.
 *
 * @param {number} yMax - desired graph yMax.
-* 
 * @returns {object|number} graph instace or graph yMax.
 */
 Graph.prototype.yMax = function( value ) {
@@ -408,22 +407,23 @@ Graph.prototype.yMax = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'yMax()::invalid input argument. ' );
+			}
+			domain.max = value;
+
+			arr = self._yScale.domain();
+			self._yScale.domain( [ arr[0], value ] );
+		});
+	
 	}
 
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		domain.max = value;
-
-		arr = self._yScale.domain();
-		self._yScale.domain( [ arr[0], value ] );
-	}
 }; // end METHOD yMax()
 
 /**
@@ -431,7 +431,6 @@ Graph.prototype.yMax = function( value ) {
 *	zMin setter and getter. If a value is supplied, defines the graph zMin. If no value is supplied, returns the graph zMin.
 *
 * @param {number} zMin - desired graph zMin.
-* 
 * @returns {object|number} graph instance or graph zMin.
 */
 Graph.prototype.zMin = function( value ) {
@@ -444,22 +443,23 @@ Graph.prototype.zMin = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'zMin()::invalid input argument. ' );
+			}
+			domain.min = value;
+
+			arr = self._zScale.domain();
+			self._zScale.domain( [ value, arr[1] ] );
+		});
+	
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		domain.min = value;
-
-		arr = self._zScale.domain();
-		self._zScale.domain( [ value, arr[1] ] );
-	}
 }; // end METHOD zMin()
 
 /**
@@ -467,7 +467,6 @@ Graph.prototype.zMin = function( value ) {
 *	zMax setter and getter. If a value is supplied, defines the graph zMax. If no value is supplied, returns the graph zMax.
 *
 * @param {number} zMax - desired graph zMax.
-* 
 * @returns {object|number} graph instance or graph zMax.
 */
 Graph.prototype.zMax = function( value ) {
@@ -480,30 +479,123 @@ Graph.prototype.zMax = function( value ) {
 	}
 
 	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-		Validator( value, rules, set );
+		
+		Validator( value, rules, function set( errors ) {
+			var arr;
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'zMax()::invalid input argument. ' );
+			}
+			domain.max = value;
+
+			arr = self._zScale.domain();
+			self._zScale.domain( [ arr[0], value ] );
+		});
+	
 	}
 	
 	return this;
 
-	function set( errors ) {
-		var arr;
+}; // end METHOD zMax()
+
+/**
+* METHOD: xDomain( arr )
+*	xDomain setter and getter. If an array is supplied, sets the instance xDomain. If no argument is supplied, gets the instance xDomain.
+*
+* @param {array} arr - 2-element array defining the xDomain
+* @returns {object|array} graph instance or xDomain
+*/
+Graph.prototype.xDomain = function( arr ) {
+	var self = this,
+		domain = this._config.scales[ 0 ].domain;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ domain.min, domain.max ];
+	}
+
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xDomain()::invalid input argument. ' );
 		}
-		domain.max = value;
+		domain.min = arr[ 0 ];
+		domain.max = arr[ 1 ];
 
-		arr = self._zScale.domain();
-		self._zScale.domain( [ arr[0], value ] );
+		self._xScale.domain( arr );
+	});
+	
+	return this;
+
+}; // end METHOD xDomain()
+
+/**
+* METHOD: yDomain( arr )
+*	yDomain setter and getter. If an array is supplied, sets the instance yDomain. If no argument is supplied, gets the instance yDomain.
+*
+* @param {array} arr - 2-element array defining the yDomain
+* @returns {object|array} graph instance or yDomain
+*/
+Graph.prototype.yDomain = function( arr ) {
+	var self = this,
+		domain = this._config.scales[ 1 ].domain;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ domain.min, domain.max ];
 	}
-}; // end METHOD zMax()
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yDomain()::invalid input argument. ' );
+		}
+		domain.min = arr[ 0 ];
+		domain.max = arr[ 1 ];
+
+		self._yScale.domain( arr );
+	});
+	
+	return this;
+
+}; // end METHOD yDomain()
+
+/**
+* METHOD: zDomain( arr )
+*	zDomain setter and getter. If an array is supplied, sets the instance zDomain. If no argument is supplied, gets the instance zDomain.
+*
+* @param {array} arr - 2-element array defining the zDomain
+* @returns {object|array} graph instance or zDomain
+*/
+Graph.prototype.zDomain = function( arr ) {
+	var self = this,
+		domain = this._config.scales[ 2 ].domain;
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return [ domain.min, domain.max ];
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'zDomain()::invalid input argument. ' );
+		}
+		domain.min = arr[ 0 ];
+		domain.max = arr[ 1 ];
+
+		self._zScale.domain( arr );
+	});
+	
+	return this;
+
+}; // end METHOD zDomain()
 
 /**
 * METHOD: xRange( arr )
 *	xRange setter and getter. If an array is supplied, sets the instance xRange. If no argument is supplied, gets the instance xRange.
 *
 * @param {array} arr - 2-element array defining the xRange
-*
 * @returns {object|array} graph instance or xRange
 */
 Graph.prototype.xRange = function( arr ) {
@@ -515,20 +607,19 @@ Graph.prototype.xRange = function( arr ) {
 		return [ range.min, range.max ];
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xRange()::invalid input argument. ' );
 		}
 		range.min = arr[ 0 ];
 		range.max = arr[ 1 ];
 
 		self._xScale.range( arr );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD xRange()
 
 /**
@@ -536,7 +627,6 @@ Graph.prototype.xRange = function( arr ) {
 *	yRange setter and getter. If an array is supplied, sets the instance yRange. If no argument is supplied, gets the instance yRange.
 *
 * @param {array} arr - 2-element array defining the yRange
-*
 * @returns {object|array} graph instance or yRange
 */
 Graph.prototype.yRange = function( arr ) {
@@ -548,20 +638,19 @@ Graph.prototype.yRange = function( arr ) {
 		return [ range.max, range.min ];
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yRange()::invalid input argument. ' );
 		}
 		range.min = arr[ 1 ];
 		range.max = arr[ 0 ];
 
 		self._yScale.range( arr );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD yRange()
 
 /**
@@ -569,7 +658,6 @@ Graph.prototype.yRange = function( arr ) {
 *	zRange setter and getter. If an array is supplied, sets the instance zRange. If no argument is supplied, gets the instance zRange.
 *
 * @param {array} arr - 2-element array defining the zRange
-*
 * @returns {object|array} graph instance or zRange
 */
 Graph.prototype.zRange = function( arr ) {
@@ -581,20 +669,19 @@ Graph.prototype.zRange = function( arr ) {
 		return [ range.min, range.max ];
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'zRange()::invalid input argument. ' );
 		}
 		range.min = arr[ 0 ];
 		range.max = arr[ 1 ];
 
 		self._zScale.range( arr );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD zRange()
 
 /**
@@ -603,7 +690,6 @@ Graph.prototype.zRange = function( arr ) {
 *
 * @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
-*
 * @returns {object|string} graph instance or the x-scale type
 */
 Graph.prototype.xScale = function( type, value ) {
@@ -613,12 +699,10 @@ Graph.prototype.xScale = function( type, value ) {
 		return this._config.scales[ 0 ].type;
 	}
 
-	this.scale( type, value, returnScale );
-
-	function returnScale( errors, scale ) {
+	this.scale( type, value, function returnScale( errors, scale ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xScale()::invalid input arguments. ' );
 		}
 		self._config.scales[ 0 ].type = type;
 
@@ -631,7 +715,9 @@ Graph.prototype.xScale = function( type, value ) {
 				self._config.scales[ 0 ].range.min,
 				self._config.scales[ 0 ].range.max
 			]);
-	}
+	});
+
+	return this;
 
 }; // end METHOD xScale()
 
@@ -641,7 +727,6 @@ Graph.prototype.xScale = function( type, value ) {
 *
 * @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
-*
 * @returns {object|string} graph instance or the y-scale type
 */
 Graph.prototype.yScale = function( type, value ) {
@@ -651,12 +736,10 @@ Graph.prototype.yScale = function( type, value ) {
 		return this._config.scales[ 1 ].type;
 	}
 
-	this.scale( type, value, returnScale );
-
-	function returnScale( errors, scale ) {
+	this.scale( type, value, function returnScale( errors, scale ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yScale()::invalid input arguments. ' );
 		}
 		self._config.scales[ 1 ].type = type;
 
@@ -669,7 +752,9 @@ Graph.prototype.yScale = function( type, value ) {
 				self._config.scales[ 1 ].range.max,
 				self._config.scales[ 1 ].range.min
 			]);
-	}
+	});
+
+	return this;
 
 }; // end METHOD yScale()
 
@@ -679,7 +764,6 @@ Graph.prototype.yScale = function( type, value ) {
 *
 * @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
-*
 * @returns {object|string} graph instance or the z-scale type
 */
 Graph.prototype.zScale = function( type, value ) {
@@ -689,12 +773,10 @@ Graph.prototype.zScale = function( type, value ) {
 		return this._config.scales[ 2 ].type;
 	}
 
-	this.scale( type, value, returnScale );
-
-	function returnScale( errors, scale ) {
+	this.scale( type, value, function returnScale( errors, scale ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'zScale()::invalid input arguments. ' );
 		}
 		self._config.scales[ 2 ].type = type;
 
@@ -707,7 +789,9 @@ Graph.prototype.zScale = function( type, value ) {
 				self._config.scales[ 2 ].range.min,
 				self._config.scales[ 2 ].range.max
 			]);
-	}
+	});
+
+	return this;
 
 }; // end METHOD zScale()
 
@@ -718,7 +802,6 @@ Graph.prototype.zScale = function( type, value ) {
 * @param {string} type - scale type; must be one of the following: linear, log, pow, category10, category20, category20b, category20c.
 * @param {number} value - (optional) scale dependent parameter; e.g., if type=log, value=10 sets the base to 10.
 * @param {function} clbk - callback to invoke after validation and getting the specified scale. Function should take two arguments: [ errors, scale ].
-*
 * @returns {object} graph instance
 */
 Graph.prototype.scale = function( type, value, clbk ) {
@@ -733,17 +816,16 @@ Graph.prototype.scale = function( type, value, clbk ) {
 			'category20c': category20c
 		};
 
-	Validator( type, rules, onErrors );
-
-	return this;
-
-	function onErrors( errors ) {
+	Validator( type, rules, function onErrors( errors ) {
 		if ( errors ) {
 			clbk( errors );
 			return;
 		}
 		clbk( null, scales[ type ]() );
-	}
+	});
+
+	return this;
+
 	function linear() {
 		return d3.scale.linear();
 	}
@@ -768,11 +850,39 @@ Graph.prototype.scale = function( type, value, clbk ) {
 }; // end METHOD scale()
 
 /**
+* METHOD: background( bool )
+*	Background display setter and getter. If a boolean is provided, sets the background display. If no boolean is provided, gets the background display. If false, when graphs are created, no background is created.
+*
+* @param {boolean} bool - boolean flag indicating whether to create a background.
+* @returns {object|boolean} graph instance or background display
+*/
+Graph.prototype.background = function( bool ) {
+	var self = this,
+		rules = 'boolean';
+
+	if ( !arguments.length ) {
+		return this._config.background;
+	}
+
+	// Validator( bool, rules, set );
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'background()::invalid input argument.' );
+		}
+		self._config.background = bool;
+	})();
+
+	return this;
+
+	
+}; // end METHOD background()
+
+/**
 * METHOD: position( value )
 *	Convenience method to set multple position values. If a value is supplied, defines the graph position. If no value is supplied, returns the graph position.
 *
 * @param {object} value - object with the following properties: left, right, top, bottom. All values assigned to properties should be numbers.
-* 
 * @returns {object|object} graph instance or position object
 */
 Graph.prototype.position = function( value ) {
@@ -783,16 +893,12 @@ Graph.prototype.position = function( value ) {
 		return position;
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		var rules = 'number';
 
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'position()::invalid input argument.' );
 		}
 
 		for ( var key in value ) {
@@ -800,14 +906,16 @@ Graph.prototype.position = function( value ) {
 				errors = Validator( value[ key ], rules );
 				if ( errors.length ) {
 					console.error( errors );
-					return;
+					throw new Error( 'position()::invalid input argument.' );
 				}
 			}
 		}
 
 		// Set the value:
 		position = value;
-	}
+	});
+	
+	return this;
 
 }; // end METHOD position()
 
@@ -816,7 +924,6 @@ Graph.prototype.position = function( value ) {
 *	position-left setter and getter. If a value is supplied, defines the graph position-left. If no value is supplied, returns the graph position-left.
 *
 * @param {number} value - desired graph position-left.
-* 
 * @returns {object|number} - graph instance or position left value
 */
 
@@ -828,17 +935,16 @@ Graph.prototype.left = function( value ) {
 		return position.left;
 	}
 
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'left()::invalid input argument.' );
+		}
+		position.left = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		position.left = value;
-	}
 }; // end METHOD left()
 
 /**
@@ -846,7 +952,6 @@ Graph.prototype.left = function( value ) {
 *	position-right setter and getter. If a value is supplied, defines the graph position-right. If no value is supplied, returns the graph position-right.
 *
 * @param {number} value - desired graph position-right.
-* 
 * @returns {object|number} - graph instance or position right value
 */
 
@@ -858,17 +963,16 @@ Graph.prototype.right = function( value ) {
 		return position.right;
 	}
 
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'right()::invalid input argument.' );
+		}
+		position.right = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		position.right = value;
-	}
 }; // end METHOD right()
 
 /**
@@ -876,7 +980,6 @@ Graph.prototype.right = function( value ) {
 *	position-top setter and getter. If a value is supplied, defines the graph position-top. If no value is supplied, returns the graph position-top.
 *
 * @param {number} value - desired graph position-top.
-* 
 * @returns {object|number} - graph instance or position top value
 */
 
@@ -888,17 +991,16 @@ Graph.prototype.top = function( value ) {
 		return position.top;
 	}
 
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'top()::invalid input argument.' );
+		}
+		position.top = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		position.top = value;
-	}
 }; // end METHOD top()
 
 /**
@@ -906,7 +1008,6 @@ Graph.prototype.top = function( value ) {
 *	position-bottom setter and getter. If a value is supplied, defines the graph position-bottom. If no value is supplied, returns the graph position-bottom.
 *
 * @param {number} value - desired graph position-bottom.
-* 
 * @returns {object|number} - graph instance or position bottom value
 */
 
@@ -918,17 +1019,16 @@ Graph.prototype.bottom = function( value ) {
 		return position.bottom;
 	}
 
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'bottom()::invalid input argument.' );
+		}
+		position.bottom = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		position.bottom = value;
-	}
 }; // end METHOD bottom()
 
 /**
@@ -936,7 +1036,6 @@ Graph.prototype.bottom = function( value ) {
 *	Graph data setter and getter. If data is supplied, sets the graph's current active dataset. If no data is supplied, returns the graph's current active dataset.
 *
 * @param {object} data - data instance
-* 
 * @returns {object|object} - graph instance or current active dataset
 */
 Graph.prototype.data = function( data ) {
@@ -946,7 +1045,7 @@ Graph.prototype.data = function( data ) {
 	}
 
 	if ( !( data instanceof Data ) ) {
-		throw new Error( 'invalid input argument. Input argument must be an instance of Data.' );
+		throw new Error( 'data()::invalid input argument. Input argument must be an instance of Data.' );
 	}
 
 	this._data = data._data;

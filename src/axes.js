@@ -48,7 +48,6 @@
 *	Axes constructor. Creates a new axes instance.
 *
 * @param {object} graph - parent graph element
-*
 * @returns {object} axes instance
 */
 var Axes = function( graph ) {
@@ -217,17 +216,16 @@ Axes.prototype.xLabel = function( value ) {
 		return this._config[ 0 ].label;
 	}
 	
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xLabel()::invalid input argument.' );
+		}
+		self._config[ 0 ].label = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 0 ].label = value;
-	}
 }; // end METHOD xLabel()
 
 /**
@@ -245,17 +243,16 @@ Axes.prototype.yLabel = function( value ) {
 		return this._config[ 1 ].label;
 	}
 	
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yLabel()::invalid input argument.' );
+		}
+		self._config[ 1 ].label = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 1 ].label = value;
-	}
 }; // end METHOD yLabel()
 
 /**
@@ -276,19 +273,18 @@ Axes.prototype.xNumTicks = function( value ) {
 	if ( _.isUndefined( value ) || _.isNull( value ) ) {
 		set();
 	} else {
-		Validator( value, rules, set );
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'xNumTicks()::invalid input argument.' );
+			}
+			self._config[ 0 ].ticks.num = value;
+			self._xAxis.ticks( value );
+		});
 	}
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 0 ].ticks.num = value;
-		self._xAxis.ticks( value );
-	}
 }; // end METHOD xNumTicks()
 
 /**
@@ -309,19 +305,18 @@ Axes.prototype.yNumTicks = function( value ) {
 	if ( _.isUndefined( value ) || _.isNull( value ) ) {
 		set();
 	} else {
-		Validator( value, rules, set );
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'yNumTicks()::invalid input argument.' );
+			}
+			self._config[ 1 ].ticks.num = value;
+			self._yAxis.ticks( value );
+		});
 	}
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 1 ].ticks.num = value;
-		self._yAxis.ticks( value );
-	}
 }; // end METHOD yNumTicks()
 
 /**
@@ -339,18 +334,17 @@ Axes.prototype.xTickPadding = function( value ) {
 		return this._config[ 0 ].ticks.padding;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xTickPadding()::invalid input argument.' );
 		}
 		self._config[ 0 ].ticks.padding = value;
 		self._xAxis.tickPadding( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD xTickPadding()
 
 /**
@@ -368,18 +362,17 @@ Axes.prototype.yTickPadding = function( value ) {
 		return this._config[ 1 ].ticks.padding;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yTickPadding()::invalid input argument.' );
 		}
 		self._config[ 1 ].ticks.padding = value;
 		self._yAxis.tickPadding( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD yTickPadding()
 
 /**
@@ -397,17 +390,16 @@ Axes.prototype.xTickRotation = function( value ) {
 		return this._config[ 0 ].ticks.rotation;
 	}
 	
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xTickRotation()::invalid input argument.' );
+		}
+		self._config[ 0 ].ticks.rotation = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 0 ].ticks.rotation = value;
-	}
 }; // end METHOD xTickRotation()
 
 /**
@@ -425,17 +417,16 @@ Axes.prototype.yTickRotation = function( value ) {
 		return this._config[ 1 ].ticks.rotation;
 	}
 	
-	Validator( value, rules, set );
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yTickRotation()::invalid input argument.' );
+		}
+		self._config[ 1 ].ticks.rotation = value;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 1 ].ticks.rotation = value;
-	}
 }; // end METHOD xTickRotation()
 
 /**
@@ -453,18 +444,17 @@ Axes.prototype.xInnerTickSize = function( value ) {
 		return this._config[ 0 ].ticks.innerSize;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xInnerTickSize()::invalid input argument.' );
 		}
 		self._config[ 0 ].ticks.innerSize = value;
 		self._xAxis.innerTickSize( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD xInnerTickSize()
 
 /**
@@ -482,18 +472,17 @@ Axes.prototype.yInnerTickSize = function( value ) {
 		return this._config[ 1 ].ticks.innerSize;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yInnerTickSize()::invalid input argument.' );
 		}
 		self._config[ 1 ].ticks.innerSize = value;
 		self._yAxis.innerTickSize( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD xInnerTickSize()
 
 /**
@@ -511,18 +500,17 @@ Axes.prototype.xOuterTickSize = function( value ) {
 		return this._config[ 0 ].ticks.outerSize;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xOuterTickSize()::invalid input argument.' );
 		}
 		self._config[ 0 ].ticks.outerSize = value;
 		self._xAxis.outerTickSize( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD xOuterTickSize()
 
 /**
@@ -540,18 +528,17 @@ Axes.prototype.yOuterTickSize = function( value ) {
 		return this._config[ 1 ].ticks.outerSize;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yOuterTickSize()::invalid input argument.' );
 		}
 		self._config[ 1 ].ticks.outerSize = value;
 		self._yAxis.outerTickSize( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD yOuterTickSize()
 
 /**
@@ -577,15 +564,11 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 		rules = 'string';
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		var format;
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xTickFormat()::invalid input arguments.' );
 		}
 		if ( flg ) {
 			format = d3.time.format( value );
@@ -594,7 +577,10 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 		}
 		self._config[ 0 ].ticks.format = format;
 		self._xAxis.tickFormat( format );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD xTickFormat()
 
 /**
@@ -620,15 +606,11 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 		rules = 'string';
 	}
 
-	Validator( value, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		var format;
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yTickFormat()::invalid input arguments.' );
 		}
 		if ( flg ) {
 			format = d3.time.format( value );
@@ -637,7 +619,10 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 		}
 		self._config[ 1 ].ticks.format = format;
 		self._yAxis.tickFormat( format );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD yTickFormat()
 
 /**
@@ -645,6 +630,7 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 *	x-axis tick label display setter and getter. If a boolean is provided, sets the x-axis tick label display. If no boolean is provided, gets the x-axis tick label display. If false, when axes are created, no x-tick labels are visible.
 *
 * @param {boolean} bool - boolean flag indicating whether to display x-tick labels.
+* @returns {object|boolean} axes instance or x-tick label display
 */
 Axes.prototype.xTickDisplay = function( bool ) {
 	var self = this,
@@ -655,17 +641,16 @@ Axes.prototype.xTickDisplay = function( bool ) {
 	}
 
 	// Validator( bool, rules, set );
-	set();
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xTickDisplay()::invalid input argument.' );
+		}
+		self._config[ 0 ].ticks.display = bool;
+	})();
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 0 ].ticks.display = bool;
-	}
 }; // end METHOD xTickDisplay()
 
 /**
@@ -673,6 +658,7 @@ Axes.prototype.xTickDisplay = function( bool ) {
 *	y-axis tick label display setter and getter. If a boolean is provided, sets the y-axis tick label display. If no boolean is provided, gets the y-axis tick label display. If false, when axes are created, no y-tick labels are visible.
 *
 * @param {boolean} bool - boolean flag indicating whether to display y-tick labels.
+* @returns {object|boolean} axes instance or x-tick label display
 */
 Axes.prototype.yTickDisplay = function( bool ) {
 	var self = this,
@@ -683,17 +669,16 @@ Axes.prototype.yTickDisplay = function( bool ) {
 	}
 
 	// Validator( bool, rules, set );
-	set();
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yTickDisplay()::invalid input argument.' );
+		}
+		self._config[ 1 ].ticks.display = bool;
+	})();
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 1 ].ticks.display = bool;
-	}
 }; // end METHOD yTickDisplay()
 
 /**
@@ -711,18 +696,17 @@ Axes.prototype.xAxisOrient = function( value ) {
 		return this._config[ 0 ].orient;
 	}
 
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'xAxisOrient()::invalid input argument.' );
 		}
 		self._config[ 0 ].orient = value;
 		self._xAxis.orient( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD xAxisOrient()
 
 /**
@@ -740,18 +724,17 @@ Axes.prototype.yAxisOrient = function( value ) {
 		return this._config[ 1 ].orient;
 	}
 
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'yAxisOrient()::invalid input argument.' );
 		}
 		self._config[ 1 ].orient = value;
 		self._yAxis.orient( value );
-	}
+	});
+
+	return this;
+
 }; // end METHOD yAxisOrient()
 
 /**
@@ -759,6 +742,7 @@ Axes.prototype.yAxisOrient = function( value ) {
 *	x-axis display setter and getter. If a boolean is provided, sets the x-axis display. If no boolean is provided, gets the x-axis display. If false, no x-axis is visible.
 *
 * @param {boolean} bool - boolean flag indicating whether to display an x-axis.
+* @returns {object|boolean} axes instance or x-axis display
 */
 Axes.prototype.xAxisDisplay = function( bool ) {
 	var self = this,
@@ -769,17 +753,16 @@ Axes.prototype.xAxisDisplay = function( bool ) {
 	}
 
 	// Validator( bool, rules, set );
-	set();
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xAxisDisplay()::invalid input argument.' );
+		}
+		self._config[ 0 ].display = bool;
+	})();
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 0 ].display = bool;
-	}
 }; // end METHOD xAxisDisplay()
 
 /**
@@ -787,6 +770,7 @@ Axes.prototype.xAxisDisplay = function( bool ) {
 *	y-axis display setter and getter. If a boolean is provided, sets the y-axis display. If no boolean is provided, gets the y-axis display. If false, no y-axis is visible.
 *
 * @param {boolean} bool - boolean flag indicating whether to display a y-axis.
+* @returns {object|boolean} axes instance or y-axis display
 */
 Axes.prototype.yAxisDisplay = function( bool ) {
 	var self = this,
@@ -797,17 +781,16 @@ Axes.prototype.yAxisDisplay = function( bool ) {
 	}
 
 	// Validator( bool, rules, set );
-	set();
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yAxisDisplay()::invalid input argument.' );
+		}
+		self._config[ 1 ].display = bool;
+	})();
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config[ 1 ].display = bool;
-	}
 }; // end METHOD yAxisDisplay()
 
 /**

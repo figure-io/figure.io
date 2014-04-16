@@ -67,7 +67,6 @@ var Figure = function() {
 *	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, a figure is appended to a newly create HTML element; to access the figure parent, use the parent method.
 *
 * @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
-* 
 * @returns {object} figure instance
 */
 Figure.prototype.create = function( selection ) {

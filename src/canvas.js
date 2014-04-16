@@ -48,7 +48,6 @@
 *	Canvas constructor. Creates a new canvas instance.
 *
 * @param {object} figure - parent figure element
-*
 * @returns {object} canvas instance
 */
 var Canvas = function( figure ) {
@@ -79,7 +78,6 @@ var Canvas = function( figure ) {
 *	Creates a new canvas element. If a type is supplied, appends a canvas element of the specified type to a root figure element. If no type is supplied, defaults to svg canvas.
 *
 * @param {string} type - canvas type to be created.
-*
 * @returns {object} canvas instance
 */
 Canvas.prototype.create = function( type ) {
@@ -100,8 +98,7 @@ Canvas.prototype.create = function( type ) {
 			this._root = svg();
 			break;
 		default:
-			console.error( 'ERROR:unrecognized canvas type: ' + type + '.' );
-			return;
+			throw new Error( 'create()::unrecognized canvas type: ' + type );
 	} // end SWITCH (type)
 
 	// REGISTER //
@@ -147,7 +144,6 @@ Canvas.prototype.create = function( type ) {
 *	Width setter and getter. If a value is supplied, defines the canvas width. If no value is supplied, returns the canvas width.
 *
 * @param {number} width - desired canvas width.
-* 
 * @returns {object|number} canvas instance or canvas width.
 */
 Canvas.prototype.width = function( value ) {
@@ -157,18 +153,21 @@ Canvas.prototype.width = function( value ) {
 	if ( !arguments.length ) {
 		return this._config.width;
 	}
-	
-	Validator( value, rules, set );
+
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'width()::invalid input argument. ' );
+			}
+			self._config.width = value;
+		});
+
+	}
 
 	return this;
-
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config.width = value;
-	}
+	
 }; // end METHOD width()
 
 /**
@@ -176,7 +175,6 @@ Canvas.prototype.width = function( value ) {
 *	Height setter and getter. If a value is supplied, defines the canvas height. If no value is supplied, returns the canvas height.
 *
 * @param {number} height - desired canvas height.
-* 
 * @returns {object|number} canvas instance or canvas height.
 */
 Canvas.prototype.height = function( value ) {
@@ -187,17 +185,20 @@ Canvas.prototype.height = function( value ) {
 		return this._config.height;
 	}
 	
-	Validator( value, rules, set );
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'height()::invalid input argument. ' );
+			}
+			self._config.height = value;
+		});
+
+	}
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config.height = value;
-	}
 }; // end METHOD height()
 
 /**

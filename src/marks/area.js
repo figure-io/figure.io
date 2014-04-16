@@ -48,7 +48,6 @@
 *	Area constructor. Creates a new area instance.
 *
 * @param {object} graph - parent graph element
-*
 * @returns {object} area instance
 */
 var Area = function( graph ) {
@@ -161,7 +160,6 @@ Area.prototype.path = function() {
 *	Interpolation mode setter and getter. If a mode is supplied, sets the instance interpolation mode. If no mode is supplied, returns the instance interpolation mode.
 *
 * @param {string} mode - interpolation mode; must be one of the following: linear, linear-closed, step, step-before, step-after, basis, basis-open, basis-closed, bundle, cardinal, cardinal-open, cardinal-closed, monotone.
-*
 * @returns {object|string} area instance or interpolation mode
 */
 Area.prototype.interpolation = function( mode ) {
@@ -175,18 +173,17 @@ Area.prototype.interpolation = function( mode ) {
 		return this._config.interpolation.mode;
 	}
 
-	Validator( mode, rules, set );
-	
-	return this;
-
-	function set( errors ) {
+	Validator( mode, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'interpolation()::invalid input argument.' );
 		}
 		self._config.interpolation.mode = mode;
 		self._path.interpolate( mode );
-	}
+	});
+	
+	return this;
+
 }; // end METHOD interpolation()
 
 /**
@@ -194,6 +191,7 @@ Area.prototype.interpolation = function( mode ) {
 *	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
 *
 * @param {number} value - interpolation tension; must reside within the interval [0,1].
+* @returns {object|number} area instance or interpolation tension
 */
 Area.prototype.tension = function( value ) {
 	var self = this,
@@ -203,26 +201,24 @@ Area.prototype.tension = function( value ) {
 		return this._config.interpolation.tension;
 	}
 	
-	Validator( value, rules, set );
-
-	return this;
-
-	function set( errors ) {
+	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			return;
+			throw new Error( 'tension()::invalid input argument.' );
 		}
 		self._config.interpolation.tension = value;
 		self._path.tension( value );
-	}
-};
+	});
+
+	return this;
+
+}; // end METHOD tension()
 
 /**
 * METHOD: labels( arr )
 *	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
 *
 * @param {array} arr - an array of labels (strings)
-* 
 * @returns {object|array} area instance or an array of labels
 */
 Area.prototype.labels = function ( arr ) {
@@ -233,17 +229,16 @@ Area.prototype.labels = function ( arr ) {
 		return this._config.labels;
 	}
 	
-	Validator( arr, rules, set );
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._config.labels = arr;
-	}
 }; // end METHOD labels()
 
 

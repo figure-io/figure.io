@@ -50,7 +50,6 @@
 *	Data constructor. Creates a new data instance.
 *
 * @param {array} data - input data is expected to be an array of arrays; e.g., [[[0,0],[1,1],...,[N,N]]] or [[{x:0,y:0},{x:1,y:1},...{x:N,y:N}]]. Elements in the outer array are treated as separate datasets.
-*
 * @returns {object} data instance
 */
 var Data = function( data ) {
@@ -81,7 +80,6 @@ var Data = function( data ) {
 *	Transform raw data into a format amenable to graph generation.
 *
 * @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
-* 
 * @returns {object} data instance
 */
 Data.prototype.transform = function( dim ) {
@@ -95,10 +93,10 @@ Data.prototype.transform = function( dim ) {
 		arr = [];
 
 	if ( !arguments.length ) {
-		throw new Error( 'insufficient input arguments. The number of dimensions to transform must be provided.' );
+		throw new Error( 'transform()::insufficient input arguments. The number of dimensions to transform must be provided.' );
 	}
 	if ( dim < 1 || dim > 3 ) {
-		throw new Error( 'invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
+		throw new Error( 'transform()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
 	}
 	data = d3.range( data.length ).map( function ( id ) {
 		return data[ id ].map( function ( d, i ) {
@@ -123,7 +121,6 @@ Data.prototype.transform = function( dim ) {
 * @param {number} min - min defines the vector lower bound
 * @param {number} max - max defines the vector upper bound
 * @param {number} increment - distance between successive vector elements
-*
 * @returns {array} a 1-dimensional array
 */
 Data.prototype.linspace = function ( min, max, increment ) {
@@ -147,7 +144,6 @@ Data.prototype.linspace = function ( min, max, increment ) {
 *
 * @param {array} data - data over which the min is determined
 * @param {function} accessor - data accessor specifying how to access data values
-*
 * @returns {number} min data value
 */
 Data.prototype.min = function( data, accessor ) {
@@ -166,7 +162,6 @@ Data.prototype.min = function( data, accessor ) {
 *
 * @param {array} data - data over which the max is determined
 * @param {function} accessor - data accessor specifying how to access data values
-*
 * @returns {number} max data value
 */
 Data.prototype.max = function( data, accessor ) {
@@ -185,7 +180,6 @@ Data.prototype.max = function( data, accessor ) {
 *
 * @param {function} accessor - data accessor specifying the data to bin
 * @param {array} edges - (optional) 1d vector of edges defining bins; if not provided, a default edge vector is created of 21 bins where the start and end edge are defined by the data.
-*
 * @returns {object} data instance
 */
 Data.prototype.histc = function( accessor, edges ) {
@@ -194,7 +188,7 @@ Data.prototype.histc = function( accessor, edges ) {
 		min, max, numEdges = 21, binWidth;
 
 	if ( !accessor ) {
-		throw new Error( 'insufficient input arguments. An data value accessor must be provided.' );
+		throw new Error( 'histc()::insufficient input arguments. An data value accessor must be provided.' );
 	}
 
 	// Convert data to standard representation; needed for non-deterministic accessors:
@@ -255,7 +249,6 @@ Data.prototype.histc = function( accessor, edges ) {
 * @param {function} yValue - data accessor specifying the data to bin along the second dimension
 * @param {array} xEdges - (optional) 1d vector of edges defining bins along the first dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
 * @param {array} yEdges - (optional) 1d vector of edges defining bins along the second dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
-*
 * @returns {object} data instance
 */
 Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
@@ -266,7 +259,7 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 		min, max;
 
 	if ( !xValue || !yValue ) {
-		throw new Error( 'insufficient input arguments. Both an x-value and y-value accessor must be supplied.' );
+		throw new Error( 'hist2c()::insufficient input arguments. Both an x-value and y-value accessor must be supplied.' );
 	}
 
 	// Convert data to standard representation; needed for non-deterministic accessors:
@@ -340,7 +333,6 @@ Data.prototype.data = function() {
 *	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
 *
 * @param {function} fcn - x-value accessor
-* 
 * @returns {function} x-value accessor
 */
 Data.prototype.x = function( fcn ) {
@@ -351,25 +343,23 @@ Data.prototype.x = function( fcn ) {
 		return this._xValue;
 	}
 	
-	Validator( fcn, rules, set );
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'x()::invalid input argument.' );
+		}
+		self._xValue = fcn;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._xValue = fcn;
-	}
-};
+}; // end METHOD x()
 
 /**
 * METHOD: y( fcn )
 *	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
 *
 * @param {function} fcn - y-value accessor
-* 
 * @returns {function} y-value accessor
 */
 Data.prototype.y = function( fcn ) {
@@ -380,25 +370,23 @@ Data.prototype.y = function( fcn ) {
 		return this._yValue;
 	}
 	
-	Validator( fcn, rules, set );
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'y()::invalid input argument.' );
+		}
+		self._yValue = fcn;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._yValue = fcn;
-	}
-};
+}; // end METHOD y()
 
 /**
 * METHOD: z( fcn )
 *	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
 *
 * @param {function} fcn - z-value accessor
-* 
 * @returns {function} z-value accessor
 */
 Data.prototype.z = function( fcn ) {
@@ -409,18 +397,17 @@ Data.prototype.z = function( fcn ) {
 		return this._zValue;
 	}
 	
-	Validator( fcn, rules, set );
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'z()::invalid input argument.' );
+		}
+		self._zValue = fcn;
+	});
 
 	return this;
 
-	function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			return;
-		}
-		self._zValue = fcn;
-	}
-};
+}; // end METHOD z()
 
 /**
 * METHOD: config()

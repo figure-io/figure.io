@@ -15,13 +15,14 @@ TODO
 3. 	Plot captioning (annotations)
 
 
+### Canvas
+
+1. 	Background option
+
 
 ### Graph
 
-1. 	x,y,z limits: convenience method for xMin,xMax,...,zMax
-2. 	Include graph method to turn background on or off (boolean)
-3. 	
-4. 	Z analog to width (x) and height (y)
+1. 	Z analog to width (x) and height (y)
 
 ### Axes
 
@@ -45,7 +46,9 @@ TODO
 2. 	Graph xRange, yRange, zRange: need to check for length==2
 3. 	Check if boolean
 4. 	Multi-parameter validation
-5. 	Instead of console.errors, throw an error
+5. 	
+6. 	Graph x,y,z domain: need to check for length==2
+7. 	Graph check if bkgd boolean
 
 
 ### Task Runner
