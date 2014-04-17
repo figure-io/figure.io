@@ -86,6 +86,10 @@
 		// Add a title:
 		annotations.title( 'Title' );
 
+		annotations = xfig.annotations( graph );
+		annotations.create();
+		annotations.title( 'Subtitle' );
+
 	});
 
 })();
