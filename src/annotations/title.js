@@ -59,7 +59,7 @@ var Title = function( annotations ) {
 	this._children = {};
 	this._config = {
 		'width': 200,
-		'height': 20,
+		'height': 28,
 		'position': {
 			'left': 0,
 			'top': 0
