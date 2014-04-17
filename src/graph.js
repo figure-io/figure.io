@@ -64,8 +64,6 @@ var Graph = function( canvas ) {
 		"width": 600,
 		"position": {
 			"top": 80,
-			"right": 20,
-			"bottom": 80,
 			"left": 90
 		},
 		"background": false,
@@ -882,15 +880,15 @@ Graph.prototype.background = function( bool ) {
 * METHOD: position( value )
 *	Convenience method to set multple position values. If a value is supplied, defines the graph position. If no value is supplied, returns the graph position.
 *
-* @param {object} value - object with the following properties: left, right, top, bottom. All values assigned to properties should be numbers.
+* @param {object} value - object with the following properties: left, top. All values assigned to properties should be numbers.
 * @returns {object|object} graph instance or position object
 */
 Graph.prototype.position = function( value ) {
-	var position = this._config.position,
-		rules = 'object|has_properties[left,right,top,bottom]';
+	var self = this,
+		rules = 'object|has_properties[left,top]';
 
 	if ( !arguments.length ) {
-		return position;
+		return this._config.position;
 	}
 
 	Validator( value, rules, function set( errors ) {
@@ -912,7 +910,7 @@ Graph.prototype.position = function( value ) {
 		}
 
 		// Set the value:
-		position = value;
+		self._config.position = value;
 	});
 	
 	return this;
@@ -921,12 +919,11 @@ Graph.prototype.position = function( value ) {
 
 /**
 * METHOD: left( value )
-*	position-left setter and getter. If a value is supplied, defines the graph position-left. If no value is supplied, returns the graph position-left.
+*	Position-left setter and getter. If a value is supplied, defines the graph position-left. If no value is supplied, returns the graph position-left.
 *
 * @param {number} value - desired graph position-left.
 * @returns {object|number} - graph instance or position left value
 */
-
 Graph.prototype.left = function( value ) {
 	var position = this._config.position,
 		rules = 'number';
@@ -948,41 +945,12 @@ Graph.prototype.left = function( value ) {
 }; // end METHOD left()
 
 /**
-* METHOD: right( value )
-*	position-right setter and getter. If a value is supplied, defines the graph position-right. If no value is supplied, returns the graph position-right.
-*
-* @param {number} value - desired graph position-right.
-* @returns {object|number} - graph instance or position right value
-*/
-
-Graph.prototype.right = function( value ) {
-	var position = this._config.position,
-		rules = 'number';
-
-	if ( !arguments.length ) {
-		return position.right;
-	}
-
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'right()::invalid input argument.' );
-		}
-		position.right = value;
-	});
-
-	return this;
-
-}; // end METHOD right()
-
-/**
 * METHOD: top( value )
-*	position-top setter and getter. If a value is supplied, defines the graph position-top. If no value is supplied, returns the graph position-top.
+*	Position-top setter and getter. If a value is supplied, defines the graph position-top. If no value is supplied, returns the graph position-top.
 *
 * @param {number} value - desired graph position-top.
 * @returns {object|number} - graph instance or position top value
 */
-
 Graph.prototype.top = function( value ) {
 	var position = this._config.position,
 		rules = 'number';
@@ -1002,34 +970,6 @@ Graph.prototype.top = function( value ) {
 	return this;
 
 }; // end METHOD top()
-
-/**
-* METHOD: bottom( value )
-*	position-bottom setter and getter. If a value is supplied, defines the graph position-bottom. If no value is supplied, returns the graph position-bottom.
-*
-* @param {number} value - desired graph position-bottom.
-* @returns {object|number} - graph instance or position bottom value
-*/
-
-Graph.prototype.bottom = function( value ) {
-	var position = this._config.position,
-		rules = 'number';
-
-	if ( !arguments.length ) {
-		return position.bottom;
-	}
-
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'bottom()::invalid input argument.' );
-		}
-		position.bottom = value;
-	});
-
-	return this;
-
-}; // end METHOD bottom()
 
 /**
 * METHOD: data( data )

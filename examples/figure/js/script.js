@@ -10,7 +10,9 @@
 		axes,
 		data,
 		area,
-		annotations;
+		annotations,
+		title,
+		text;
 
 	// [0] Select the element to which to append the figure:
 	_selection = document.querySelector( '.main' );
@@ -35,8 +37,6 @@
 		.height( 400 )
 		.position({
 			'left': 90,
-			'right': 20,
-			'bottom': 80,
 			'top': 80
 		})
 		.xMin( 0 )
@@ -83,12 +83,39 @@
 		// Create the annotations element:
 		annotations.create();
 
-		// Add a title:
-		annotations.title( 'Title' );
+		// [7.1] Instantiate a new title instance and configure:
+		title = annotations.title()
+			.position({
+				'left': 300,
+				'top': 10
+			});
 
+		// Create the title element:
+		title.create( 'Title' );
+
+		// [8] Instantiate a new annotations generator and configure, but this time do so for a graph element:
 		annotations = xfig.annotations( graph );
+
+		// Create the annotations element:
 		annotations.create();
-		annotations.title( 'Subtitle' );
+
+		// [8.1] Instantiate a new title instance and configure:
+		title = annotations.title()
+			.top( -20 )
+			.left( 0 );
+
+		// Add a (sub)title:
+		title.create( 'Subtitle' );
+
+		// [8.2] Instantiate a new text instance and configure:
+		text = annotations.text()
+			.width( 200 )
+			.height( 100 )
+			.top( 100 )
+			.left( 400 );
+
+		// Add a text annotation:
+		text.create( 'This is my text annotation, which may run multiple lines.' );
 
 	});
 
