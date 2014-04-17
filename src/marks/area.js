@@ -1,6 +1,6 @@
 /**
 *
-*	FIGURE: area (marks)
+*	MARKS: area
 *
 *
 *

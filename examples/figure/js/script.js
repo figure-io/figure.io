@@ -10,6 +10,7 @@
 		axes,
 		data,
 		area,
+		histogram,
 		annotations,
 		title,
 		text;
@@ -63,12 +64,12 @@
 	graph.create();
 
 	// Get data:
-	d3.json( 'data/data.json', function ( error, json ) {
+	d3.json( 'data/area.data.json', function ( error, json ) {
 
 		// [5] Instantiate a new data generator and configure:
 		data = xfig.data( json )
-			.x( function( d ) { return d[ 0 ]; } )
-			.y( function( d ) { return d[ 1 ]; } );
+			.x( function ( d ) { return d[ 0 ]; } )
+			.y( function ( d ) { return d[ 1 ]; } );
 
 		// Transform the data:
 		data.transform( 2 );
@@ -101,7 +102,7 @@
 
 		// [8.1] Instantiate a new title instance and configure:
 		title = annotations.title()
-			.top( -20 )
+			.top( -30 )
 			.left( 0 );
 
 		// Add a (sub)title:
@@ -117,14 +118,14 @@
 		// Add a text annotation:
 		text.create( 'This is my text annotation, which may run multiple lines.' );
 
-		// Repeat the above for another dataset:
-		subplot1();
-
 	});
 
-	function subplot1() {
+	// Repeat the above for another dataset:
+	another_graph();
 
-		var graph, data, area, axes, annotations, title, text;
+	function another_graph() {
+
+		var graph, data, histogram, edges, axes, annotations, title, text;
 
 		// [9] Instantiate a new graph generator and configure:
 		graph = xfig.graph( canvas )
@@ -142,15 +143,19 @@
 		graph.create();
 
 		// Get data:
-		d3.json( 'data/data.json', function ( error, json ) {
+		d3.json( 'data/histogram.data.json', function ( error, json ) {
 
 			// [10] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function( d ) { return d[ 0 ]; } )
-				.y( function( d ) { return d[ 1 ]; } );
+				.x( function ( d ) { return d[ 0 ]; } )
+				.y( function ( d ) { return d[ 1 ]; } );
 
-			// Transform the data:
-			data.transform( 2 );
+			// Create edges to define our histogram bins:
+			edges = data.linspace( -0.025, 1.025, 0.05 );
+			
+			// Transform the data and histogram the data:
+			data.transform( 2 )
+				.histc( function ( d ) { return d[ 1 ]; }, edges );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -158,13 +163,12 @@
 					return d[ 1 ];
 				}));
 
-			// [11] Instantiate a new area generator and configure:
-			area = xfig.area( graph )
-				.interpolation( 'basis' )
+			// [11] Instantiate a new histogram generator and configure:
+			histogram = xfig.histogram( graph )
 				.labels( [ 'data 0' ] );
 
-			// Create the area:
-			area.create();
+			// Create the histogram:
+			histogram.create();
 
 			// [12] Instantiate a new axes generator and configure:
 			axes = xfig.axes( graph );
@@ -180,8 +184,8 @@
 
 			// [13.1] Instantiate a new title instance and configure:
 			title = annotations.title()
-				.top( -20 )
-				.left( 0 );
+				.top( -30 )
+				.left( 250 );
 
 			// Add a (sub)title:
 			title.create( 'Subtitle' );
@@ -190,7 +194,7 @@
 			text = annotations.text()
 				.width( 200 )
 				.height( 100 )
-				.top( 100 )
+				.top( 50 )
 				.left( 310 );
 
 			// Add a text annotation:

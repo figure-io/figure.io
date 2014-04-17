@@ -42,6 +42,13 @@ body {
 	fill-opacity: 1;
 }
 
+.graph .column {
+	fill: #474747;
+	stroke: #fff;
+	stroke-width: 2px;
+	stroke-opacity: 90%;
+}
+
 .graph .axis path {
 	fill: none;
 }

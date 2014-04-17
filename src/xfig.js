@@ -96,6 +96,16 @@ xfig.area = function( graph ) {
 	return new Area( graph );
 };
 
+xfig.histogram = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'histogram()::graph not provided. Unable to initialize histogram constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'histogram()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Histogram( graph );
+};
+
 xfig.annotations = function( parent ) {
 	if ( !parent ) {
 		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );
