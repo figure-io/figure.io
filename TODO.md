@@ -32,14 +32,20 @@ TODO
 
 ### Marks
 
-1. 	
-2. 	
+1. 	line
+2. 	bar
+3.	column
+4. 	gauge
+5. 	multipanel line
+6. 	multipanel histogram
+7. 	timeseries histogram
+8.	
 
 ### Annotations
 
 1. 	Legend
 2. 	Caption 
-3. 	Text
+3. 	Allow text positioning to be specified in data units (?) --> annotations --> text would need access to graph x,y scales
 
 ### Utils
 
@@ -62,4 +68,4 @@ TODO
 
 1. 	Setup Gulp
 2. 	JSLint
-3. 	Concat, minify, and wrap in closure src JS
+3. 	Concat, minify, and wrap in closure in src JS

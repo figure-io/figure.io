@@ -96,6 +96,16 @@ xfig.area = function( graph ) {
 	return new Area( graph );
 };
 
+xfig.line = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'line()::graph not provided. Unable to initialize line constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'line()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Line( graph );
+};
+
 xfig.histogram = function( graph ) {
 	if ( !graph ) {
 		throw new Error( 'histogram()::graph not provided. Unable to initialize histogram constructor.' );
