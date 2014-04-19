@@ -145,6 +145,11 @@ var Graph = function( canvas ) {
 	} else {
 		canvas._config.graph = [ this._config ];
 	}
+	if ( canvas._children.hasOwnProperty( 'graph' ) ) {
+		canvas._children.graph.push( this );
+	} else {
+		canvas._children.graph = [ this ];
+	}
 
 	return this;
 
@@ -160,8 +165,7 @@ var Graph = function( canvas ) {
 Graph.prototype.create = function( type ) {
 
 	// VARIABLES //
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		position = this._config.position,
 		width = this._config.width,
 		height = this._config.height,
@@ -197,13 +201,6 @@ Graph.prototype.create = function( type ) {
 			.attr( 'width', width )
 			.attr( 'height', height );
 	} // end IF (background)
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'graph' ) ) {
-		pChildren.graph.push( this );
-	} else {
-		pChildren.graph = [ this ];
-	}
 
 	return this;
 

@@ -95,6 +95,11 @@ var Line = function( graph ) {
 	} else {
 		graph._config.marks = [ this._config ];
 	}
+	if ( graph._children.hasOwnProperty( 'marks' ) ) {
+		graph._children.marks.push( this );
+	} else {
+		graph._children.marks = [ this ];
+	}
 
 	return this;
 
@@ -108,8 +113,7 @@ var Line = function( graph ) {
 */
 Line.prototype.create = function() {
 
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
 
@@ -127,15 +131,6 @@ Line.prototype.create = function() {
 		.attr( 'class', 'line' )
 		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
 		.attr( 'd', this._path );
-
-	// REGISTER //
-
-	// Marks:
-	if ( pChildren.hasOwnProperty( 'marks' ) ) {
-		pChildren.marks.push( this );
-	} else {
-		pChildren.marks = [ this ];
-	}
 
 	return this;
 

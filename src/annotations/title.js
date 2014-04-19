@@ -73,6 +73,11 @@ var Title = function( annotations ) {
 	} else {
 		annotations._config.title = [ this._config ];
 	}
+	if ( annotations._children.hasOwnProperty( 'title' ) ) {
+		annotations._children.title.push( this );
+	} else {
+		annotations._children.title = [ this ];
+	}
 
 	return this;
 
@@ -87,8 +92,7 @@ var Title = function( annotations ) {
 */
 Title.prototype.create = function( title ) {
 
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		width = this._config.width,
 		height = this._config.height,
 		pos = this._config.position;
@@ -106,13 +110,6 @@ Title.prototype.create = function( title ) {
 		.attr( 'property', 'title' )
 		.attr( 'class', 'title' )
 		.html( title );
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'title' ) ) {
-		pChildren.title.push( this );
-	} else {
-		pChildren.title = [ this ];
-	}
 
 	return this;
 

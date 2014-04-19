@@ -69,6 +69,11 @@ var Canvas = function( figure ) {
 	} else {
 		figure._config.canvas = [ this._config ];
 	}
+	if ( figure._children.hasOwnProperty( 'canvas' ) ) {
+		figure._children.canvas.push( this );
+	} else {
+		figure._children.canvas = [ this ];
+	}
 
 	return this;
 
@@ -84,8 +89,7 @@ var Canvas = function( figure ) {
 Canvas.prototype.create = function( type ) {
 
 	// VARIABLES //
-	var self = this,
-		pChildren = this._parent._children;
+	var self = this;
 
 	// CHECKS!!!
 	if ( !type ) {
@@ -102,13 +106,6 @@ Canvas.prototype.create = function( type ) {
 		default:
 			throw new Error( 'create()::unrecognized canvas type: ' + type );
 	} // end SWITCH (type)
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'canvas' ) ) {
-		pChildren.canvas.push( this );
-	} else {
-		pChildren.canvas = [ this ];
-	}
 
 	return this;
 

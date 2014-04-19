@@ -70,6 +70,11 @@ var Annotations = function( parent ) {
 	} else {
 		parent._config.annotations = [ this._config ];
 	}
+	if ( parent._children.hasOwnProperty( 'annotations' ) ) {
+		parent._children.annotations.push( this );
+	} else {
+		parent._children.annotations = [ this ];
+	}
 
 	return this;
 
@@ -83,8 +88,7 @@ var Annotations = function( parent ) {
 */
 Annotations.prototype.create = function() {
 
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		position = this._config.position;
 	
 	// Create the annotation element:
@@ -92,13 +96,6 @@ Annotations.prototype.create = function() {
 		.attr( 'property', 'annotations' )
 		.attr( 'class', 'annotations' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'annotations' ) ) {
-		pChildren.annotations.push( this );
-	} else {
-		pChildren.annotations = [ this ];
-	}
 
 	return this;
 

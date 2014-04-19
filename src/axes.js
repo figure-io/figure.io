@@ -116,6 +116,11 @@ var Axes = function( graph ) {
 	} else {
 		graph._config.axes = [ this._config ];
 	}
+	if ( graph._children.hasOwnProperty( 'axes' ) ) {
+		graph._children.axes.push( this );
+	} else {
+		graph._children.axes = [ this ];
+	}
 
 	return this;
 
@@ -129,8 +134,7 @@ var Axes = function( graph ) {
 */
 Axes.prototype.create = function() {
 
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		height = this._parent._config.height,
 		width = this._parent._config.width,
 		xAxis, yAxis;
@@ -179,13 +183,6 @@ Axes.prototype.create = function() {
 
 		yAxis.selectAll( '.domain' )
 			.attr( 'property', 'axis_domain' );
-	}
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'axes' ) ) {
-		pChildren.axes.push( this );
-	} else {
-		pChildren.axes = [ this ];
 	}
 
 	return this;

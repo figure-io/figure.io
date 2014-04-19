@@ -73,6 +73,11 @@ var Text = function( annotations ) {
 	} else {
 		annotations._config.text = [ this._config ];
 	}
+	if ( annotations._children.hasOwnProperty( 'text' ) ) {
+		annotations._children.text.push( this );
+	} else {
+		annotations._children.text = [ this ];
+	}
 
 	return this;
 
@@ -87,8 +92,7 @@ var Text = function( annotations ) {
 */
 Text.prototype.create = function( text ) {
 
-	var pChildren = this._parent._children,
-		selection = this._parent._root,
+	var selection = this._parent._root,
 		width = this._config.width,
 		height = this._config.height,
 		pos = this._config.position;
@@ -106,13 +110,6 @@ Text.prototype.create = function( text ) {
 		.attr( 'property', 'annotation' )
 		.attr( 'class', 'text' )
 		.html( text );
-
-	// REGISTER //
-	if ( pChildren.hasOwnProperty( 'text' ) ) {
-		pChildren.text.push( this );
-	} else {
-		pChildren.text = [ this ];
-	}
 
 	return this;
 
