@@ -213,7 +213,7 @@ var Validator;
 		isNull: function( value ) {
 			var error;
 			if ( !_.isNull( value ) ) {
-				error= {
+				error = {
 					'rule': 'isNull',
 					'message': 'ERROR:provided value[' + value + '] is not null.'
 				};
@@ -221,6 +221,36 @@ var Validator;
 			}
 			return;
 		}, // end METHOD isNull()
+
+		isEmpty: function( value ) {
+			var error;
+			try {
+				if ( value.length ) {
+					error = {
+						'rule': 'isEmpty',
+						'message': 'ERROR:provided value[' + value +'] is not empty.'
+					};
+					return [ error ];
+				}
+			} catch ( e ) {
+				if ( _.isPlainObject( value ) ) {
+					for ( var key in value ) {
+						if ( value.hasOwnProperty( key ) ) {
+							error = {
+								'rule': 'isEmpty',
+								'message': 'ERROR:provided value[' + value +'] is not empty.'
+							};
+							return [ error ];
+						}
+					} // end FOR key
+				}
+				error = {
+					'rule': 'isEmpty',
+					'message': 'ERROR:input data type is not compatible with this rule.'
+				};
+				return [ error ];
+			}
+		}
 
 	}; // end VALIDATE
 
@@ -237,7 +267,8 @@ var Validator;
 		"less_than": validate.less_than,
 		"matches": validate.matches,
 		"interval": validate.interval,
-		"null": validate.isNull
+		"null": validate.isNull,
+		"empty": validate.isEmpty
 	};
 
 		

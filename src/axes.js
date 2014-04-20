@@ -545,31 +545,32 @@ Axes.prototype.yOuterTickSize = function( value ) {
 
 /**
 * METHOD: xTickFormat( value, flg )
-*	x-axis tick format setter and getter. If a format is supplied, sets the x-axis tick format. If no format is supplied, gets the x-axis tick format. If the desired formatting is time formatting, a boolean (true) should be passed as the second argument.
+*	x-axis tick format setter and getter. If a format is supplied, sets the x-axis tick format. If no format is supplied, gets the x-axis tick format. 
 *
 * @param {string} value - x-axis tick format; available time formatting: %Y, %B, %b, %a, %d, %I, %p, %M, %S, %L.
-* @param {boolean} flg - (optional) flag indicating if time formatting should be used
 * @returns {object|string} axes instance or x-axis tick format
 */
-Axes.prototype.xTickFormat = function( value, flg ) {
+Axes.prototype.xTickFormat = function( value ) {
 	var self = this,
+		timeFormats = ['%Y','%B','%b','%a','%d','%I','%p','%M','%S','%L'],
 		rules;
 
 	if ( !arguments.length ) {
 		return this._config[ 0 ].ticks.format;
 	}
 
-	switch ( flg ) {
-		case 'time':
-			// https://github.com/mbostock/d3/wiki/Time-Scales
-			rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
-			break;
-		case 'none':
-			rules = 'null';
-			break;
-		default:
-			rules = 'string';
-			break;
+	if ( timeFormats.indexOf( value ) !== -1 ) {
+		// https://github.com/mbostock/d3/wiki/Time-Scales
+		rules = 'string|matches[' + timeFormats.join( ',' ) + ']';
+		flg = 'time';
+	} else if ( value === '' ) {
+		rules = 'string|empty';
+		flg = 'empty';
+	} else if ( value === null ) {
+		rules = 'null';
+		flg = 'none';
+	} else {
+		rules = 'string';
 	}
 
 	Validator( value, rules, function set( errors ) {
@@ -581,6 +582,12 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 		switch ( flg ) {
 			case 'time':
 				format = d3.time.format( value );
+				break;
+			case 'empty':
+				format = '';
+				break;
+			case 'none':
+				format = null;
 				break;
 			default:
 				format = d3.format( value );
@@ -596,31 +603,32 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 
 /**
 * METHOD: yTickFormat( value, flg )
-*	y-axis tick format setter and getter. If a format is supplied, sets the y-axis tick format. If no format is supplied, gets the y-axis tick format. If the desired formatting is time formatting, a boolean (true) should be passed as the second argument.
+*	y-axis tick format setter and getter. If a format is supplied, sets the y-axis tick format. If no format is supplied, gets the y-axis tick format. 
 *
 * @param {string} value - y-axis tick format; available time formatting: %Y, %B, %b, %a, %d, %I, %p, %M, %S, %L.
-* @param {boolean} flg - (optional) flag indicating if time formatting should be used
 * @returns {object|string} axes instance or y-axis tick format
 */
-Axes.prototype.yTickFormat = function( value, flg ) {
+Axes.prototype.yTickFormat = function( value ) {
 	var self = this,
+		timeFormats = ['%Y','%B','%b','%a','%d','%I','%p','%M','%S','%L'],
 		rules;
 
 	if ( !arguments.length ) {
 		return this._config[ 1 ].ticks.format;
 	}
 
-	switch ( flg ) {
-		case 'time':
-			// https://github.com/mbostock/d3/wiki/Time-Scales
-			rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
-			break;
-		case 'none':
-			rules = 'null';
-			break;
-		default:
-			rules = 'string';
-			break;
+	if ( timeFormats.indexOf( value ) !== -1 ) {
+		// https://github.com/mbostock/d3/wiki/Time-Scales
+		rules = 'string|matches[' + timeFormats.join( ',' ) + ']';
+		flg = 'time';
+	} else if ( value === '' ) {
+		rules = 'string|empty';
+		flg = 'empty';
+	} else if ( value === null ) {
+		rules = 'null';
+		flg = 'none';
+	} else {
+		rules = 'string';
 	}
 
 	Validator( value, rules, function set( errors ) {
@@ -632,6 +640,12 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 		switch ( flg ) {
 			case 'time':
 				format = d3.time.format( value );
+				break;
+			case 'empty':
+				format = '';
+				break;
+			case 'none':
+				format = null;
 				break;
 			default:
 				format = d3.format( value );

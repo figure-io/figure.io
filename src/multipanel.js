@@ -102,7 +102,7 @@ var Multipanel = function( canvas ) {
 				"ticks": {
 					"display": true,
 					"num": 5,
-					"format": ',.0f',
+					"format": null,
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
@@ -117,7 +117,7 @@ var Multipanel = function( canvas ) {
 				"ticks": {
 					"display": true,
 					"num": 5,
-					"format": ',.0f',
+					"format": null,
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
@@ -183,7 +183,8 @@ Multipanel.prototype.create = function( type ) {
 		height = config.height,
 		total = config.total,
 		graphHeight = Math.floor( height / total ),
-		graph, axes;
+		graph, axes,
+		xAxisFLG, yAxisFLG;
 
 	config.scales[ 1 ].range.max = graphHeight;
 
@@ -198,11 +199,22 @@ Multipanel.prototype.create = function( type ) {
 	// Create the graphs and axes:
 	for ( var i = 0; i < total; i++ ) {
 
+		// Formatting flags:
+		xAxisFLG = false;
+		yAxisFLG = true;
+
+		if ( i === total-1 ) {
+			xAxisFLG = true;
+		}
+		if ( i === 0 ) {
+			yAxisFLG = false;
+		}
+
 		// Graph:
 		graph = createGraph( this, graphHeight, graphHeight*i, new Data() );
 
 		// Axes:
-		axes = createAxes( graph, false );
+		axes = createAxes( graph, xAxisFLG, yAxisFLG );
 
 	} // end FOR i
 
@@ -242,13 +254,13 @@ Multipanel.prototype.create = function( type ) {
 
 	} // end FUNCTION createGraph()
 
-	function createAxes( graph, display ) {
-		var axes;
+	function createAxes( graph, xAxisFLG, yAxisFLG ) {
+		var axes, yTicks;
 
 		axes = new Axes( graph );
 
-		axes.xLabel( config.axes[ 0 ].label )
-			.yLabel( config.axes[ 1 ].label )
+		axes.yLabel( config.axes[ 1 ].label )
+			.yTickFormat( config.axes[ 1 ].ticks.format )
 			.xNumTicks( config.axes[ 0 ].ticks.num )
 			.yNumTicks( config.axes[ 1 ].ticks.num )
 			.xTickPadding( config.axes[ 0 ].ticks.padding )
@@ -259,16 +271,34 @@ Multipanel.prototype.create = function( type ) {
 			.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
 			.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
 			.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
-			.xTickFormat( '' )
-			.yTickFormat( config.axes[ 1 ].ticks.format )
-			.xTickDisplay( display )
+			.xTickDisplay( xAxisFLG )
 			.yTickDisplay( config.axes[ 1 ].ticks.display )
 			.xAxisOrient( config.axes[ 0 ].orient )
 			.yAxisOrient( config.axes[ 1 ].orient )
 			.xAxisDisplay( config.axes[ 0 ].display )
 			.yAxisDisplay( config.axes[ 1 ].display );
 
-		return axes.create();
+		if ( xAxisFLG ) {
+			axes.xLabel( config.axes[ 0 ].label )
+				.xTickFormat( config.axes[ 0 ].ticks.format );
+		} else {
+			axes.xLabel( '' )
+				.xTickFormat( '' );
+		}
+
+		axes.create();
+
+		if ( yAxisFLG ) {
+			yTicks = axes._root.selectAll( '.y.axis .tick' );
+
+			yTicks.style( 'visibility', function ( d, i ) {
+				if ( i === yTicks[ 0 ].length-1 ) {
+					return 'hidden';
+				}
+			});
+		}
+
+		return axes;
 
 	} // end FUNCTION createAxes()
 
@@ -324,6 +354,7 @@ Multipanel.prototype.width = function( value ) {
 				throw new Error( 'width()::invalid input argument. ' );
 			}
 			self._config.width = value;
+			self._config.scales[ 0 ].range.max = value;
 		});
 	
 	}
