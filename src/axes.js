@@ -573,7 +573,7 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 		} else {
 			format = d3.format( value );
 		}
-		self._config[ 0 ].ticks.format = format;
+		self._config[ 0 ].ticks.format = value;
 		self._xAxis.tickFormat( format );
 	});
 	
@@ -615,7 +615,7 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 		} else {
 			format = d3.format( value );
 		}
-		self._config[ 1 ].ticks.format = format;
+		self._config[ 1 ].ticks.format = value;
 		self._yAxis.tickFormat( format );
 	});
 	

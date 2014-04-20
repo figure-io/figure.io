@@ -28,7 +28,7 @@ TODO
 
 ### multipanel
 
-1.	Validate num panels on create.
+1.	Validate total panels on create.
 2. 	Add to meta data terms
 
 
