@@ -102,7 +102,7 @@ var Multipanel = function( canvas ) {
 				"ticks": {
 					"display": true,
 					"num": 5,
-					"format": null,
+					"format": ',.0f',
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
@@ -117,7 +117,7 @@ var Multipanel = function( canvas ) {
 				"ticks": {
 					"display": true,
 					"num": 5,
-					"format": null,
+					"format": ',.0f',
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
@@ -177,11 +177,15 @@ var Multipanel = function( canvas ) {
 Multipanel.prototype.create = function( type ) {
 
 	// VARIABLES //
-	var selection = this._parent._root,
-		position = this._config.position,
-		width = this._config.width,
-		height = this._config.height,
-		total = this._config.total;
+	var config = this._config,
+		selection = this._parent._root,
+		position = config.position,
+		height = config.height,
+		total = config.total,
+		graphHeight = Math.floor( height / total ),
+		graph, axes;
+
+	config.scales[ 1 ].range.max = graphHeight;
 
 	// MULTIPANEL //
 
@@ -191,12 +195,76 @@ Multipanel.prototype.create = function( type ) {
 		.attr( 'class', 'multipanel' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
-	// Create the graphs:
+	// Create the graphs and axes:
 	for ( var i = 0; i < total; i++ ) {
-
+		graph = createGraph( this, graphHeight, graphHeight*i, new Data() );
+		axes = createAxes( graph, false );
 	}
 
 	return this;
+
+	// FUNCTIONS //
+
+	function createGraph( parent, height, top, data ) {
+		var graph;
+
+		graph = new Graph( parent );
+
+		graph.width( config.width )
+			.height( height )
+			.position({
+				'left': 0,
+				'top': top
+			})
+			.xMin( config.scales[ 0 ].domain.min )
+			.xMax( config.scales[ 0 ].domain.max )
+			.yMin( config.scales[ 1 ].domain.min )
+			.yMax( config.scales[ 1 ].domain.max )
+			.xRange([
+				config.scales[ 0 ].range.min,
+				config.scales[ 0 ].range.max
+			])
+			.yRange([
+				config.scales[ 1 ].range.max,
+				config.scales[ 1 ].range.min
+			])
+			.xScale( config.scales[ 0 ].type )
+			.yScale( config.scales[ 1 ].type )
+			.background( config.background )
+			.data( data );
+
+		return graph.create();
+	}
+
+	function createAxes( graph, display ) {
+		var axes;
+
+		axes = new Axes( graph );
+
+		axes.xLabel( config.axes[ 0 ].label )
+			.yLabel( config.axes[ 1 ].label )
+			.xNumTicks( config.axes[ 0 ].ticks.num )
+			.yNumTicks( config.axes[ 1 ].ticks.num )
+			.xTickPadding( config.axes[ 0 ].ticks.padding )
+			.yTickPadding( config.axes[ 1 ].ticks.padding )
+			.xTickRotation( config.axes[ 0 ].ticks.rotation )
+			.yTickRotation( config.axes[ 1 ].ticks.rotation )
+			.xInnerTickSize( config.axes[ 0 ].ticks.innerSize )
+			.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
+			.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
+			.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
+			.xTickFormat( config.axes[ 0 ].ticks.format )
+			.yTickFormat( config.axes[ 1 ].ticks.format )
+			.xTickDisplay( display )
+			.yTickDisplay( config.axes[ 1 ].ticks.display )
+			.xAxisOrient( config.axes[ 0 ].orient )
+			.yAxisOrient( config.axes[ 1 ].orient )
+			.xAxisDisplay( config.axes[ 0 ].display )
+			.yAxisDisplay( config.axes[ 1 ].display );
+
+		return axes.create();
+
+	}
 
 }; // end METHOD create()
 
@@ -389,7 +457,7 @@ Multipanel.prototype.yMin = function( value ) {
 * @param {number} yMax - desired multipanel yMax.
 * @returns {object|number} multipanel instance or multipanel yMax.
 */
-Graph.prototype.yMax = function( value ) {
+Multipanel.prototype.yMax = function( value ) {
 	var domain = this._config.scales[ 1 ].domain,
 		rules = 'number';
 
@@ -1208,7 +1276,7 @@ Multipanel.prototype.yTickFormat = function( value, flg ) {
 * @param {boolean} bool - boolean flag indicating whether to display x-tick labels.
 * @returns {object|boolean} instance object or x-tick label display
 */
-Axes.prototype.xTickDisplay = function( bool ) {
+Multipanel.prototype.xTickDisplay = function( bool ) {
 	var self = this,
 		rules = 'boolean';
 

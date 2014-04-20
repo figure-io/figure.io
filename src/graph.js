@@ -510,7 +510,7 @@ Graph.prototype.xDomain = function( arr ) {
 		return [ domain.min, domain.max ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'xDomain()::invalid input argument. ' );
@@ -541,7 +541,7 @@ Graph.prototype.yDomain = function( arr ) {
 		return [ domain.min, domain.max ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'yDomain()::invalid input argument. ' );
@@ -572,7 +572,7 @@ Graph.prototype.zDomain = function( arr ) {
 		return [ domain.min, domain.max ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'zDomain()::invalid input argument. ' );
@@ -603,7 +603,7 @@ Graph.prototype.xRange = function( arr ) {
 		return [ range.min, range.max ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'xRange()::invalid input argument. ' );
@@ -634,7 +634,7 @@ Graph.prototype.yRange = function( arr ) {
 		return [ range.max, range.min ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'yRange()::invalid input argument. ' );
@@ -665,7 +665,7 @@ Graph.prototype.zRange = function( arr ) {
 		return [ range.min, range.max ];
 	}
 
-	Validator( value, rules, function set( errors ) {
+	Validator( arr, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
 			throw new Error( 'zRange()::invalid input argument. ' );

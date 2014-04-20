@@ -66,6 +66,16 @@ xfig.graph = function( canvas ) {
 	return new Graph( canvas );
 };
 
+xfig.multipanel = function( canvas ) {
+	if ( !canvas ) {
+		throw new Error( 'multipanel()::canvas not provided. Unable to initialize multipanel constructor.' );
+	}
+	if ( !( canvas instanceof Canvas ) ) {
+		throw new Error( 'multipanel()::invalid input parameter. Input argument must be a Canvas instance.' );
+	}
+	return new Multipanel( canvas );
+};
+
 xfig.data = function( data ) {
 	if ( !data ) {
 		throw new Error( 'data()::data not provided. Unable to initialize data constructor.' );
