@@ -36,6 +36,7 @@ TODO
 
 1. 	tick rotation
 2. 	tick display and axes display boolean validation
+3. 	add to meta data terms
 
 ### Marks
 
@@ -66,7 +67,7 @@ TODO
 2. 	Graph xRange, yRange, zRange: need to check for length==2
 3. 	Check if boolean
 4. 	Multi-parameter validation
-5. 	
+5. 	Null
 6. 	Graph x,y,z domain: need to check for length==2
 7. 	Graph, Canvas check if bkgd boolean
 

@@ -210,6 +210,18 @@ var Validator;
 			return;
 		}, // end METHOD isInteger()
 
+		isNull: function( value ) {
+			var error;
+			if ( !_.isNull( value ) ) {
+				error= {
+					'rule': 'isNull',
+					'message': 'ERROR:provided value[' + value + '] is not null.'
+				};
+				return [ error ];
+			}
+			return;
+		}, // end METHOD isNull()
+
 	}; // end VALIDATE
 
 	// Map the rules to a particular method:
@@ -224,7 +236,8 @@ var Validator;
 		"greater_than": validate.greater_than,
 		"less_than": validate.less_than,
 		"matches": validate.matches,
-		"interval": validate.interval
+		"interval": validate.interval,
+		"null": validate.isNull
 	};
 
 		

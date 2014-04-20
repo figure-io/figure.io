@@ -139,9 +139,13 @@ Axes.prototype.create = function() {
 		width = this._parent._config.width,
 		xAxis, yAxis;
 
+	this._root = selection.append( 'svg:g' )
+		.attr( 'property', 'axes' )
+		.attr( 'class', 'axes' );
+
 	// x-axis:
 	if ( this._config[ 0 ].display ) {
-		xAxis = selection.append( 'svg:g' )
+		xAxis = this._root.append( 'svg:g' )
 			.attr( 'property', 'axis' )
 			.attr( 'class', 'x axis' )
 			.attr( 'transform', 'translate(0,' + height + ')' )
@@ -164,7 +168,7 @@ Axes.prototype.create = function() {
 
 	// y-axis:
 	if ( this._config[ 1 ].display ) {
-		yAxis = selection.append( 'svg:g' )
+		yAxis = this._root.append( 'svg:g' )
 			.attr( 'property', 'axis' )
 			.attr( 'class', 'y axis' )
 			.call( this._yAxis );
@@ -555,11 +559,17 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 		return this._config[ 0 ].ticks.format;
 	}
 
-	if ( flg ) {
-		// https://github.com/mbostock/d3/wiki/Time-Scales
-		rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
-	} else {
-		rules = 'string';
+	switch ( flg ) {
+		case 'time':
+			// https://github.com/mbostock/d3/wiki/Time-Scales
+			rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
+			break;
+		case 'none':
+			rules = 'null';
+			break;
+		default:
+			rules = 'string';
+			break;
 	}
 
 	Validator( value, rules, function set( errors ) {
@@ -568,10 +578,13 @@ Axes.prototype.xTickFormat = function( value, flg ) {
 			console.error( errors );
 			throw new Error( 'xTickFormat()::invalid input arguments.' );
 		}
-		if ( flg ) {
-			format = d3.time.format( value );
-		} else {
-			format = d3.format( value );
+		switch ( flg ) {
+			case 'time':
+				format = d3.time.format( value );
+				break;
+			default:
+				format = d3.format( value );
+				break;
 		}
 		self._config[ 0 ].ticks.format = value;
 		self._xAxis.tickFormat( format );
@@ -597,11 +610,17 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 		return this._config[ 1 ].ticks.format;
 	}
 
-	if ( flg ) {
-		// https://github.com/mbostock/d3/wiki/Time-Scales
-		rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
-	} else {
-		rules = 'string';
+	switch ( flg ) {
+		case 'time':
+			// https://github.com/mbostock/d3/wiki/Time-Scales
+			rules = 'string|matches[%Y,%B,%b,%a,%d,%I,%p,%M,%S,%L]';
+			break;
+		case 'none':
+			rules = 'null';
+			break;
+		default:
+			rules = 'string';
+			break;
 	}
 
 	Validator( value, rules, function set( errors ) {
@@ -610,10 +629,13 @@ Axes.prototype.yTickFormat = function( value, flg ) {
 			console.error( errors );
 			throw new Error( 'yTickFormat()::invalid input arguments.' );
 		}
-		if ( flg ) {
-			format = d3.time.format( value );
-		} else {
-			format = d3.format( value );
+		switch ( flg ) {
+			case 'time':
+				format = d3.time.format( value );
+				break;
+			default:
+				format = d3.format( value );
+				break;
 		}
 		self._config[ 1 ].ticks.format = value;
 		self._yAxis.tickFormat( format );

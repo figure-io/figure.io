@@ -197,9 +197,14 @@ Multipanel.prototype.create = function( type ) {
 
 	// Create the graphs and axes:
 	for ( var i = 0; i < total; i++ ) {
+
+		// Graph:
 		graph = createGraph( this, graphHeight, graphHeight*i, new Data() );
+
+		// Axes:
 		axes = createAxes( graph, false );
-	}
+
+	} // end FOR i
 
 	return this;
 
@@ -234,7 +239,8 @@ Multipanel.prototype.create = function( type ) {
 			.data( data );
 
 		return graph.create();
-	}
+
+	} // end FUNCTION createGraph()
 
 	function createAxes( graph, display ) {
 		var axes;
@@ -253,7 +259,7 @@ Multipanel.prototype.create = function( type ) {
 			.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
 			.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
 			.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
-			.xTickFormat( config.axes[ 0 ].ticks.format )
+			.xTickFormat( '' )
 			.yTickFormat( config.axes[ 1 ].ticks.format )
 			.xTickDisplay( display )
 			.yTickDisplay( config.axes[ 1 ].ticks.display )
@@ -264,7 +270,7 @@ Multipanel.prototype.create = function( type ) {
 
 		return axes.create();
 
-	}
+	} // end FUNCTION createAxes()
 
 }; // end METHOD create()
 
