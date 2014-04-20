@@ -26,6 +26,12 @@ TODO
 
 1. 	Z analog to width (x) and height (y) (???)
 
+### multipanel
+
+1.	Validate num panels on create.
+2. 	Add to meta data terms
+
+
 ### Axes
 
 1. 	tick rotation

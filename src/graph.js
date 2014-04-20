@@ -287,7 +287,7 @@ Graph.prototype.height = function( value ) {
 */
 Graph.prototype.xMin = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 0 ].domain;
+		domain = this._config.scales[ 0 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -323,7 +323,7 @@ Graph.prototype.xMin = function( value ) {
 */
 Graph.prototype.xMax = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 0 ].domain;
+		domain = this._config.scales[ 0 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -359,7 +359,7 @@ Graph.prototype.xMax = function( value ) {
 */
 Graph.prototype.yMin = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 1 ].domain;
+		domain = this._config.scales[ 1 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -391,11 +391,11 @@ Graph.prototype.yMin = function( value ) {
 *	yMax setter and getter. If a value is supplied, defines the graph yMax. If no value is supplied, returns the graph yMax.
 *
 * @param {number} yMax - desired graph yMax.
-* @returns {object|number} graph instace or graph yMax.
+* @returns {object|number} graph instance or graph yMax.
 */
 Graph.prototype.yMax = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 1 ].domain;
+		domain = this._config.scales[ 1 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -431,7 +431,7 @@ Graph.prototype.yMax = function( value ) {
 */
 Graph.prototype.zMin = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 2 ].domain;
+		domain = this._config.scales[ 2 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -467,7 +467,7 @@ Graph.prototype.zMin = function( value ) {
 */
 Graph.prototype.zMax = function( value ) {
 	var self = this,
-		domain = this._config.scales[ 2 ].domain;
+		domain = this._config.scales[ 2 ].domain,
 		rules = 'number';
 
 	if ( !arguments.length ) {
@@ -503,7 +503,7 @@ Graph.prototype.zMax = function( value ) {
 */
 Graph.prototype.xDomain = function( arr ) {
 	var self = this,
-		domain = this._config.scales[ 0 ].domain;
+		domain = this._config.scales[ 0 ].domain,
 		rules = 'array';
 
 	if ( !arguments.length ) {
@@ -534,7 +534,7 @@ Graph.prototype.xDomain = function( arr ) {
 */
 Graph.prototype.yDomain = function( arr ) {
 	var self = this,
-		domain = this._config.scales[ 1 ].domain;
+		domain = this._config.scales[ 1 ].domain,
 		rules = 'array';
 
 	if ( !arguments.length ) {
@@ -565,7 +565,7 @@ Graph.prototype.yDomain = function( arr ) {
 */
 Graph.prototype.zDomain = function( arr ) {
 	var self = this,
-		domain = this._config.scales[ 2 ].domain;
+		domain = this._config.scales[ 2 ].domain,
 		rules = 'array';
 
 	if ( !arguments.length ) {
@@ -596,7 +596,7 @@ Graph.prototype.zDomain = function( arr ) {
 */
 Graph.prototype.xRange = function( arr ) {
 	var self = this,
-		range = this._config.scales[ 0 ].range;
+		range = this._config.scales[ 0 ].range,
 		rules = 'array';
 
 	if ( !arguments.length ) {
@@ -627,7 +627,7 @@ Graph.prototype.xRange = function( arr ) {
 */
 Graph.prototype.yRange = function( arr ) {
 	var self = this,
-		range = this._config.scales[ 1 ].range;
+		range = this._config.scales[ 1 ].range,
 		rules = 'array';
 
 	if ( !arguments.length ) {
@@ -658,7 +658,7 @@ Graph.prototype.yRange = function( arr ) {
 */
 Graph.prototype.zRange = function( arr ) {
 	var self = this,
-		range = this._config.scales[ 2 ].range;
+		range = this._config.scales[ 2 ].range,
 		rules = 'array';
 
 	if ( !arguments.length ) {

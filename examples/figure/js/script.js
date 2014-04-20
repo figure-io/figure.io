@@ -74,7 +74,7 @@
 			.yMin( 0 );
 
 		// Create the graph:
-		graph.create();
+		graph.create( 'area' );
 
 		// Get data:
 		d3.json( 'data/area.data.json', function ( error, json ) {
@@ -152,7 +152,7 @@
 			.yMin( 0 );
 
 		// Create the graph:
-		graph.create();
+		graph.create( 'line' );
 
 		// Get data:
 		d3.json( 'data/line.data.json', function ( error, json ) {
@@ -220,7 +220,7 @@
 			.yMin( 0 );
 
 		// Create the graph:
-		graph.create();
+		graph.create( 'histogram' );
 
 		// Get data:
 		d3.json( 'data/histogram.data.json', function ( error, json ) {
