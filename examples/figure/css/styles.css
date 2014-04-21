@@ -74,7 +74,9 @@ body {
 	stroke-width: 1px;
 }
 
-
+.italic {
+	font-style: italic;
+}
 
 
 

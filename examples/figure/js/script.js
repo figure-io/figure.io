@@ -341,7 +341,21 @@
 			// Create the multipanel:
 			multipanel.create();
 
-			// [3] For each panel graph, instantiate a new histogram generator and configure:
+			// [3] Instantiate a new annotations generator and configure:
+			annotations = xfig.annotations( multipanel );
+
+			// Create the annotations element:
+			annotations.create();
+
+			// [3.1] Instantiate a new title instance and configure:
+			title = annotations.title()
+				.top( -30 )
+				.left( 250 );
+
+			// Add a (sub)title:
+			title.create( 'Subtitle' );
+
+			// [4] For each panel graph, instantiate a new histogram generator and configure:
 			graphs = multipanel.children().graph;
 			for ( var j = 0; j < graphs.length; j++ ) {
 
@@ -350,6 +364,22 @@
 
 				// Create the histogram:
 				histogram.create();
+
+				// Instantiate a new annotations generator and configure:
+				annotations = xfig.annotations( graphs[ j ] );
+
+				// Create the annotations element:
+				annotations.create();
+
+				// Instantiate a new text instance and configure:
+				text = annotations.text()
+					.width( 200 )
+					.height( 100 )
+					.top( 50 )
+					.left( 310 );
+
+				// Add a text annotation:
+				text.create( 'This is a description of <span class="italic">condition ' + (j+1) + '</span>.' );
 
 			} // end FOR j
 
