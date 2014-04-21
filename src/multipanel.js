@@ -301,31 +301,31 @@ Multipanel.prototype.create = function( type ) {
 }; // end METHOD create()
 
 /**
-* METHOD: total( value )
-*	Total panel number setter and getter. If a value is supplied, defines the total panel number. If no value is supplied, returns the total panel number.
+* METHOD: padding( value )
+*	Panel padding setter and getter. If a value is supplied, defines the panel padding. If no value is supplied, returns the panel padding.
 *
-* @param {number} value - total panel number; must be an integer
-* @returns {object|number} multipanel instance or total panel number
+* @param {number} value - panel padding; i.e., the vertical padding between panels
+* @returns {object|number} multipanel instance or panel padding
 */
-Multipanel.prototype.total = function( value ) {
+Multipanel.prototype.padding = function( value ) {
 	var self = this,
-		rules = 'integer';
+		rules = 'number';
 
 	if ( !arguments.length ) {
-		return this._config.total;
+		return this._config.padding;
 	}
 
 	Validator( value, rules, function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			throw new Error( 'height()::invalid input argument. ' );
+			throw new Error( 'padding()::invalid input argument. ' );
 		}
-		self._config.total = value;
+		self._config.padding = value;
 	});
 	
 	return this;
 
-}; // end METHOD total()
+}; // end METHOD padding()
 
 /**
 * METHOD: width( value )
