@@ -148,6 +148,19 @@ Axes.prototype.create = function() {
 
 	// x-axis:
 	if ( this._config[ 0 ].display ) {
+		
+		switch( this._config[ 0 ].ticks.direction ) {
+			case "in":
+				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize) + ')';
+				break;
+			case "both":
+				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize/2) + ')';
+				console.log( translate );
+				break;
+			default:
+				translate = null;
+		}
+
 		xAxis = this._root.append( 'svg:g' )
 			.attr( 'property', 'axis' )
 			.attr( 'class', 'x axis' )
@@ -161,18 +174,6 @@ Axes.prototype.create = function() {
 			.attr( 'property', 'axis_label' )
 			.attr( 'class', 'label' )
 			.text( this._config[ 0 ].label );
-
-		switch( this._config[ 0 ].ticks.direction ) {
-			case "in":
-				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize) + ')';
-				break;
-			case "both":
-				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize/2) + ')';
-				console.log( translate );
-				break;
-			default:
-				translate = null;
-		}
 
 		// Only add an attribute if we need to:
 		if ( translate ) {
@@ -189,6 +190,18 @@ Axes.prototype.create = function() {
 
 	// y-axis:
 	if ( this._config[ 1 ].display ) {
+
+		switch( this._config[ 1 ].ticks.direction ) {
+			case "in":
+				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize) + ',0)';
+				break;
+			case "both":
+				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize/2) + ',0)';
+				break;
+			default:
+				translate = null;
+		}
+
 		yAxis = this._root.append( 'svg:g' )
 			.attr( 'property', 'axis' )
 			.attr( 'class', 'y axis' )
@@ -202,17 +215,6 @@ Axes.prototype.create = function() {
 			.attr( 'property', 'axis_label' )
 			.attr( 'class', 'label' )
 			.text( this._config[ 1 ].label );
-
-		switch( this._config[ 1 ].ticks.direction ) {
-			case "in":
-				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize) + ',0)';
-				break;
-			case "both":
-				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize/2) + ',0)';
-				break;
-			default:
-				translate = null;
-		}
 
 		// Only add an attribute if we need to:
 		if ( translate ) {

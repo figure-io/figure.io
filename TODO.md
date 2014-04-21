@@ -6,7 +6,7 @@ TODO
 1.	Multiple canvas children (?) --> similar to Matlab hold on; or if new canvas is registered to same figure, blow the previous canvas away
 2. 	Option to pass in config object at instantiation; e.g., xfig.canvas( figure, {width:600,height:400} ).
 3. 	Method to expose root element
-4. 	Move 'this' registration to instantiation, rather than on create()
+4. 	
 5. 	
 
 
@@ -28,24 +28,25 @@ TODO
 
 ### multipanel
 
-1.	Validate total panels on create.
-2. 	Add to meta data terms
+1.	
+2. 	Add 'multipanel' to meta data terms
 
 
 ### Axes
 
 1. 	tick rotation
 2. 	tick display and axes display boolean validation
-3. 	add to meta data terms
+3. 	add 'axes' to meta data terms
+4. 	outerticksize when setting tick direction; probably best to just reduce the outerticksize to match the extent that inner ticks extend out.
 
 ### Marks
 
-1. 	Have all inherit from a general marks class; allow for type checking: instanceof marks
+1. 	Have all inherit from a general marks class; allow for type checking: instanceof marks --> why would this be useful? Only if supplying multiple marks(?) to a setter/getter and need to type check multiple marks types. Will this ever be used?
 2. 	bar
 3.	column
 4. 	gauge
-5. 	multipanel line
-6. 	multipanel histogram
+5. 	
+6. 	
 7. 	timeseries histogram
 8.	
 

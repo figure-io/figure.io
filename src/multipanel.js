@@ -107,7 +107,7 @@ var Multipanel = function( canvas ) {
 					"innerSize": 6,
 					"outerSize": 6,
 					"rotation": 0,
-					"direction": "both"
+					"direction": "out"
 				},
 				"orient": "bottom"
 			},
