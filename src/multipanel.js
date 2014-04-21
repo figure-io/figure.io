@@ -106,7 +106,8 @@ var Multipanel = function( canvas ) {
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
-					"rotation": 0
+					"rotation": 0,
+					"direction": "both"
 				},
 				"orient": "bottom"
 			},
@@ -121,7 +122,8 @@ var Multipanel = function( canvas ) {
 					"padding": 3,
 					"innerSize": 6,
 					"outerSize": 6,
-					"rotation": 0
+					"rotation": 0,
+					"direction": "out"
 				},
 				"orient": "left"
 			}
@@ -275,6 +277,8 @@ Multipanel.prototype.create = function( type ) {
 			.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
 			.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
 			.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
+			.xTickDirection( config.axes[ 0 ].ticks.direction )
+			.yTickDirection( config.axes[ 1 ].ticks.direction )
 			.xTickDisplay( xAxisFLG )
 			.yTickDisplay( config.axes[ 1 ].ticks.display )
 			.xAxisOrient( config.axes[ 0 ].orient )
@@ -1367,6 +1371,60 @@ Multipanel.prototype.yTickDisplay = function( bool ) {
 	return this;
 
 }; // end METHOD yTickDisplay()
+
+/**
+* METHOD: xTickDirection( value )
+*	x-axis tick direction setter and getter. If a direction is supplied, sets the x-axis tick direction. If no direction is supplied, gets the x-axis tick direction.
+*
+* @param {string} value - tick direction; must be either 'in', 'out', or 'both'
+* @returns {object|string} instance object or x-axis tick direction
+*/
+Multipanel.prototype.xTickDirection = function( value ) {
+	var self = this,
+		rules = 'matches[in,out,both]';
+
+	if ( !arguments.length ) {
+		return this._config.axes[ 0 ].ticks.direction;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xTickDirection()::invalid input argument.' );
+		}
+		self._config.axes[ 0 ].ticks.direction = value;
+	});
+
+	return this;
+
+}; // end METHOD xTickDirection()
+
+/**
+* METHOD: yTickDirection( value )
+*	y-axis tick direction setter and getter. If a direction is supplied, sets the y-axis tick direction. If no direction is supplied, gets the y-axis tick direction.
+*
+* @param {string} value - tick direction; must be either 'in', 'out', or 'both'
+* @returns {object|string} instance object or y-axis tick direction
+*/
+Multipanel.prototype.yTickDirection = function( value ) {
+	var self = this,
+		rules = 'matches[in,out,both]';
+
+	if ( !arguments.length ) {
+		return this._config.axes[ 1 ].ticks.direction;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yTickDirection()::invalid input argument.' );
+		}
+		self._config.axes[ 1 ].ticks.direction = value;
+	});
+
+	return this;
+
+}; // end METHOD yTickDirection()
 
 /**
 * METHOD: xAxisOrient( value )

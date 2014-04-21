@@ -69,7 +69,8 @@ var Axes = function( graph ) {
 				"padding": 3,
 				"innerSize": 6,
 				"outerSize": 6,
-				"rotation": 0
+				"rotation": 0,
+				"direction": "out"
 			},
 			"orient": "bottom"
 		},
@@ -84,7 +85,8 @@ var Axes = function( graph ) {
 				"padding": 3,
 				"innerSize": 6,
 				"outerSize": 6,
-				"rotation": 0
+				"rotation": 0,
+				"direction": "out"
 			},
 			"orient": "left"
 		}
@@ -137,7 +139,8 @@ Axes.prototype.create = function() {
 	var selection = this._parent._root,
 		height = this._parent._config.height,
 		width = this._parent._config.width,
-		xAxis, yAxis;
+		xAxis, yAxis,
+		translate;
 
 	this._root = selection.append( 'svg:g' )
 		.attr( 'property', 'axes' )
@@ -158,6 +161,24 @@ Axes.prototype.create = function() {
 			.attr( 'property', 'axis_label' )
 			.attr( 'class', 'label' )
 			.text( this._config[ 0 ].label );
+
+		switch( this._config[ 0 ].ticks.direction ) {
+			case "in":
+				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize) + ')';
+				break;
+			case "both":
+				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize/2) + ')';
+				console.log( translate );
+				break;
+			default:
+				translate = null;
+		}
+
+		// Only add an attribute if we need to:
+		if ( translate ) {
+			xAxis.selectAll( '.tick line' )
+				.attr( 'transform', translate );
+		}
 
 		xAxis.selectAll( '.tick' )
 			.attr( 'property', 'axis_tick' );
@@ -181,6 +202,23 @@ Axes.prototype.create = function() {
 			.attr( 'property', 'axis_label' )
 			.attr( 'class', 'label' )
 			.text( this._config[ 1 ].label );
+
+		switch( this._config[ 1 ].ticks.direction ) {
+			case "in":
+				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize) + ',0)';
+				break;
+			case "both":
+				translate = 'translate(' + (-this._config[ 1 ].ticks.innerSize/2) + ',0)';
+				break;
+			default:
+				translate = null;
+		}
+
+		// Only add an attribute if we need to:
+		if ( translate ) {
+			yAxis.selectAll( '.tick line' )
+				.attr( 'transform', translate );
+		}
 
 		yAxis.selectAll( '.tick' )
 			.attr( 'property', 'axis_tick' );
@@ -714,6 +752,60 @@ Axes.prototype.yTickDisplay = function( bool ) {
 	return this;
 
 }; // end METHOD yTickDisplay()
+
+/**
+* METHOD: xTickDirection( value )
+*	x-axis tick direction setter and getter. If a direction is supplied, sets the x-axis tick direction. If no direction is supplied, gets the x-axis tick direction.
+*
+* @param {string} value - tick direction; must be either 'in', 'out', or 'both'
+* @returns {object|string} instance object or x-axis tick direction
+*/
+Axes.prototype.xTickDirection = function( value ) {
+	var self = this,
+		rules = 'matches[in,out,both]';
+
+	if ( !arguments.length ) {
+		return this._config[ 0 ].ticks.direction;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'xTickDirection()::invalid input argument.' );
+		}
+		self._config[ 0 ].ticks.direction = value;
+	});
+
+	return this;
+
+}; // end METHOD xTickDirection()
+
+/**
+* METHOD: yTickDirection( value )
+*	y-axis tick direction setter and getter. If a direction is supplied, sets the y-axis tick direction. If no direction is supplied, gets the y-axis tick direction.
+*
+* @param {string} value - tick direction; must be either 'in', 'out', or 'both'
+* @returns {object|string} instance object or y-axis tick direction
+*/
+Axes.prototype.yTickDirection = function( value ) {
+	var self = this,
+		rules = 'matches[in,out,both]';
+
+	if ( !arguments.length ) {
+		return this._config[ 1 ].ticks.direction;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'yTickDirection()::invalid input argument.' );
+		}
+		self._config[ 1 ].ticks.direction = value;
+	});
+
+	return this;
+
+}; // end METHOD yTickDirection()
 
 /**
 * METHOD: xAxisOrient( value )
