@@ -60,21 +60,21 @@ var Multipanel = function( canvas ) {
 	this._children = {};
 
 	this._config = {
-		"total": 1,
-		"height": 400,
 		"width": 600,
+		"height": 400,
 		"position": {
 			"top": 80,
 			"left": 90
 		},
+		"padding": 10,
 		"background": false,
 		"scales": [
 			{
 				"name": "x",
 				"type": "linear",
 				"domain": {
-					"min": 0,
-					"max": 1
+					"min": null,
+					"max": null
 				},
 				"range": {
 					"min": 0,
@@ -85,8 +85,8 @@ var Multipanel = function( canvas ) {
 				"name": "y",
 				"type": "linear",
 				"domain": {
-					"min": 0,
-					"max": 1
+					"min": null,
+					"max": null
 				},
 				"range": {
 					"min": 0,
@@ -181,12 +181,11 @@ Multipanel.prototype.create = function( type ) {
 		selection = this._parent._root,
 		position = config.position,
 		height = config.height,
-		total = config.total,
-		graphHeight = Math.floor( height / total ),
+		padding = config.padding,
+		graphHeight, top,
 		graph, axes,
+		total = this._data.length,
 		xAxisFLG, yAxisFLG;
-
-	config.scales[ 1 ].range.max = graphHeight;
 
 	// MULTIPANEL //
 
@@ -196,25 +195,29 @@ Multipanel.prototype.create = function( type ) {
 		.attr( 'class', 'multipanel' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
+	// Compute the graph height: (NOTE: 54 is a fudge factor to allow for x-axis ticks and labels; depending on font-size, tick padding, and tick sizes, this may not be correct.)
+	graphHeight = Math.floor( ( height-54-padding*(total-1) ) / total );
+
+	config.scales[ 1 ].range.max = graphHeight;
+
 	// Create the graphs and axes:
 	for ( var i = 0; i < total; i++ ) {
 
 		// Formatting flags:
 		xAxisFLG = false;
-		yAxisFLG = true;
 
 		if ( i === total-1 ) {
 			xAxisFLG = true;
 		}
-		if ( i === 0 ) {
-			yAxisFLG = false;
-		}
+
+		// Graph vertical position:
+		top = (graphHeight+padding) * i;
 
 		// Graph:
-		graph = createGraph( this, graphHeight, graphHeight*i, new Data() );
+		graph = createGraph( this, graphHeight, top, this._data[ i ] );
 
 		// Axes:
-		axes = createAxes( graph, xAxisFLG, yAxisFLG );
+		axes = createAxes( graph, xAxisFLG );
 
 	} // end FOR i
 
@@ -254,11 +257,12 @@ Multipanel.prototype.create = function( type ) {
 
 	} // end FUNCTION createGraph()
 
-	function createAxes( graph, xAxisFLG, yAxisFLG ) {
+	function createAxes( graph, xAxisFLG ) {
 		var axes, yTicks;
 
 		axes = new Axes( graph );
 
+		// Configure the axes:
 		axes.yLabel( config.axes[ 1 ].label )
 			.yTickFormat( config.axes[ 1 ].ticks.format )
 			.xNumTicks( config.axes[ 0 ].ticks.num )
@@ -278,6 +282,7 @@ Multipanel.prototype.create = function( type ) {
 			.xAxisDisplay( config.axes[ 0 ].display )
 			.yAxisDisplay( config.axes[ 1 ].display );
 
+		// Show x-axis tick labels:
 		if ( xAxisFLG ) {
 			axes.xLabel( config.axes[ 0 ].label )
 				.xTickFormat( config.axes[ 0 ].ticks.format );
@@ -286,17 +291,8 @@ Multipanel.prototype.create = function( type ) {
 				.xTickFormat( '' );
 		}
 
+		// Create the axes:
 		axes.create();
-
-		if ( yAxisFLG ) {
-			yTicks = axes._root.selectAll( '.y.axis .tick' );
-
-			yTicks.style( 'visibility', function ( d, i ) {
-				if ( i === yTicks[ 0 ].length-1 ) {
-					return 'hidden';
-				}
-			});
-		}
 
 		return axes;
 
@@ -883,23 +879,33 @@ Multipanel.prototype.top = function( value ) {
 
 /**
 * METHOD: data( data )
-*	Multipanel data setter and getter. If data is supplied, sets the multipanel's current active dataset. If no data is supplied, returns the multipanel's current active dataset.
+*	Multipanel data setter and getter. If data is supplied, sets the multipanel's current active dataset. If no data is supplied, returns the multipanel's datasets.
 *
-* @param {object} data - data instance
-* @returns {object|object} - multipanel instance or current active dataset
+* @param {array} data - array of data instances
+* @returns {object|object} - multipanel instance or multipanel datasets
 */
 Multipanel.prototype.data = function( data ) {
+	var self = this,
+		rules = 'array';
 
 	if ( !arguments.length ) {
 		return this._data;
 	}
 
-	if ( !( data instanceof Data ) ) {
-		throw new Error( 'data()::invalid input argument. Input argument must be an instance of Data.' );
-	}
-
-	this._data = data._data;
-
+	Validator( data, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'data()::invalid input argument.' );
+		}
+		// Ensure that each member of the data array is a Data instance:
+		for ( var i = 0; i < data.length; i++ ) {
+			if ( !( data[ i ] instanceof Data ) ) {
+				throw new Error( 'data()::invalid input argument. Each input argument member must be an instance of Data.' );
+			}
+		}
+		self._data = data;
+	});
+	
 	return this;
 
 }; // end METHOD data()

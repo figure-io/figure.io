@@ -40,7 +40,7 @@ TODO
 
 ### Marks
 
-1. 	
+1. 	Have all inherit from a general marks class; allow for type checking: instanceof marks
 2. 	bar
 3.	column
 4. 	gauge

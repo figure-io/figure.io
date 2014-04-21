@@ -289,7 +289,14 @@
 
 	function Multipanel( canvas, width, height, left, top ) {
 
-		var multipanel, data, edges, annotations, title, text;
+		var multipanel,
+			data = [],
+			edges,
+			xValue = function( d ) { return d[ 0 ]; },
+			yValue = function( d ) { return d[ 1 ]; },
+			yMax = 0, _yMax,
+			graphs, histogram,
+			annotations, title, text;
 
 		// [1] Instantiate a new multipanel generator and configure:
 		multipanel = xfig.multipanel( canvas )
@@ -298,75 +305,53 @@
 			.position({
 				'left': left,
 				'top': top
-			})
-			.xMin( 0 )
-			.xMax( 1 )
-			.yMin( 0 )
-			.total( 3 );
-
-		// Create the multipanel:
-		multipanel.create();
-
-		return;
+			});
 
 		// Get data:
-		d3.json( 'data/histogram.data.json', function ( error, json ) {
+		d3.json( 'data/multipanel.data.json', function ( error, json ) {
 
-			// [2] Instantiate a new data generator and configure:
-			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+			// [2] For each panel dataset, instantiate a new data generator and configure:
+			for ( var i = 0; i < json.length; i++ ) {
 
-			// Create edges to define our histogram bins:
-			edges = data.linspace( -0.025, 1.025, 0.05 );
+				data.push( xfig.data( json[ i ] )
+					.x( xValue )
+					.y( yValue ) );
+
+				// Create edges to define our histogram bins:
+				edges = data[ i ].linspace( -0.025, 1.025, 0.05 );
 			
-			// Transform the data and histogram the data:
-			data.transform( 2 )
-				.histc( function ( d ) { return d[ 1 ]; }, edges );
+				// Transform the data and histogram the data:
+				data[ i ].transform( 2 )
+					.histc( yValue, edges );
 
-			// Bind the data instance to the graph:
-			graph.data( data )
-				.yMax( data.max( data.data(), function ( d ) {
-					return d[ 1 ];
-				}));
+				// Compute the yMax:
+				_yMax = data[ i ].max( data[ i ].data(), yValue );
+				yMax = ( yMax < _yMax ) ? _yMax : yMax;
 
-			// [3] Instantiate a new histogram generator and configure:
-			histogram = xfig.histogram( graph )
-				.labels( [ 'data 0' ] );
+			} // end FOR i
 
-			// Create the histogram:
-			histogram.create();
-
-			// [4] Instantiate a new axes generator and configure:
-			axes = xfig.axes( graph )
+			// Bind the data instance to the multipanel:
+			multipanel.data( data )
+				.xMin( 0 )
+				.xMax( 1 )
+				.yMin( 0 )
+				.yMax( yMax )
 				.yLabel( 'counts' );
 
-			// Create the axes:
-			axes.create();
+			// Create the multipanel:
+			multipanel.create();
 
-			// [5] Instantiate a new annotations generator and configure:
-			annotations = xfig.annotations( graph );
+			// [3] For each panel graph, instantiate a new histogram generator and configure:
+			graphs = multipanel.children().graph;
+			for ( var j = 0; j < graphs.length; j++ ) {
 
-			// Create the annotations element:
-			annotations.create();
+				histogram = xfig.histogram( graphs[ j ] )
+					.labels( [ 'data ' + j ] );
 
-			// [5.1] Instantiate a new title instance and configure:
-			title = annotations.title()
-				.top( -30 )
-				.left( 250 );
+				// Create the histogram:
+				histogram.create();
 
-			// Add a (sub)title:
-			title.create( 'Subtitle' );
-
-			// [5.2] Instantiate a new text instance and configure:
-			text = annotations.text()
-				.width( 200 )
-				.height( 100 )
-				.top( 50 )
-				.left( 310 );
-
-			// Add a text annotation:
-			text.create( 'This is another text annotation, which may run multiple lines.' );
+			} // end FOR j
 
 		});
 
