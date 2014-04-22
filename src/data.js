@@ -147,13 +147,11 @@ Data.prototype.linspace = function ( min, max, increment ) {
 * @returns {number} min data value
 */
 Data.prototype.min = function( data, accessor ) {
-
 	return d3.min( data, function ( dataset ) {
 		return d3.min( dataset, function ( d ) {
 			return accessor( d );
 		});
 	});
-
 }; // end METHOD min()
 
 /**
@@ -165,13 +163,11 @@ Data.prototype.min = function( data, accessor ) {
 * @returns {number} max data value
 */
 Data.prototype.max = function( data, accessor ) {
-
 	return d3.max( data, function ( dataset ) {
 		return d3.max( dataset, function ( d ) {
 			return accessor( d );
 		});
 	});
-
 }; // end METHOD max()
 
 /**
@@ -317,6 +313,32 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	return this;
 
 }; // end METHOD hist2c()
+
+/**
+* METHOD: sort( value )
+*	Sort method setter and getter. If a sort method name is supplied, sets the sort method. If no method is supplied, retrieves the sort method name.
+*
+* @param {string} value - sort method name
+* @returns {object|string} instance object or sort method name
+*/
+Data.prototype.sort = function( value ) {
+	var self = this,
+		rules = 'matches[ascending,descending]';
+
+	if ( !arguments.length ) {
+		return this._config.sort;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'sort()::invalid input argument.' );
+		}
+		self._config.sort = value;
+	});
+
+	return this;
+}; // end METHOD sort()
 
 /**
 * METHOD: data()

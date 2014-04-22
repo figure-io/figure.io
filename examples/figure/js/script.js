@@ -56,6 +56,9 @@
 	// [7] Multipanel chart:
 	Multipanel( canvas, width, height*3, 690, 550 );
 
+	// [8] Timeseries Histogram chart:
+	TimeseriesHistogram( canvas, width, width, 90, 1020 );
+
 
 	// CHARTS //
 
@@ -386,6 +389,81 @@
 		});
 
 	} // end FUNCTION Multipanel()
+
+	function TimeseriesHistogram( canvas, width, height, left, top ) {
+
+		var graph, data, histogram, edges, axes, annotations, title, text;
+
+		// [1] Instantiate a new graph generator and configure:
+		graph = xfig.graph( canvas )
+			.width( width )
+			.height( height )
+			.position({
+				'left': left,
+				'top': top
+			})
+			.xMin( 0 )
+			.xMax( 1 );
+
+		// Create the graph:
+		graph.create( 'timeseries-histogram' );
+
+		// Get data:
+		d3.json( 'data/timeseries-histogram.data.json', function ( error, json ) {
+
+			// [2] Instantiate a new data generator and configure:
+			data = xfig.data( json )
+				.x( function ( d ) { return d[ 0 ]; } )
+				.y( function ( d ) { return d[ 1 ]; } );
+
+			// Create edges to define our histogram bins:
+			edges = data.linspace( -0.025, 1.025, 0.05 );
+			
+			// Transform the data and histogram the data:
+			data.transform( 2 )
+				.histc( function ( d ) { return d[ 1 ]; }, edges );
+
+			// Bind the data instance to the graph:
+			graph.data( data )
+				.yMin( 0 )
+				.yMax( data.data().length )
+				.zMin( 0 )
+				.zMax( data.max( data.data(), function ( d ) {
+					return d[ 1 ];
+				}))
+				.zRange( ['#ffffff', '#000000'] );
+
+			// [3] Instantiate a new histogram generator and configure:
+			histogram = xfig.timeserieshistogram( graph );
+
+			// Create the histogram:
+			histogram.create();
+
+			// [4] Instantiate a new axes generator and configure:
+			axes = xfig.axes( graph )
+				.xLabel( 'percent' )
+				.yLabel( 'node' );
+
+			// Create the axes:
+			axes.create();
+
+			// [5] Instantiate a new annotations generator and configure:
+			annotations = xfig.annotations( graph );
+
+			// Create the annotations element:
+			annotations.create();
+
+			// [5.1] Instantiate a new title instance and configure:
+			title = annotations.title()
+				.top( -30 )
+				.left( 0 );
+
+			// Add a (sub)title:
+			title.create( 'Subtitle' );
+
+		});
+
+	} // end FUNCTION TimeseriesHistogram()
 
 })();
 

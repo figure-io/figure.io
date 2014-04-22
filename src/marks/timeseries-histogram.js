@@ -1,6 +1,6 @@
 /**
 *
-*	MARKS: timeseries-histogram
+*	MARKS: timeseries histogram
 *
 *
 *
@@ -41,7 +41,7 @@
 *
 */
 
-// TIMESERIES-HISTOGRAM //
+// TIMESERIES HISTOGRAM //
 
 /**
 * FUNCTION: TimeseriesHistogram( graph )
@@ -60,7 +60,8 @@ var TimeseriesHistogram = function( graph ) {
 	this._root = undefined;
 	this._children = {};
 	this._config = {
-		
+		'labels': [],
+		'sort': 'ascending'
 	};
 
 	// DATA //
@@ -75,15 +76,15 @@ var TimeseriesHistogram = function( graph ) {
 		'x': function X( d ) {
 			return graph._xScale( d[ 0 ] );
 		},
-		'y': function Y( d ) {
-			return graph._yScale( d[ 1 ] ) - binHeight;
+		'y': function Y( d, i ) {
+			return graph._yScale( i ) - binHeight;
 		},
 		'width': function Width( d ) {
 			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
 		},
 		'height': binHeight,
 		'color': function Color( d ) {
-			return graph._zScale( d[ 4 ] );
+			return graph._zScale( d[ 1 ] );
 		}
 	};
 
@@ -111,12 +112,13 @@ var TimeseriesHistogram = function( graph ) {
 */
 TimeseriesHistogram.prototype.create = function() {
 
-	var selection = this._parent._root,
+	var self = this,
+		selection = this._parent._root,
 		labels = this._config.labels,
 		histograms, bins;
 
 	// Create a marks group:
-	this._root = selection.selectAll( '.marks' )
+	this._root = selection.append( 'svg:g' )
 		.attr( 'property', 'marks' )
 		.attr( 'class', 'marks' )
 		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
@@ -127,7 +129,10 @@ TimeseriesHistogram.prototype.create = function() {
 		.data( this._data )
 	  .enter().append( 'svg:g' )
 	  	.attr( 'class', 'histogram' )
-		.attr( 'data-label', function( d, i ) { return labels[ i ]; });
+		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
+		.attr( 'transform', function ( d, i ) {
+			return 'translate( 0,' + self._transforms.y( d, i ) + ' )';
+		});
 
 	// Add bins:
 	bins = histograms.selectAll( '.bin' )
@@ -138,21 +143,41 @@ TimeseriesHistogram.prototype.create = function() {
 		.attr( 'property', 'bin' )
 		.attr( 'class', 'bin' )
 		.attr( 'x', this._transforms.x )
-		.attr( 'y', this._transforms.y )
+		.attr( 'y', 0 )
 		.attr( 'width', this._transforms.width )
 		.attr( 'height', this._transforms.height )
 		.style( 'fill', this._transforms.color );
 
-	// Add tooltips:
-	bins.append( 'svg:title' )
-		.attr( 'class', 'tooltip' )
-		.text( function ( d ) {
-			return Math.round( d[ 4 ] );
-		});
-
 	return this;
 
 }; // end METHOD create()
+
+/**
+* METHOD: labels( arr )
+*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} instance object or an array of labels
+*/
+TimeseriesHistogram.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+
+}; // end METHOD labels()
 
 /**
 * METHOD: parent()
