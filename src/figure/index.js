@@ -35,9 +35,9 @@ Figure.prototype.create = function( selection ) {
 	this._parent = selection;
 	figure = document.createElement( 'figure' );
 	figure.setAttribute( 'property', 'figure' );
-	figure.className += 'chart-container';
+	figure.className += 'figure';
 	selection.appendChild( figure );
-	elements = selection.querySelectorAll( '.chart-container' );
+	elements = selection.querySelectorAll( '.figure' );
 	this._root = elements[ elements.length - 1 ];
 	return this;
 }; // end METHOD create()
