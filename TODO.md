@@ -47,7 +47,7 @@ TODO
 4. 	gauge
 5. 	
 6. 	
-7. 	timeseries histogram
+7. 	
 8.	
 
 ### Annotations
@@ -64,7 +64,7 @@ TODO
 
 ### Validation
 
-1. 	Data methods; inputs
+1. 	Data methods; inputs --> some are hard to verify. Is this necessary?
 2. 	Graph xRange, yRange, zRange: need to check for length==2
 3. 	Check if boolean
 4. 	Multi-parameter validation
