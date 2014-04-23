@@ -271,9 +271,6 @@ var Validator;
 		"empty": validate.isEmpty
 	};
 
-		
-
-
 	// VALIDATOR //
 
 	validator = function( value, rules, callback ) {

@@ -45,11 +45,6 @@ var histc;
 (function() {
 	'use strict';
 
-	// VARIABLES //
-
-	var _histc;
-
-
 	// FUNCTIONS //
 
 	function binarysearch( vector, value ) {
@@ -100,7 +95,7 @@ var histc;
 
 	// HISTC //
 
-	_histc = function( vector, edges ) {
+	function _histc( vector, edges ) {
 		
 		var id, counts = [];
 
@@ -123,7 +118,7 @@ var histc;
 		// Return the counts:
 		return counts;
 
-	}; // end FUNCTION getCounts()
+	} // end FUNCTION getCounts()
 
 
 	// EXPORTS //

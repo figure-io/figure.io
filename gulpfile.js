@@ -56,9 +56,7 @@ var jshint = require( 'gulp-jshint' ),
 	minifyHTML = require( 'gulp-minify-html' ),
 	minifyCSS = require( 'gulp-minify-css' ),
 	autoprefix = require( 'gulp-autoprefixer' ),
-	minifyJSON = require( 'gulp-jsonminify' ),
-	header = require( 'gulp-header' ),
-	footer = require( 'gulp-footer' );
+	minifyJSON = require( 'gulp-jsonminify' );
 
 
 // TASKS //

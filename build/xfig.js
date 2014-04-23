@@ -1,46 +1,5 @@
-!function(){
-	var xfig = {version: "0.0.0"}; // semver
-/**
-*
-*	XFIG
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/13: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] 
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
+!function ( d3, _ ){
+	var xfig = { version: "0.0.0" }; // semver
 
 xfig.figure = function() {
 	return new Figure();
@@ -145,48 +104,6 @@ xfig.annotations = function( parent ) {
 	}
 	return new Annotations( parent );
 };
-/**
-*
-*	FIGURE: annotations
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/16: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // ANNOTATION //
 
@@ -393,48 +310,6 @@ Annotations.prototype.config = function() {
 Annotations.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	ANNOTATIONS: text
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/16: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // TEXT //
 
@@ -699,48 +574,6 @@ Text.prototype.config = function() {
 Text.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	ANNOTATIONS: title
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/16: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // TITLE //
 
@@ -1005,48 +838,6 @@ Title.prototype.config = function() {
 Title.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	FIGURE: axes
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/14: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // Axes //
 
@@ -1958,48 +1749,6 @@ Axes.prototype.config = function() {
 Axes.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	FIGURE: canvas
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/12: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // CANVAS //
 
@@ -2218,50 +1967,6 @@ Canvas.prototype.config = function() {
 Canvas.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	FIGURE: data
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/13: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] validate.js
-*		[2] histc.js
-*		[3] hist2c.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
-
 
 // DATA //
 
@@ -2716,48 +2421,6 @@ Data.prototype.config = function() {
 
 
 
-/**
-*
-*	FIGURE
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/12: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
-
 
 // FIGURE //
 
@@ -2833,49 +2496,6 @@ Figure.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
 
-/**
-*
-*	FIGURE: graph
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/12: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*		[3] data.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // GRAPH //
 
@@ -3856,48 +3476,6 @@ Graph.prototype.config = function() {
 Graph.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	MARKS: area
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/14: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // Area //
 
@@ -4126,48 +3704,6 @@ Area.prototype.config = function() {
 Area.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	MARKS: histogram
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/17: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // HISTOGRAM //
 
@@ -4354,48 +3890,6 @@ Histogram.prototype.config = function() {
 Histogram.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	MARKS: line
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/17: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // Line //
 
@@ -4620,48 +4114,6 @@ Line.prototype.config = function() {
 Line.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	MARKS: timeseries histogram
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/21: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // TIMESERIES HISTOGRAM //
 
@@ -4832,49 +4284,6 @@ TimeseriesHistogram.prototype.config = function() {
 TimeseriesHistogram.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-/**
-*
-*	FIGURE: multipanel
-*
-*
-*
-*	DESCRIPTION:
-*		- 
-*
-*
-*	API:
-*		- 
-*
-*
-*	NOTES:
-*		[1] 
-*
-*
-*	TODO:
-*		[1] 
-*
-*
-*	HISTORY:
-*		- 2014/04/19: Created. [AReines].
-*
-*
-*	DEPENDENCIES:
-*		[1] d3.js
-*		[2] validate.js
-*		[3] data.js
-*
-*
-*	LICENSE:
-*		MIT. http://opensource.org/licenses/MIT
-*
-*	Copyright (c) 2014. Athan Reines.
-*
-*
-*	AUTHOR:
-*		Athan Reines. athan@nodeprime.com. 2014
-*
-*
-*/
 
 // MULTIPANEL //
 
@@ -6447,11 +5856,6 @@ var hist2c;
 (function() {
 	'use strict';
 
-	// VARIABLES //
-
-	var _hist2c;
-
-
 	// FUNCTIONS //
 
 	function binarysearch( vector, value ) {
@@ -6502,7 +5906,7 @@ var hist2c;
 
 	// HIST2C //
 
-	_hist2c = function( data, xEdges, yEdges ) {
+	function _hist2c( data, xEdges, yEdges ) {
 
 		var id1, id2, counts = [];
 
@@ -6533,7 +5937,7 @@ var hist2c;
 		// Return the counts:
 		return counts;
 
-	}; // end FUNCTION histc()
+	} // end FUNCTION histc()
 
 
 	// EXPORTS //
@@ -6588,11 +5992,6 @@ var histc;
 (function() {
 	'use strict';
 
-	// VARIABLES //
-
-	var _histc;
-
-
 	// FUNCTIONS //
 
 	function binarysearch( vector, value ) {
@@ -6643,7 +6042,7 @@ var histc;
 
 	// HISTC //
 
-	_histc = function( vector, edges ) {
+	function _histc( vector, edges ) {
 		
 		var id, counts = [];
 
@@ -6666,7 +6065,7 @@ var histc;
 		// Return the counts:
 		return counts;
 
-	}; // end FUNCTION getCounts()
+	} // end FUNCTION getCounts()
 
 
 	// EXPORTS //
@@ -6950,9 +6349,6 @@ var Validator;
 		"empty": validate.isEmpty
 	};
 
-		
-
-
 	// VALIDATOR //
 
 	validator = function( value, rules, callback ) {
@@ -7023,11 +6419,10 @@ var Validator;
 	Validator = validator;
 
 })( _ );
-	if (typeof define === "function" && define.amd) {
-		define( xfig );
-	} else if (typeof module === "object" && module.exports) {
-		module.exports = xfig;
-	} else {
-		this.xfig = xfig;
-	}
-}();
+if ( typeof define === "function" && define.amd ) {
+	define( xfig );
+} else if ( typeof module === "object" && module.exports ) {
+	module.exports = xfig;
+} else {
+	this.xfig = xfig;
+}}( d3, _ );
