@@ -56,7 +56,9 @@ var jshint = require( 'gulp-jshint' ),
 	minifyHTML = require( 'gulp-minify-html' ),
 	minifyCSS = require( 'gulp-minify-css' ),
 	autoprefix = require( 'gulp-autoprefixer' ),
-	minifyJSON = require( 'gulp-jsonminify' );
+	minifyJSON = require( 'gulp-jsonminify' ),
+	header = require( 'gulp-header' ),
+	footer = require( 'gulp-footer' );
 
 
 // TASKS //
@@ -65,14 +67,24 @@ var jshint = require( 'gulp-jshint' ),
 gulp.task( 'jshint', function() {
 	gulp.src(
 		[
-			'./app/*.js',
-			'./app/utils/*.js',
-			'./app/modules/*.js',
-			'./app/modules/*/*.js'
+			'./src/*.js',
+			'./src/*/*.js'
 		])
 		.pipe( jshint() )
 		.pipe( jshint.reporter( 'default' ) );
 });
 
+// Concatenate scripts:
+gulp.task( 'library.build', function() {
+	gulp.src( [ './src/start.js', './src/xfig.js', './src/*/*.js', './src/end.js' ] )
+		.pipe( concat( 'xfig.js' ) )
+		.pipe( gulp.dest( './build/' ) );
+	gulp.src( [ './src/start.js', './src/xfig.js', './src/*/*.js', './src/end.js' ] )
+		.pipe( concat( 'xfig.min.js' ) )
+		.pipe( stripDebug() )
+		.pipe( uglify() )
+		.pipe( gulp.dest( './build/' ) );
+});
+
 // Default:
-gulp.task( 'default', [], function(){});
+gulp.task( 'default', [ 'library.build' ], function(){});

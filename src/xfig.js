@@ -40,8 +40,6 @@
 *
 */
 
-var xfig = {};
-
 xfig.figure = function() {
 	return new Figure();
 };
