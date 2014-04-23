@@ -128,6 +128,7 @@ TimeseriesHistogram.prototype.create = function() {
 	histograms = this._root.selectAll( '.histogram' )
 		.data( this._data )
 	  .enter().append( 'svg:g' )
+	  	.attr( 'property', 'histogram' )
 	  	.attr( 'class', 'histogram' )
 		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
 		.attr( 'transform', function ( d, i ) {

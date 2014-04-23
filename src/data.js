@@ -139,15 +139,14 @@ Data.prototype.linspace = function ( min, max, increment ) {
 }; // end METHOD linspace()
 
 /**
-* METHOD: min( data, accessor )
+* METHOD: min( accessor )
 *	Determines the min data value.
 *
-* @param {array} data - data over which the min is determined
 * @param {function} accessor - data accessor specifying how to access data values
 * @returns {number} min data value
 */
-Data.prototype.min = function( data, accessor ) {
-	return d3.min( data, function ( dataset ) {
+Data.prototype.min = function( accessor ) {
+	return d3.min( this._data, function ( dataset ) {
 		return d3.min( dataset, function ( d ) {
 			return accessor( d );
 		});
@@ -155,20 +154,99 @@ Data.prototype.min = function( data, accessor ) {
 }; // end METHOD min()
 
 /**
-* METHOD: max( data, accessor )
+* METHOD: max( accessor )
 *	Determines the max data value.
 *
-* @param {array} data - data over which the max is determined
 * @param {function} accessor - data accessor specifying how to access data values
 * @returns {number} max data value
 */
-Data.prototype.max = function( data, accessor ) {
-	return d3.max( data, function ( dataset ) {
+Data.prototype.max = function( accessor ) {
+	return d3.max( this._data, function ( dataset ) {
 		return d3.max( dataset, function ( d ) {
 			return accessor( d );
 		});
 	});
 }; // end METHOD max()
+
+/**
+* METHOD: mean( accessor )
+*	Calculates the mean values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of mean values
+*/
+Data.prototype.mean = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return mean( dataset );
+	});
+}; // end METHOD mean()
+
+/**
+* FUNCTION: mean( vector )
+*	Calculates the mean value of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} mean value
+*/
+function mean( vector ) {
+	var sum = 0;
+	for ( var i = 0; i < vector.length; i++ ) {
+		sum += vector[ i ];
+	}
+	return sum / vector.length;
+} // end FUNCTION mean()
+
+/**
+* METHOD: reorder( vector )
+*	Reorders the data based on an index vector.
+*
+* @param {array} vector - 1d array of indices
+* @returns {object} instance object
+*/
+Data.prototype.reorder = function( vector ) {
+	var self = this;
+	if ( this._data.length !== vector.length ) {
+		throw new Error( 'reorder()::invalid input argument. Vector length must equal data length.' );
+	}
+	this._data = vector.map( function ( id ) {
+		return self._data[ id ];
+	});
+	return this;
+}; // end METHOD reorder()
+
+/**
+* METHOD: extract( accessor )
+*	Reduce data dimensionality by extracting data feature(s).
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {object} instance object
+*/
+Data.prototype.extract = function( accessor ) {
+	this._data = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return this;
+}; // end METHOD extract()
+
+/**
+* METHOD: size()
+*	Determine instance data size. (NOTE: we assume homogenous 2d data array)
+*
+* @returns {array} data size: [1d,2d]
+*/
+Data.prototype.size = function() {
+	var size = [];
+	size.push( this._data.length );
+	size.push( this._data[ 0 ].length );
+	return size;
+}; // end METHOD size()
 
 /**
 * METHOD: histc( accessor, edges )
@@ -313,32 +391,6 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	return this;
 
 }; // end METHOD hist2c()
-
-/**
-* METHOD: sort( value )
-*	Sort method setter and getter. If a sort method name is supplied, sets the sort method. If no method is supplied, retrieves the sort method name.
-*
-* @param {string} value - sort method name
-* @returns {object|string} instance object or sort method name
-*/
-Data.prototype.sort = function( value ) {
-	var self = this,
-		rules = 'matches[ascending,descending]';
-
-	if ( !arguments.length ) {
-		return this._config.sort;
-	}
-
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'sort()::invalid input argument.' );
-		}
-		self._config.sort = value;
-	});
-
-	return this;
-}; // end METHOD sort()
 
 /**
 * METHOD: data()

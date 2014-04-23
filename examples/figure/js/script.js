@@ -94,7 +94,7 @@
 
 			// Bind the data instance to the graph:
 			graph.data( data )
-				.yMax( data.max( data.data(), function ( d ) {
+				.yMax( data.max( function ( d ) {
 					return d[ 1 ];
 				}));
 
@@ -172,7 +172,7 @@
 
 			// Bind the data instance to the graph:
 			graph.data( data )
-				.yMax( data.max( data.data(), function ( d ) {
+				.yMax( data.max( function ( d ) {
 					return d[ 1 ];
 				}));
 
@@ -244,7 +244,7 @@
 
 			// Bind the data instance to the graph:
 			graph.data( data )
-				.yMax( data.max( data.data(), function ( d ) {
+				.yMax( data.max( function ( d ) {
 					return d[ 1 ];
 				}));
 
@@ -328,7 +328,7 @@
 					.histc( yValue, edges );
 
 				// Compute the yMax:
-				_yMax = data[ i ].max( data[ i ].data(), yValue );
+				_yMax = data[ i ].max( yValue );
 				yMax = ( yMax < _yMax ) ? _yMax : yMax;
 
 			} // end FOR i
@@ -392,7 +392,7 @@
 
 	function TimeseriesHistogram( canvas, width, height, left, top ) {
 
-		var graph, data, histogram, edges, axes, annotations, title, text;
+		var graph, data, histogram, edges, axes, annotations, title, text, means;
 
 		// [1] Instantiate a new graph generator and configure:
 		graph = xfig.graph( canvas )
@@ -419,16 +419,32 @@
 			// Create edges to define our histogram bins:
 			edges = data.linspace( -0.025, 1.025, 0.05 );
 			
-			// Transform the data and histogram the data:
+			// Transform the data and extract the data to histogram:
 			data.transform( 2 )
-				.histc( function ( d ) { return d[ 1 ]; }, edges );
+				.extract( function ( d ) { return d[ 1 ]; });
+
+			// Calculate each dataset's mean value and sort the datasets based on their means:
+			means = data.mean( function ( d ) { return d; });
+			means = means.map( function ( d, i ) {
+				return [ d, i ];
+			});
+			means.sort( function ( a, b ) {
+				return a[0] < b[0] ? -1 : ( a[0] > b[0] ? 1 : 0 );
+			});
+			means = means.map( function ( d ) {
+				return d[ 1 ];
+			});
+
+			// Calculate the histogram:
+			data.reorder( means )
+				.histc( function ( d ) { return d; }, edges );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
 				.yMin( 0 )
-				.yMax( data.data().length )
+				.yMax( data.size()[0] )
 				.zMin( 0 )
-				.zMax( data.max( data.data(), function ( d ) {
+				.zMax( data.max( function ( d ) {
 					return d[ 1 ];
 				}))
 				.zRange( ['#ffffff', '#000000'] );
