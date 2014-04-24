@@ -4,6 +4,9 @@
   "description": "",
   "main": "",
   "dependencies": {
+    "bootable": "~0.2.1",
+    "electrolyte": "0.0.2",
+    "express": "~3.4.6",
     "lodash": "~2.4.1",
     "d3": "~3.4.6"
   },
