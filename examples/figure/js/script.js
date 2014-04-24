@@ -89,8 +89,8 @@
 				.x( function ( d ) { return d[ 0 ]; } )
 				.y( function ( d ) { return d[ 1 ]; } );
 
-			// Transform the data:
-			data.transform( 2 );
+			// Format the data:
+			data.format( 2 );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -167,8 +167,8 @@
 				.x( function ( d ) { return d[ 0 ]; } )
 				.y( function ( d ) { return d[ 1 ]; } );
 
-			// Transform the data:
-			data.transform( 2 );
+			// Format the data:
+			data.format( 2 );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -238,8 +238,8 @@
 			// Create edges to define our histogram bins:
 			edges = data.linspace( -0.025, 1.025, 0.05 );
 			
-			// Transform the data and histogram the data:
-			data.transform( 2 )
+			// Format the data and histogram the data:
+			data.format( 2 )
 				.histc( function ( d ) { return d[ 1 ]; }, edges );
 
 			// Bind the data instance to the graph:
@@ -323,8 +323,8 @@
 				// Create edges to define our histogram bins:
 				edges = data[ i ].linspace( -0.025, 1.025, 0.05 );
 			
-				// Transform the data and histogram the data:
-				data[ i ].transform( 2 )
+				// Format the data and histogram the data:
+				data[ i ].format( 2 )
 					.histc( yValue, edges );
 
 				// Compute the yMax:
@@ -419,8 +419,8 @@
 			// Create edges to define our histogram bins:
 			edges = data.linspace( -0.025, 1.025, 0.05 );
 			
-			// Transform the data and extract the data to histogram:
-			data.transform( 2 )
+			// Format the data and extract the data to histogram:
+			data.format( 2 )
 				.extract( function ( d ) { return d[ 1 ]; });
 
 			// Calculate each dataset's mean value and sort the datasets based on their means:

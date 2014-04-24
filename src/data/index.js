@@ -32,13 +32,13 @@ var Data = function( data ) {
 }; // end FUNCTION Data()
 
 /**
-* METHOD: transform( dim )
-*	Transform raw data into a format amenable to graph generation.
+* METHOD: format( dim )
+*	Format raw data into a form amenable to graph generation.
 *
 * @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
 * @returns {object} data instance
 */
-Data.prototype.transform = function( dim ) {
+Data.prototype.format = function( dim ) {
 
 	var data = this._data,
 		fcns = [
@@ -49,10 +49,10 @@ Data.prototype.transform = function( dim ) {
 		arr = [];
 
 	if ( !arguments.length ) {
-		throw new Error( 'transform()::insufficient input arguments. The number of dimensions to transform must be provided.' );
+		throw new Error( 'format()::insufficient input arguments. The number of dimensions to format must be provided.' );
 	}
 	if ( dim < 1 || dim > 3 ) {
-		throw new Error( 'transform()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
+		throw new Error( 'format()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
 	}
 	data = d3.range( data.length ).map( function ( id ) {
 		return data[ id ].map( function ( d, i ) {
@@ -68,7 +68,7 @@ Data.prototype.transform = function( dim ) {
 
 	return this;
 
-}; // end METHOD transform()
+}; // end METHOD format()
 
 /**
 * METHOD: linspace( min, max, increment )
