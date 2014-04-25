@@ -45,14 +45,14 @@ body {
 .graph .line {
 	fill: none;
 	stroke: #474747;
-	stroke-width: 2px;
+	stroke-width: 1;
 	stroke-opacity: 90%;
 }
 
 .graph .column {
 	fill: #474747;
 	stroke: #fff;
-	stroke-width: 2px;
+	stroke-width: 1;
 	stroke-opacity: 90%;
 }
 
@@ -66,12 +66,12 @@ body {
 
 .graph .x.axis path {
 	stroke: #aaa;
-	stroke-width: 1px;
+	stroke-width: 1;
 }
 
 .graph .axis line {
 	stroke: #aaa;
-	stroke-width: 1px;
+	stroke-width: 1;
 }
 
 .italic {
