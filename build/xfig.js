@@ -2161,6 +2161,21 @@ Data.prototype.extract = function( accessor ) {
 }; // end METHOD extract()
 
 /**
+* METHOD: concat()
+*	Concats each dataset in a multidimensional dataset array into a single dataset array.
+*/
+Data.prototype.concat = function() {
+	var data = [[]], numData = this._data.length;
+	for ( var i = 0; i < numData; i++ ) {
+		for ( var j = 0; j < this._data[ i ].length; j++ ) {
+			data[ 0 ].push( this._data[ i ][ j ] );
+		}
+	}
+	this._data = data;
+	return this;
+}; // end METHOD concat()
+
+/**
 * METHOD: size()
 *	Determine instance data size. (NOTE: we assume homogenous 2d data array)
 *
