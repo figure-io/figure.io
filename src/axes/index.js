@@ -113,7 +113,6 @@ Axes.prototype.create = function() {
 				break;
 			case "both":
 				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize/2) + ')';
-				console.log( translate );
 				break;
 			default:
 				translate = null;

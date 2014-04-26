@@ -25,6 +25,7 @@ TODO
 ### Graph
 
 1. 	Z analog to width (x) and height (y) (???)
+2.	Auto-scale domains, if no domain supplied?
 
 ### multipanel
 
@@ -49,6 +50,21 @@ TODO
 6. 	
 7. 	
 8.	
+
+### Data
+
+1. 	KDE
+2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method)
+3. 	Quantiles
+4. 	Median (median)
+5. 	Mode (mode)
+6.	Variance (var)
+7. 	Windowed Mean (wmean)
+8. 	Windowed Variance (wvar )
+9. 	Find (return indices)
+10. Filter
+11. 
+
 
 ### Annotations
 
