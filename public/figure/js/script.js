@@ -236,7 +236,7 @@
 				.y( function ( d ) { return d[ 1 ]; } );
 
 			// Create edges to define our histogram bins:
-			edges = data.linspace( -0.025, 1.025, 0.05 );
+			edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 			// Format the data and histogram the data:
 			data.format( 2 )
@@ -321,7 +321,7 @@
 					.y( yValue ) );
 
 				// Create edges to define our histogram bins:
-				edges = data[ i ].linspace( -0.025, 1.025, 0.05 );
+				edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 				// Format the data and histogram the data:
 				data[ i ].format( 2 )
@@ -417,7 +417,7 @@
 				.y( function ( d ) { return d[ 1 ]; } );
 
 			// Create edges to define our histogram bins:
-			edges = data.linspace( -0.025, 1.025, 0.05 );
+			edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 			// Format the data and extract the data to histogram:
 			data.format( 2 )

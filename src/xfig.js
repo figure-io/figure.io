@@ -102,3 +102,5 @@ xfig.annotations = function( parent ) {
 	}
 	return new Annotations( parent );
 };
+
+xfig.vector = Vector;

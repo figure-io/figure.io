@@ -58,12 +58,12 @@ TODO
 3. 	Quantiles
 4. 	
 5. 	Mode (mode)
-6.	
+6.	nanmean, nanmedian, nanvariance, etc, to handle missing values
 7. 	Windowed Mean (wmean)
 8. 	Windowed Variance (wvar )
 9. 	Find (return indices)
 10. Filter
-11. Aggregators: min, max, median, mean, sum (across all datasets per point) --> performs a reduction across datasets, not per dataset
+11. Aggregators: median, variance, stdev
 12. 
 
 

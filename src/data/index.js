@@ -71,30 +71,6 @@ Data.prototype.format = function( dim ) {
 }; // end METHOD format()
 
 /**
-* METHOD: linspace( min, max, increment )
-*	Generate a linearly spaced vector.
-*
-* @param {number} min - min defines the vector lower bound
-* @param {number} max - max defines the vector upper bound
-* @param {number} increment - distance between successive vector elements
-* @returns {array} a 1-dimensional array
-*/
-Data.prototype.linspace = function ( min, max, increment ) {
-	var numElements, vec = [];
-
-	numElements = Math.round( ( ( max - min ) / increment ) ) + 1;
-
-	vec[ 0 ] = min;
-	vec[ numElements - 1] = max;
-
-	for ( var i = 1; i < numElements - 1; i++ ) {
-		vec[ i ] = min + increment*i;
-	}
-
-	return vec;
-}; // end METHOD linspace()
-
-/**
 * METHOD: min( accessor )
 *	Determines the min data value.
 *
@@ -138,7 +114,7 @@ Data.prototype.mean = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return mean( dataset );
+		return Vector.mean( dataset );
 	});
 }; // end METHOD mean()
 
@@ -156,7 +132,7 @@ Data.prototype.variance = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return variance( dataset );
+		return Vector.variance( dataset );
 	});
 }; // end METHOD variance()
 
@@ -174,7 +150,7 @@ Data.prototype.stdev = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return stdev( dataset );
+		return Vector.stdev( dataset );
 	});
 }; // end METHOD stdev()
 
@@ -192,7 +168,7 @@ Data.prototype.median = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return median( dataset );
+		return Vector.median( dataset );
 	});
 }; // end METHOD median()
 
@@ -210,7 +186,7 @@ Data.prototype.sum = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return sum( dataset );
+		return Vector.sum( dataset );
 	});
 }; // end METHOD sum()
 
@@ -264,6 +240,104 @@ Data.prototype.concat = function() {
 }; // end METHOD concat()
 
 /**
+* METHOD: amean( accessor )
+*	Aggregate mean across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amean = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum / numDatum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amean()
+
+/**
+* METHOD: asum( accessor )
+*	Aggregate sum across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.asum = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD asum()
+
+/**
+* METHOD: amin( accessor )
+*	Aggregate min across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amin = function( accessor ) {
+	var data = this._data, d = [[]], val, min = Number.POSITIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		min = Number.POSITIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val < min ) {
+				min = val;
+			}
+		}
+		d[ 0 ].push( min );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amin()
+
+/**
+* METHOD: amax( accessor )
+*	Aggregate max across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amax = function( accessor ) {
+	var data = this._data, d = [[]], val, max = Number.NEGATIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		max = Number.NEGATIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val > max ) {
+				max = val;
+			}
+		}
+		d[ 0 ].push( max );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amax()
+
+/**
 * METHOD: size()
 *	Determine instance data size. (NOTE: we assume homogenous 2d data array)
 *
@@ -312,7 +386,7 @@ Data.prototype.histc = function( accessor, edges ) {
 
 		binWidth = ( max - min ) / ( numEdges - 1 );
 
-		edges = this.linspace( min, max+1e-16, binWidth );
+		edges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (edges)
 
@@ -386,7 +460,7 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 		binWidth = ( max - min ) / ( xNumEdges - 1 );
 
-		xEdges = this.linspace( min, max+1e-16, binWidth );
+		xEdges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (xEdges)
 
@@ -402,7 +476,7 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 		binWidth = ( max - min ) / ( yNumEdges - 1 );
 
-		yEdges = this.linspace( min, max+1e-16, binWidth );
+		yEdges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (yEdges)
 

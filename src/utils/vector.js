@@ -1,30 +1,34 @@
 
 
+// VECTOR //
 
+var Vector = {
+		'version': '0.0.0' // semvar
+	};
 
 /**
-* FUNCTION: mean( vector )
+* METHOD: mean( vector )
 *	Calculates the mean value of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} mean value
 */
-function mean( vector ) {
+Vector.mean = function( vector ) {
 	var sum = 0;
 	for ( var i = 0; i < vector.length; i++ ) {
 		sum += vector[ i ];
 	}
 	return sum / vector.length;
-} // end FUNCTION mean()
+}; // end METHOD mean()
 
 /**
-* FUNCTION: variance( vector )
+* METHOD: variance( vector )
 *	Calculates the sample variance of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} variance
 */
-function variance( vector ) {
+Vector.variance = function( vector ) {
 	var sum = 0, sum_of_squares = 0,
 		value1, value2,
 		N = vector.length;
@@ -35,16 +39,16 @@ function variance( vector ) {
 	value1 = sum_of_squares / ( N-1 );
 	value2 = sum*sum / ( N*(N-1) );
 	return value1 - value2;
-} // end FUNCTION variance()
+}; // end METHOD variance()
 
 /**
-* FUNCTION: stdev( vector )
+* METHOD: stdev( vector )
 *	Calculates the sample standard deviation of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} standard deviation
 */
-function stdev( vector ) {
+Vector.stdev = function( vector ) {
 	var sum = 0, sum_of_squares = 0,
 		value1, value2,
 		N = vector.length;
@@ -55,16 +59,16 @@ function stdev( vector ) {
 	value1 = sum_of_squares / ( N-1 );
 	value2 = sum*sum / ( N*(N-1) );
 	return Math.sqrt( value1 - value2 );
-} // end FUNCTION stdev()
+}; // end METHOD stdev()
 
 /**
-* FUNCTION: median( vector )
+* METHOD: median( vector )
 *	Calculates the median value of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} median value
 */
-function median( vector ) {
+Vector.median = function( vector ) {
 	var value, id, vec;
 
 	// Create a copy of the input vector:
@@ -86,31 +90,31 @@ function median( vector ) {
 	// Even number of elements, so must take the mean of the two middle values:
 	return ( vec[ id-1 ] + vec[ id ] ) / 2.0;
 
-} // end FUNCTION median()
+}; // end METHOD median()
 
 /**
-* FUNCTION: sum( vector )
+* METHOD: sum( vector )
 *	Calculates the sum of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} sum value
 */
-function sum( vector ) {
+Vector.sum = function( vector ) {
 	var value = 0;
 	for ( var i = 0; i < vector.length; i++ ) {
 		value += vector[ i ];
 	}
 	return value;
-} // end FUNCTION sum()
+}; // end METHOD sum()
 
 /**
-* FUNCTION: min( vector )
+* METHOD: min( vector )
 *	Calculates the min of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} min value
 */
-function min( vector ) {
+Vector.min = function( vector ) {
 	var value = Number.POSITIVE_INFINITY;
 	for ( var i = 0; i < vector.length; i++ ) {
 		if ( vector[ i ] < value ) {
@@ -118,16 +122,16 @@ function min( vector ) {
 		}
 	}
 	return value;
-} // end FUNCTION min()
+}; // end METHOD min()
 
 /**
-* FUNCTION: max( vector )
+* METHOD: max( vector )
 *	Calculates the max of an input vector.
 *
 * @param {array} vector - 1d array of numeric values
 * @returns {number} max value
 */
-function max( vector ) {
+Vector.max = function( vector ) {
 	var value = Number.NEGATIVE_INFINITY;
 	for ( var i = 0; i < vector.length; i++ ) {
 		if ( vector[ i ] > value ) {
@@ -135,4 +139,28 @@ function max( vector ) {
 		}
 	}
 	return value;
-} // end FUNCTION max()
+}; // end METHOD max()
+
+/**
+* METHOD: linspace( min, max, increment )
+*	Generate a linearly spaced vector.
+*
+* @param {number} min - min defines the vector lower bound
+* @param {number} max - max defines the vector upper bound
+* @param {number} increment - distance between successive vector elements
+* @returns {array} a 1-dimensional array
+*/
+Vector.linspace = function( min, max, increment ) {
+	var numElements, vec = [];
+
+	numElements = Math.round( ( ( max - min ) / increment ) ) + 1;
+
+	vec[ 0 ] = min;
+	vec[ numElements - 1] = max;
+
+	for ( var i = 1; i < numElements - 1; i++ ) {
+		vec[ i ] = min + increment*i;
+	}
+
+	return vec;
+}; // end METHOD linspace()

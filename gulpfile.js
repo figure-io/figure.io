@@ -74,10 +74,10 @@ gulp.task( 'jshint', function() {
 
 // Concatenate scripts:
 gulp.task( 'library.build', function() {
-	gulp.src( [ './src/start.js', './src/xfig.js', './src/*/*.js', './src/end.js' ] )
+	gulp.src( [ './src/start.js', './src/*/*.js', './src/xfig.js', './src/end.js' ] )
 		.pipe( concat( 'xfig.js' ) )
 		.pipe( gulp.dest( './build/' ) );
-	gulp.src( [ './src/start.js', './src/xfig.js', './src/*/*.js', './src/end.js' ] )
+	gulp.src( [ './src/start.js', './src/*/*.js', './src/xfig.js', './src/end.js' ] )
 		.pipe( concat( 'xfig.min.js' ) )
 		.pipe( stripDebug() )
 		.pipe( uglify() )

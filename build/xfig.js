@@ -1,110 +1,6 @@
 !function ( d3, _ ){
 	var xfig = { version: "0.0.0" }; // semver
 
-xfig.figure = function() {
-	return new Figure();
-};
-
-xfig.canvas = function( figure ) {
-	if ( !figure ) {
-		throw new Error( 'canvas()::figure selection not provided. Unable to initialize canvas generator.' );
-	}
-	if ( !( figure instanceof Figure ) ) {
-		throw new Error( 'canvas()::invalid input parameter. Parameter must be a Figure instance.' );
-	}
-	return new Canvas( figure );
-};
-
-xfig.graph = function( canvas ) {
-	if ( !canvas ) {
-		throw new Error( 'graph()::canvas selection not provided. Unable to initialize graph constructor.' );
-	}
-	if ( !( canvas instanceof Canvas ) ) {
-		throw new Error( 'graph()::invalid input parameter. Argument must be a Canvas instance.' );
-	}
-	return new Graph( canvas );
-};
-
-xfig.multipanel = function( canvas ) {
-	if ( !canvas ) {
-		throw new Error( 'multipanel()::canvas not provided. Unable to initialize multipanel constructor.' );
-	}
-	if ( !( canvas instanceof Canvas ) ) {
-		throw new Error( 'multipanel()::invalid input parameter. Input argument must be a Canvas instance.' );
-	}
-	return new Multipanel( canvas );
-};
-
-xfig.data = function( data ) {
-	if ( !data ) {
-		throw new Error( 'data()::data not provided. Unable to initialize data constructor.' );
-	}
-	if ( !( data instanceof Array ) ) {
-		throw new Error( 'data()::invalid input parameter. Input data must be an Array.' );
-	}
-	return new Data( data );
-};
-
-xfig.axes = function( graph ) {
-	if ( !graph ) {
-		throw new Error( 'axes()::graph not provided. Unable to initialize axes constructor.' );
-	}
-	if ( !( graph instanceof Graph ) ) {
-		throw new Error( 'axes()::invalid input parameter. Input argument must be a Graph instance.' );
-	}
-	return new Axes( graph );
-};
-
-xfig.area = function( graph ) {
-	if ( !graph ) {
-		throw new Error( 'area()::graph not provided. Unable to initialize area constructor.' );
-	}
-	if ( !( graph instanceof Graph ) ) {
-		throw new Error( 'area()::invalid input parameter. Input argument must be a Graph instance.' );
-	}
-	return new Area( graph );
-};
-
-xfig.line = function( graph ) {
-	if ( !graph ) {
-		throw new Error( 'line()::graph not provided. Unable to initialize line constructor.' );
-	}
-	if ( !( graph instanceof Graph ) ) {
-		throw new Error( 'line()::invalid input parameter. Input argument must be a Graph instance.' );
-	}
-	return new Line( graph );
-};
-
-xfig.histogram = function( graph ) {
-	if ( !graph ) {
-		throw new Error( 'histogram()::graph not provided. Unable to initialize histogram constructor.' );
-	}
-	if ( !( graph instanceof Graph ) ) {
-		throw new Error( 'histogram()::invalid input parameter. Input argument must be a Graph instance.' );
-	}
-	return new Histogram( graph );
-};
-
-xfig.timeserieshistogram = function( graph ) {
-	if ( !graph ) {
-		throw new Error( 'timeserieshistogram()::graph not provided. Unable to initialize timeseries histogram constructor.' );
-	}
-	if ( !( graph instanceof Graph ) ) {
-		throw new Error( 'timeserieshistogram()::invalid input parameter. Input argument must be a Graph instance.' );
-	}
-	return new TimeseriesHistogram( graph );
-};
-
-xfig.annotations = function( parent ) {
-	if ( !parent ) {
-		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );
-	}
-	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Multipanel ) ) {
-		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Multipanel instance.' );
-	}
-	return new Annotations( parent );
-};
-
 // ANNOTATION //
 
 /**
@@ -953,7 +849,6 @@ Axes.prototype.create = function() {
 				break;
 			case "both":
 				translate = 'translate(0,' + (-this._config[ 0 ].ticks.innerSize/2) + ')';
-				console.log( translate );
 				break;
 			default:
 				translate = null;
@@ -2040,30 +1935,6 @@ Data.prototype.format = function( dim ) {
 }; // end METHOD format()
 
 /**
-* METHOD: linspace( min, max, increment )
-*	Generate a linearly spaced vector.
-*
-* @param {number} min - min defines the vector lower bound
-* @param {number} max - max defines the vector upper bound
-* @param {number} increment - distance between successive vector elements
-* @returns {array} a 1-dimensional array
-*/
-Data.prototype.linspace = function ( min, max, increment ) {
-	var numElements, vec = [];
-
-	numElements = Math.round( ( ( max - min ) / increment ) ) + 1;
-
-	vec[ 0 ] = min;
-	vec[ numElements - 1] = max;
-
-	for ( var i = 1; i < numElements - 1; i++ ) {
-		vec[ i ] = min + increment*i;
-	}
-
-	return vec;
-}; // end METHOD linspace()
-
-/**
 * METHOD: min( accessor )
 *	Determines the min data value.
 *
@@ -2107,24 +1978,81 @@ Data.prototype.mean = function( accessor ) {
 		});
 	});
 	return d.map( function ( dataset ) {
-		return mean( dataset );
+		return Vector.mean( dataset );
 	});
 }; // end METHOD mean()
 
 /**
-* FUNCTION: mean( vector )
-*	Calculates the mean value of an input vector.
+* METHOD: variance( accessor )
+*	Calculates sample variance values for an array of arrays.
 *
-* @param {array} vector - 1d array of numeric values
-* @returns {number} mean value
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of variance values
 */
-function mean( vector ) {
-	var sum = 0;
-	for ( var i = 0; i < vector.length; i++ ) {
-		sum += vector[ i ];
-	}
-	return sum / vector.length;
-} // end FUNCTION mean()
+Data.prototype.variance = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.variance( dataset );
+	});
+}; // end METHOD variance()
+
+/**
+* METHOD: stdev( accessor )
+*	Calculates sample standard deviation values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of standard deviation values
+*/
+Data.prototype.stdev = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.stdev( dataset );
+	});
+}; // end METHOD stdev()
+
+/**
+* METHOD: median( accessor )
+*	Calculates the median values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of median values
+*/
+Data.prototype.median = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.median( dataset );
+	});
+}; // end METHOD median()
+
+/**
+* METHOD: sum( accessor )
+*	Calculates sums for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of sums
+*/
+Data.prototype.sum = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.sum( dataset );
+	});
+}; // end METHOD sum()
 
 /**
 * METHOD: reorder( vector )
@@ -2176,6 +2104,104 @@ Data.prototype.concat = function() {
 }; // end METHOD concat()
 
 /**
+* METHOD: amean( accessor )
+*	Aggregate mean across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amean = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum / numDatum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amean()
+
+/**
+* METHOD: asum( accessor )
+*	Aggregate sum across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.asum = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD asum()
+
+/**
+* METHOD: amin( accessor )
+*	Aggregate min across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amin = function( accessor ) {
+	var data = this._data, d = [[]], val, min = Number.POSITIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		min = Number.POSITIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val < min ) {
+				min = val;
+			}
+		}
+		d[ 0 ].push( min );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amin()
+
+/**
+* METHOD: amax( accessor )
+*	Aggregate max across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amax = function( accessor ) {
+	var data = this._data, d = [[]], val, max = Number.NEGATIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		max = Number.NEGATIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val > max ) {
+				max = val;
+			}
+		}
+		d[ 0 ].push( max );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amax()
+
+/**
 * METHOD: size()
 *	Determine instance data size. (NOTE: we assume homogenous 2d data array)
 *
@@ -2224,7 +2250,7 @@ Data.prototype.histc = function( accessor, edges ) {
 
 		binWidth = ( max - min ) / ( numEdges - 1 );
 
-		edges = this.linspace( min, max+1e-16, binWidth );
+		edges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (edges)
 
@@ -2298,7 +2324,7 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 		binWidth = ( max - min ) / ( xNumEdges - 1 );
 
-		xEdges = this.linspace( min, max+1e-16, binWidth );
+		xEdges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (xEdges)
 
@@ -2314,7 +2340,7 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 		binWidth = ( max - min ) / ( yNumEdges - 1 );
 
-		yEdges = this.linspace( min, max+1e-16, binWidth );
+		yEdges = Vector.linspace( min, max+1e-16, binWidth );
 
 	} // end IF (yEdges)
 
@@ -6434,6 +6460,278 @@ var Validator;
 	Validator = validator;
 
 })( _ );
+
+
+// VECTOR //
+
+var Vector = {
+		'version': '0.0.0' // semvar
+	};
+
+/**
+* METHOD: mean( vector )
+*	Calculates the mean value of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} mean value
+*/
+Vector.mean = function( vector ) {
+	var sum = 0;
+	for ( var i = 0; i < vector.length; i++ ) {
+		sum += vector[ i ];
+	}
+	return sum / vector.length;
+}; // end METHOD mean()
+
+/**
+* METHOD: variance( vector )
+*	Calculates the sample variance of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} variance
+*/
+Vector.variance = function( vector ) {
+	var sum = 0, sum_of_squares = 0,
+		value1, value2,
+		N = vector.length;
+	for ( var i = 0; i < N; i++ ) {
+		sum += vector[ i ];
+		sum_of_squares += vector[ i ]*vector[ i ];
+	}
+	value1 = sum_of_squares / ( N-1 );
+	value2 = sum*sum / ( N*(N-1) );
+	return value1 - value2;
+}; // end METHOD variance()
+
+/**
+* METHOD: stdev( vector )
+*	Calculates the sample standard deviation of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} standard deviation
+*/
+Vector.stdev = function( vector ) {
+	var sum = 0, sum_of_squares = 0,
+		value1, value2,
+		N = vector.length;
+	for ( var i = 0; i < N; i++ ) {
+		sum += vector[ i ];
+		sum_of_squares += vector[ i ]*vector[ i ];
+	}
+	value1 = sum_of_squares / ( N-1 );
+	value2 = sum*sum / ( N*(N-1) );
+	return Math.sqrt( value1 - value2 );
+}; // end METHOD stdev()
+
+/**
+* METHOD: median( vector )
+*	Calculates the median value of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} median value
+*/
+Vector.median = function( vector ) {
+	var value, id, vec;
+
+	// Create a copy of the input vector:
+	vec = vector.slice();
+
+	// Sort the input vector:
+	vec.sort( function ( a, b ) {
+		return a - b;
+	});
+
+	// Get the middle index:
+	id = Math.floor( vec.length / 2 );
+
+	if ( vec.length % 2 ) {
+		// The number of elements is not evenly divisible by two, hence we have a middle index:
+		return vec[ id ];
+	}
+
+	// Even number of elements, so must take the mean of the two middle values:
+	return ( vec[ id-1 ] + vec[ id ] ) / 2.0;
+
+}; // end METHOD median()
+
+/**
+* METHOD: sum( vector )
+*	Calculates the sum of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} sum value
+*/
+Vector.sum = function( vector ) {
+	var value = 0;
+	for ( var i = 0; i < vector.length; i++ ) {
+		value += vector[ i ];
+	}
+	return value;
+}; // end METHOD sum()
+
+/**
+* METHOD: min( vector )
+*	Calculates the min of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} min value
+*/
+Vector.min = function( vector ) {
+	var value = Number.POSITIVE_INFINITY;
+	for ( var i = 0; i < vector.length; i++ ) {
+		if ( vector[ i ] < value ) {
+			value = vector[ i ];
+		}
+	}
+	return value;
+}; // end METHOD min()
+
+/**
+* METHOD: max( vector )
+*	Calculates the max of an input vector.
+*
+* @param {array} vector - 1d array of numeric values
+* @returns {number} max value
+*/
+Vector.max = function( vector ) {
+	var value = Number.NEGATIVE_INFINITY;
+	for ( var i = 0; i < vector.length; i++ ) {
+		if ( vector[ i ] > value ) {
+			value = vector[ i ];
+		}
+	}
+	return value;
+}; // end METHOD max()
+
+/**
+* METHOD: linspace( min, max, increment )
+*	Generate a linearly spaced vector.
+*
+* @param {number} min - min defines the vector lower bound
+* @param {number} max - max defines the vector upper bound
+* @param {number} increment - distance between successive vector elements
+* @returns {array} a 1-dimensional array
+*/
+Vector.linspace = function( min, max, increment ) {
+	var numElements, vec = [];
+
+	numElements = Math.round( ( ( max - min ) / increment ) ) + 1;
+
+	vec[ 0 ] = min;
+	vec[ numElements - 1] = max;
+
+	for ( var i = 1; i < numElements - 1; i++ ) {
+		vec[ i ] = min + increment*i;
+	}
+
+	return vec;
+}; // end METHOD linspace()
+
+xfig.figure = function() {
+	return new Figure();
+};
+
+xfig.canvas = function( figure ) {
+	if ( !figure ) {
+		throw new Error( 'canvas()::figure selection not provided. Unable to initialize canvas generator.' );
+	}
+	if ( !( figure instanceof Figure ) ) {
+		throw new Error( 'canvas()::invalid input parameter. Parameter must be a Figure instance.' );
+	}
+	return new Canvas( figure );
+};
+
+xfig.graph = function( canvas ) {
+	if ( !canvas ) {
+		throw new Error( 'graph()::canvas selection not provided. Unable to initialize graph constructor.' );
+	}
+	if ( !( canvas instanceof Canvas ) ) {
+		throw new Error( 'graph()::invalid input parameter. Argument must be a Canvas instance.' );
+	}
+	return new Graph( canvas );
+};
+
+xfig.multipanel = function( canvas ) {
+	if ( !canvas ) {
+		throw new Error( 'multipanel()::canvas not provided. Unable to initialize multipanel constructor.' );
+	}
+	if ( !( canvas instanceof Canvas ) ) {
+		throw new Error( 'multipanel()::invalid input parameter. Input argument must be a Canvas instance.' );
+	}
+	return new Multipanel( canvas );
+};
+
+xfig.data = function( data ) {
+	if ( !data ) {
+		throw new Error( 'data()::data not provided. Unable to initialize data constructor.' );
+	}
+	if ( !( data instanceof Array ) ) {
+		throw new Error( 'data()::invalid input parameter. Input data must be an Array.' );
+	}
+	return new Data( data );
+};
+
+xfig.axes = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'axes()::graph not provided. Unable to initialize axes constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'axes()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Axes( graph );
+};
+
+xfig.area = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'area()::graph not provided. Unable to initialize area constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'area()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Area( graph );
+};
+
+xfig.line = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'line()::graph not provided. Unable to initialize line constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'line()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Line( graph );
+};
+
+xfig.histogram = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'histogram()::graph not provided. Unable to initialize histogram constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'histogram()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Histogram( graph );
+};
+
+xfig.timeserieshistogram = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'timeserieshistogram()::graph not provided. Unable to initialize timeseries histogram constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'timeserieshistogram()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new TimeseriesHistogram( graph );
+};
+
+xfig.annotations = function( parent ) {
+	if ( !parent ) {
+		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );
+	}
+	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Multipanel ) ) {
+		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Multipanel instance.' );
+	}
+	return new Annotations( parent );
+};
+
+xfig.vector = Vector;
 if ( typeof define === "function" && define.amd ) {
 	define( xfig );
 } else if ( typeof module === "object" && module.exports ) {
