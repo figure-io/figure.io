@@ -56,14 +56,15 @@ TODO
 1. 	KDE
 2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method)
 3. 	Quantiles
-4. 	Median (median)
+4. 	
 5. 	Mode (mode)
-6.	Variance (var)
+6.	
 7. 	Windowed Mean (wmean)
 8. 	Windowed Variance (wvar )
 9. 	Find (return indices)
 10. Filter
-11. 
+11. Aggregators: min, max, median, mean, sum (across all datasets per point) --> performs a reduction across datasets, not per dataset
+12. 
 
 
 ### Annotations

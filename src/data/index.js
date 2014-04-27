@@ -143,19 +143,76 @@ Data.prototype.mean = function( accessor ) {
 }; // end METHOD mean()
 
 /**
-* FUNCTION: mean( vector )
-*	Calculates the mean value of an input vector.
+* METHOD: variance( accessor )
+*	Calculates sample variance values for an array of arrays.
 *
-* @param {array} vector - 1d array of numeric values
-* @returns {number} mean value
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of variance values
 */
-function mean( vector ) {
-	var sum = 0;
-	for ( var i = 0; i < vector.length; i++ ) {
-		sum += vector[ i ];
-	}
-	return sum / vector.length;
-} // end FUNCTION mean()
+Data.prototype.variance = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return variance( dataset );
+	});
+}; // end METHOD variance()
+
+/**
+* METHOD: stdev( accessor )
+*	Calculates sample standard deviation values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of standard deviation values
+*/
+Data.prototype.stdev = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return stdev( dataset );
+	});
+}; // end METHOD stdev()
+
+/**
+* METHOD: median( accessor )
+*	Calculates the median values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of median values
+*/
+Data.prototype.median = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return median( dataset );
+	});
+}; // end METHOD median()
+
+/**
+* METHOD: sum( accessor )
+*	Calculates sums for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of sums
+*/
+Data.prototype.sum = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return sum( dataset );
+	});
+}; // end METHOD sum()
 
 /**
 * METHOD: reorder( vector )
