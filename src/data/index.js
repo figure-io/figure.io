@@ -15,13 +15,6 @@ var Data = function( data ) {
 	this._config = {};
 	this._data = data;
 
-	this._xMin = null;
-	this._xMax = null;
-	this._yMin = null;
-	this._yMax = null;
-	this._zMin = null;
-	this._zMax = null;
-
 	// ACCESSORS:
 	this._xValue = function( d ) { return d[ 0 ]; };
 	this._yValue = function( d ) { return d[ 1 ]; };
@@ -509,7 +502,7 @@ Data.prototype.data = function() {
 *	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
 *
 * @param {function} fcn - x-value accessor
-* @returns {function} x-value accessor
+* @returns {object|function} instance object or x-value accessor
 */
 Data.prototype.x = function( fcn ) {
 	var self = this,
@@ -528,7 +521,6 @@ Data.prototype.x = function( fcn ) {
 	});
 
 	return this;
-
 }; // end METHOD x()
 
 /**
@@ -536,7 +528,7 @@ Data.prototype.x = function( fcn ) {
 *	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
 *
 * @param {function} fcn - y-value accessor
-* @returns {function} y-value accessor
+* @returns {object|function} instance object or y-value accessor
 */
 Data.prototype.y = function( fcn ) {
 	var self = this,
@@ -555,7 +547,6 @@ Data.prototype.y = function( fcn ) {
 	});
 
 	return this;
-
 }; // end METHOD y()
 
 /**
@@ -563,7 +554,7 @@ Data.prototype.y = function( fcn ) {
 *	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
 *
 * @param {function} fcn - z-value accessor
-* @returns {function} z-value accessor
+* @returns {object|function} instance object or z-value accessor
 */
 Data.prototype.z = function( fcn ) {
 	var self = this,
@@ -582,7 +573,6 @@ Data.prototype.z = function( fcn ) {
 	});
 
 	return this;
-
 }; // end METHOD z()
 
 /**
