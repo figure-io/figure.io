@@ -73,6 +73,16 @@ xfig.line = function( graph ) {
 	return new Line( graph );
 };
 
+xfig.rug = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'rug()::graph not provided. Unable to initialize rug constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'rug()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Rug( graph );
+};
+
 xfig.histogram = function( graph ) {
 	if ( !graph ) {
 		throw new Error( 'histogram()::graph not provided. Unable to initialize histogram constructor.' );

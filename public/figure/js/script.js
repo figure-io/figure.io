@@ -295,7 +295,7 @@
 
 	function KDE( canvas, width, height, left, top ) {
 
-		var graph, data, line, edges, axes, annotations, title, text;
+		var graph, data, line, rug, edges, axes, annotations, title, text;
 
 		// [1] Instantiate a new graph generator and configure:
 		graph = xfig.graph( canvas )
@@ -342,6 +342,13 @@
 
 			// Create the line chart:
 			line.create();
+
+			// [3.1] Instantiate a new rug chart generator and configure:
+			rug = xfig.rug( graph )
+				.labels( [ 'data 0' ] );
+
+			// Create the rug chart:
+			rug.create();
 
 			// [4] Instantiate a new axes generator and configure:
 			axes = xfig.axes( graph )

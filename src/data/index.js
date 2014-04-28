@@ -485,6 +485,8 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 }; // end METHOD hist2c()
 
+// TODO: permit other kernels; ability to specify number of points; ability to specify estimator.
+
 /**
 * METHOD: kde( accessor )
 *	Calculates the kernel density estimate for each dataset.
@@ -509,7 +511,6 @@ Data.prototype.kde = function( accessor, min, max ) {
 		.eval( data );
 
 	return this;
-
 }; // end METHOD kde()
 
 /**

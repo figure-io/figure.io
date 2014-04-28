@@ -46,14 +46,14 @@ TODO
 2. 	bar
 3.	column
 4. 	gauge
-5. 	
+5. 	rug
 6. 	
 7. 	
 8.	
 
 ### Data
 
-1. 	KDE
+1. 	
 2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method)
 3. 	Quantiles
 4. 	
@@ -92,6 +92,6 @@ TODO
 
 ### Task Runner
 
-1. 	Setup Gulp
+1. 	
 2. 	JSLint
-3. 	Concat, minify, and wrap in closure in src JS
+3. 	

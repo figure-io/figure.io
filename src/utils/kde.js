@@ -270,6 +270,8 @@ KDE.prototype.points = function( value ) {
 
 }; // end METHOD points()
 
+// TODO: use dfft to speed KDE calculation.
+
 /**
 * METHOD: eval( data )
 *	Computes the kernel density estimate.
