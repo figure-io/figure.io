@@ -353,7 +353,7 @@ Data.prototype.size = function() {
 */
 Data.prototype.histc = function( accessor, edges ) {
 
-	var data = this._data,
+	var self = this,
 		min, max, numEdges = 21, binWidth;
 
 	if ( !accessor ) {
@@ -361,19 +361,19 @@ Data.prototype.histc = function( accessor, edges ) {
 	}
 
 	// Convert data to standard representation; needed for non-deterministic accessors:
-	data = d3.range( data.length ).map( function ( id ) {
-		return data[ id ].map( function ( d, i ) {
-			return accessor.call( data[ id ], d, i );
+	this._data = d3.range( this._data.length ).map( function ( id ) {
+		return self._data[ id ].map( function ( d, i ) {
+			return accessor.call( self._data[ id ], d, i );
 		});
 	});
 
 	if ( !edges.length ) {
 		
-		min = this.min( data, function ( d ) {
+		min = this.min( function ( d ) {
 				return d;
 			});
 
-		max = this.max( data, function ( d ) {
+		max = this.max( function ( d ) {
 				return d;
 			});
 
@@ -384,11 +384,11 @@ Data.prototype.histc = function( accessor, edges ) {
 	} // end IF (edges)
 
 	// Histogram the data:
-	data = d3.range( data.length ).map( function ( id ) {
+	this._data = d3.range( this._data.length ).map( function ( id ) {
 
 		var counts;
 
-		counts = histc( data[ id ], edges );
+		counts = histc( self._data[ id ], edges );
 
 		// Augment counts to include the edge and binWidth (binWidth is needed in the event of variable bin width ):
 		counts = counts.map( function ( d, i ) {
@@ -403,8 +403,6 @@ Data.prototype.histc = function( accessor, edges ) {
 		return counts.slice( 1, counts.length-1 );
 
 	});
-
-	this._data = data;
 
 	return this;
 
@@ -422,7 +420,7 @@ Data.prototype.histc = function( accessor, edges ) {
 */
 Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
-	var data = this._data,
+	var self = this,
 		xNumEdges = 101,
 		yNumEdges = 101,
 		min, max;
@@ -432,22 +430,22 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	}
 
 	// Convert data to standard representation; needed for non-deterministic accessors:
-	data = d3.range( data.length ).map( function ( id ) {
-		return data[ id ].map( function ( d, i ) {
+	this._data = d3.range( this._data.length ).map( function ( id ) {
+		return self._data[ id ].map( function ( d, i ) {
 			return [
-				xValue.call( data[ id ], d, i ),
-				yValue.call( data[ id ], d, i )
+				xValue.call( self._data[ id ], d, i ),
+				yValue.call( self._data[ id ], d, i )
 			];
 		});
 	});
 
 	if ( !xEdges.length ) {
 		
-		min = this.min( data, function ( d ) {
+		min = this.min( function ( d ) {
 				return d[ 0 ];
 			});
 
-		max = this.max( data, function ( d ) {
+		max = this.max( function ( d ) {
 				return d[ 0 ];
 			});
 
@@ -459,11 +457,11 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 
 	if ( !yEdges.length ) {
 		
-		min = this.min( data, function ( d ) {
+		min = this.min( function ( d ) {
 				return d[ 1 ];
 			});
 
-		max = this.max( data, function ( d ) {
+		max = this.max( function ( d ) {
 				return d[ 1 ];
 			});
 
@@ -474,18 +472,43 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	} // end IF (yEdges)
 
 	// Histogram the data:
-	data = hist2c( data, xEdges, yEdges );
+	this._data = hist2c( this._data, xEdges, yEdges );
 
 	// Drop the first and last bins as these include values which exceeded the lower and upper bounds:
-	data = data.map( function ( d, i ) {
-		return data[ i ].slice( 1, data[ i ].length - 1 );
+	this._data = this._data.map( function ( d, i ) {
+		return self._data[ i ].slice( 1, self._data[ i ].length - 1 );
 	});
 
-	this._data = data.slice( 1, data.length-1 );
+	this._data = this._data.slice( 1, this._data.length-1 );
 
 	return this;
 
 }; // end METHOD hist2c()
+
+/**
+* METHOD: kde( accessor )
+*	Calculates the kernel density estimate for each dataset.
+*
+* @param {function} accessor - data accessor specifying the data over which to calculate the KDE
+*/
+Data.prototype.kde = function( accessor ) {
+	var data = this._data,
+		kde = new KDE();
+
+	// Configure the KDE generator:
+	kde.kernel( pdf.normal( 0, 1 ) )
+		.x( accessor )
+		.min( data.min( accessor ) )
+		.max( data.max( accessor ) )
+		.points( Math.pow( 2, 14 ) );
+
+	// Calculate the bandwidth estimator and evaluate the density:
+	this._data = kde.estimator( data, 'silverman' )
+		.eval( data );
+
+	return this;
+
+}; // end METHOD kde()
 
 /**
 * METHOD: data()

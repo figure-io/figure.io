@@ -290,6 +290,84 @@
 
 	} // end FUNCTION Histogram()
 
+	function KDE( canvas, width, height, left, top ) {
+
+		var graph, data, line, edges, axes, annotations, title, text;
+
+		// [1] Instantiate a new graph generator and configure:
+		graph = xfig.graph( canvas )
+			.width( width )
+			.height( height )
+			.position({
+				'left': left,
+				'top': top
+			})
+			.xMin( 0 )
+			.xMax( 1 )
+			.yMin( 0 );
+
+		// Create the graph:
+		graph.create( 'line' );
+
+		// Get data:
+		d3.json( 'data/kde.data.json', function ( error, json ) {
+
+			// [2] Instantiate a new data generator and configure:
+			data = xfig.data( json )
+				.x( function ( d ) { return d[ 0 ]; } )
+				.y( function ( d ) { return d[ 1 ]; } );
+
+			// Format the data:
+			data.format( 2 );
+
+			// Bind the data instance to the graph:
+			graph.data( data )
+				.yMax( data.max( function ( d ) {
+					return d[ 1 ];
+				}));
+
+			// [3] Instantiate a new line chart generator and configure:
+			line = xfig.line( graph )
+				.labels( [ 'data 0' ] );
+
+			// Create the line chart:
+			line.create();
+
+			// [4] Instantiate a new axes generator and configure:
+			axes = xfig.axes( graph )
+				.yLabel( 'density' );
+
+			// Create the axes:
+			axes.create();
+
+			// [5] Instantiate a new annotations generator and configure:
+			annotations = xfig.annotations( graph );
+
+			// Create the annotations element:
+			annotations.create();
+
+			// [5.1] Instantiate a new title instance and configure:
+			title = annotations.title()
+				.top( -30 )
+				.left( 250 );
+
+			// Add a (sub)title:
+			title.create( 'Subtitle' );
+
+			// [5.2] Instantiate a new text instance and configure:
+			text = annotations.text()
+				.width( 200 )
+				.height( 100 )
+				.top( 50 )
+				.left( 310 );
+
+			// Add a text annotation:
+			text.create( 'This is another text annotation, which may run multiple lines.' );
+
+		});
+
+	} // end FUNCTION KDE()
+
 	function Multipanel( canvas, width, height, left, top ) {
 
 		var multipanel,

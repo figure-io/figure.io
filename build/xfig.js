@@ -735,6 +735,224 @@ Title.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
 
+// CANVAS //
+
+/**
+* FUNCTION: Canvas( figure )
+*	Canvas constructor. Creates a new canvas instance.
+*
+* @param {object} figure - parent figure instance
+* @returns {object} canvas instance
+*/
+var Canvas = function( figure ) {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._parent = figure;
+	this._root = undefined;
+	this._children = {};
+	this._config = {
+		'width': 500,
+		'height': 500,
+		"background": false
+	};
+
+	// REGISTER //
+	if ( figure._config.hasOwnProperty( 'canvas' )  ) {
+		figure._config.canvas.push( this._config );
+	} else {
+		figure._config.canvas = [ this._config ];
+	}
+	if ( figure._children.hasOwnProperty( 'canvas' ) ) {
+		figure._children.canvas.push( this );
+	} else {
+		figure._children.canvas = [ this ];
+	}
+
+	return this;
+
+}; // end FUNCTION Canvas()
+
+/**
+* METHOD: create( type )
+*	Creates a new canvas element. If a type is supplied, appends a canvas element of the specified type to a root figure element. If no type is supplied, defaults to svg canvas.
+*
+* @param {string} type - canvas type to be created.
+* @returns {object} canvas instance
+*/
+Canvas.prototype.create = function( type ) {
+
+	// VARIABLES //
+	var self = this;
+
+	// CHECKS!!!
+	if ( !type ) {
+		type = 'svg';
+	}
+
+	// CANVAS //
+
+	// Create a new canvas based on the specified type...
+	switch ( type ) {
+		case 'svg':
+			this._root = svg();
+			break;
+		default:
+			throw new Error( 'create()::unrecognized canvas type: ' + type );
+	} // end SWITCH (type)
+
+	return this;
+
+	// FUNCTIONS //
+
+	/**
+	* FUNCTION: svg()
+	*	Append an SVG canvas to a parent element.
+	*
+	* @returns {object} SVG element as a D3 selection.
+	*/
+	function svg() {
+		var parent = self._parent._root,
+			width = self._config.width,
+			height = self._config.height,
+			canvas;
+
+		canvas = d3.select( parent ).append( 'svg:svg' )
+			.attr( 'property', 'canvas' )
+			.attr( 'class', 'canvas' )
+			.attr( 'width', width )
+			.attr( 'height', height )
+			.attr( 'viewBox', '0 0 ' + width + ' ' + height )
+			.attr( 'preserveAspectRatio', 'xMidYMid' )
+			.attr( 'data-aspect', width / height );
+
+		return canvas;
+	} // end FUNCTION svg()
+
+}; // end METHOD create()
+
+
+/**
+* METHOD: width( value )
+*	Width setter and getter. If a value is supplied, defines the canvas width. If no value is supplied, returns the canvas width.
+*
+* @param {number} width - desired canvas width.
+* @returns {object|number} canvas instance or canvas width.
+*/
+Canvas.prototype.width = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.width;
+	}
+
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'width()::invalid input argument. ' );
+			}
+			self._config.width = value;
+		});
+
+	}
+
+	return this;
+	
+}; // end METHOD width()
+
+/**
+* METHOD: height( value )
+*	Height setter and getter. If a value is supplied, defines the canvas height. If no value is supplied, returns the canvas height.
+*
+* @param {number} height - desired canvas height.
+* @returns {object|number} canvas instance or canvas height.
+*/
+Canvas.prototype.height = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.height;
+	}
+	
+	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
+
+		Validator( value, rules, function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'height()::invalid input argument. ' );
+			}
+			self._config.height = value;
+		});
+
+	}
+
+	return this;
+
+}; // end METHOD height()
+
+/**
+* METHOD: background( bool )
+*	Background display setter and getter. If a boolean is provided, sets the background display. If no boolean is provided, gets the background display. If false, when canvases are created, no background is created.
+*
+* @param {boolean} bool - boolean flag indicating whether to create a background.
+* @returns {object|boolean} canvas instance or background display
+*/
+Canvas.prototype.background = function( bool ) {
+	var self = this,
+		rules = 'boolean';
+
+	if ( !arguments.length ) {
+		return this._config.background;
+	}
+
+	// Validator( bool, rules, set );
+	(function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'background()::invalid input argument.' );
+		}
+		self._config.background = bool;
+	})();
+
+	return this;
+
+}; // end METHOD background()
+
+/**
+* METHOD: parent()
+*	Returns the canvas parent.
+*
+* @returns {object} parent instance
+*/
+Canvas.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the canvas configuration as a JSON blob.
+*
+* @returns {string} configuration blob
+*/
+Canvas.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the canvas children.
+*
+* @returns {object} canvas children
+*/
+Canvas.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
+
 // Axes //
 
 /**
@@ -1644,889 +1862,6 @@ Axes.prototype.config = function() {
 Axes.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
-
-// CANVAS //
-
-/**
-* FUNCTION: Canvas( figure )
-*	Canvas constructor. Creates a new canvas instance.
-*
-* @param {object} figure - parent figure instance
-* @returns {object} canvas instance
-*/
-var Canvas = function( figure ) {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._parent = figure;
-	this._root = undefined;
-	this._children = {};
-	this._config = {
-		'width': 500,
-		'height': 500,
-		"background": false
-	};
-
-	// REGISTER //
-	if ( figure._config.hasOwnProperty( 'canvas' )  ) {
-		figure._config.canvas.push( this._config );
-	} else {
-		figure._config.canvas = [ this._config ];
-	}
-	if ( figure._children.hasOwnProperty( 'canvas' ) ) {
-		figure._children.canvas.push( this );
-	} else {
-		figure._children.canvas = [ this ];
-	}
-
-	return this;
-
-}; // end FUNCTION Canvas()
-
-/**
-* METHOD: create( type )
-*	Creates a new canvas element. If a type is supplied, appends a canvas element of the specified type to a root figure element. If no type is supplied, defaults to svg canvas.
-*
-* @param {string} type - canvas type to be created.
-* @returns {object} canvas instance
-*/
-Canvas.prototype.create = function( type ) {
-
-	// VARIABLES //
-	var self = this;
-
-	// CHECKS!!!
-	if ( !type ) {
-		type = 'svg';
-	}
-
-	// CANVAS //
-
-	// Create a new canvas based on the specified type...
-	switch ( type ) {
-		case 'svg':
-			this._root = svg();
-			break;
-		default:
-			throw new Error( 'create()::unrecognized canvas type: ' + type );
-	} // end SWITCH (type)
-
-	return this;
-
-	// FUNCTIONS //
-
-	/**
-	* FUNCTION: svg()
-	*	Append an SVG canvas to a parent element.
-	*
-	* @returns {object} SVG element as a D3 selection.
-	*/
-	function svg() {
-		var parent = self._parent._root,
-			width = self._config.width,
-			height = self._config.height,
-			canvas;
-
-		canvas = d3.select( parent ).append( 'svg:svg' )
-			.attr( 'property', 'canvas' )
-			.attr( 'class', 'canvas' )
-			.attr( 'width', width )
-			.attr( 'height', height )
-			.attr( 'viewBox', '0 0 ' + width + ' ' + height )
-			.attr( 'preserveAspectRatio', 'xMidYMid' )
-			.attr( 'data-aspect', width / height );
-
-		return canvas;
-	} // end FUNCTION svg()
-
-}; // end METHOD create()
-
-
-/**
-* METHOD: width( value )
-*	Width setter and getter. If a value is supplied, defines the canvas width. If no value is supplied, returns the canvas width.
-*
-* @param {number} width - desired canvas width.
-* @returns {object|number} canvas instance or canvas width.
-*/
-Canvas.prototype.width = function( value ) {
-	var self = this,
-		rules = 'number';
-
-	if ( !arguments.length ) {
-		return this._config.width;
-	}
-
-	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-
-		Validator( value, rules, function set( errors ) {
-			if ( errors ) {
-				console.error( errors );
-				throw new Error( 'width()::invalid input argument. ' );
-			}
-			self._config.width = value;
-		});
-
-	}
-
-	return this;
-	
-}; // end METHOD width()
-
-/**
-* METHOD: height( value )
-*	Height setter and getter. If a value is supplied, defines the canvas height. If no value is supplied, returns the canvas height.
-*
-* @param {number} height - desired canvas height.
-* @returns {object|number} canvas instance or canvas height.
-*/
-Canvas.prototype.height = function( value ) {
-	var self = this,
-		rules = 'number';
-
-	if ( !arguments.length ) {
-		return this._config.height;
-	}
-	
-	if ( !_.isUndefined( value ) && !_.isNull( value ) ) {
-
-		Validator( value, rules, function set( errors ) {
-			if ( errors ) {
-				console.error( errors );
-				throw new Error( 'height()::invalid input argument. ' );
-			}
-			self._config.height = value;
-		});
-
-	}
-
-	return this;
-
-}; // end METHOD height()
-
-/**
-* METHOD: background( bool )
-*	Background display setter and getter. If a boolean is provided, sets the background display. If no boolean is provided, gets the background display. If false, when canvases are created, no background is created.
-*
-* @param {boolean} bool - boolean flag indicating whether to create a background.
-* @returns {object|boolean} canvas instance or background display
-*/
-Canvas.prototype.background = function( bool ) {
-	var self = this,
-		rules = 'boolean';
-
-	if ( !arguments.length ) {
-		return this._config.background;
-	}
-
-	// Validator( bool, rules, set );
-	(function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'background()::invalid input argument.' );
-		}
-		self._config.background = bool;
-	})();
-
-	return this;
-
-}; // end METHOD background()
-
-/**
-* METHOD: parent()
-*	Returns the canvas parent.
-*
-* @returns {object} parent instance
-*/
-Canvas.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the canvas configuration as a JSON blob.
-*
-* @returns {string} configuration blob
-*/
-Canvas.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the canvas children.
-*
-* @returns {object} canvas children
-*/
-Canvas.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
-// DATA //
-
-/**
-* FUNCTION: Data( data )
-*	Data constructor. Creates a new data instance.
-*
-* @param {array} data - input data is expected to be an array of arrays; e.g., [[[0,0],[1,1],...,[N,N]]] or [[{x:0,y:0},{x:1,y:1},...{x:N,y:N}]]. Elements in the outer array are treated as separate datasets.
-* @returns {object} data instance
-*/
-var Data = function( data ) {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._config = {};
-	this._data = data;
-
-	// ACCESSORS:
-	this._xValue = function( d ) { return d[ 0 ]; };
-	this._yValue = function( d ) { return d[ 1 ]; };
-	this._zValue = function( d ) { return d[ 2 ]; };
-
-	return this;
-
-}; // end FUNCTION Data()
-
-/**
-* METHOD: format( dim )
-*	Format raw data into a form amenable to graph generation.
-*
-* @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
-* @returns {object} data instance
-*/
-Data.prototype.format = function( dim ) {
-
-	var data = this._data,
-		fcns = [
-			this._xValue,
-			this._yValue,
-			this._zValue
-		],
-		arr = [];
-
-	if ( !arguments.length ) {
-		throw new Error( 'format()::insufficient input arguments. The number of dimensions to format must be provided.' );
-	}
-	if ( dim < 1 || dim > 3 ) {
-		throw new Error( 'format()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
-	}
-	data = d3.range( data.length ).map( function ( id ) {
-		return data[ id ].map( function ( d, i ) {
-			arr = [];
-			for ( var n = 0; n < dim; n++ ) {
-				arr.push( fcns[ n ].call( data[ id ], d, i ) );
-			}
-			return arr;
-		});
-	});
-
-	this._data = data;
-
-	return this;
-
-}; // end METHOD format()
-
-/**
-* METHOD: min( accessor )
-*	Determines the min data value.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {number} min data value
-*/
-Data.prototype.min = function( accessor ) {
-	return d3.min( this._data, function ( dataset ) {
-		return d3.min( dataset, function ( d ) {
-			return accessor( d );
-		});
-	});
-}; // end METHOD min()
-
-/**
-* METHOD: max( accessor )
-*	Determines the max data value.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {number} max data value
-*/
-Data.prototype.max = function( accessor ) {
-	return d3.max( this._data, function ( dataset ) {
-		return d3.max( dataset, function ( d ) {
-			return accessor( d );
-		});
-	});
-}; // end METHOD max()
-
-/**
-* METHOD: mean( accessor )
-*	Calculates the mean values for an array of arrays.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {array} 1d array of mean values
-*/
-Data.prototype.mean = function( accessor ) {
-	var d = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return d.map( function ( dataset ) {
-		return Vector.mean( dataset );
-	});
-}; // end METHOD mean()
-
-/**
-* METHOD: variance( accessor )
-*	Calculates sample variance values for an array of arrays.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {array} 1d array of variance values
-*/
-Data.prototype.variance = function( accessor ) {
-	var d = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return d.map( function ( dataset ) {
-		return Vector.variance( dataset );
-	});
-}; // end METHOD variance()
-
-/**
-* METHOD: stdev( accessor )
-*	Calculates sample standard deviation values for an array of arrays.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {array} 1d array of standard deviation values
-*/
-Data.prototype.stdev = function( accessor ) {
-	var d = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return d.map( function ( dataset ) {
-		return Vector.stdev( dataset );
-	});
-}; // end METHOD stdev()
-
-/**
-* METHOD: median( accessor )
-*	Calculates the median values for an array of arrays.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {array} 1d array of median values
-*/
-Data.prototype.median = function( accessor ) {
-	var d = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return d.map( function ( dataset ) {
-		return Vector.median( dataset );
-	});
-}; // end METHOD median()
-
-/**
-* METHOD: sum( accessor )
-*	Calculates sums for an array of arrays.
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {array} 1d array of sums
-*/
-Data.prototype.sum = function( accessor ) {
-	var d = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return d.map( function ( dataset ) {
-		return Vector.sum( dataset );
-	});
-}; // end METHOD sum()
-
-/**
-* METHOD: reorder( vector )
-*	Reorders the data based on an index vector.
-*
-* @param {array} vector - 1d array of indices
-* @returns {object} instance object
-*/
-Data.prototype.reorder = function( vector ) {
-	var self = this;
-	if ( this._data.length !== vector.length ) {
-		throw new Error( 'reorder()::invalid input argument. Vector length must equal data length.' );
-	}
-	this._data = vector.map( function ( id ) {
-		return self._data[ id ];
-	});
-	return this;
-}; // end METHOD reorder()
-
-/**
-* METHOD: extract( accessor )
-*	Reduce data dimensionality by extracting data feature(s).
-*
-* @param {function} accessor - data accessor specifying how to access data values
-* @returns {object} instance object
-*/
-Data.prototype.extract = function( accessor ) {
-	this._data = this._data.map( function ( dataset ) {
-		return dataset.map( function ( d ) {
-			return accessor( d );
-		});
-	});
-	return this;
-}; // end METHOD extract()
-
-/**
-* METHOD: concat()
-*	Concats each dataset in a multidimensional dataset array into a single dataset array.
-*/
-Data.prototype.concat = function() {
-	var data = [[]], numData = this._data.length;
-	for ( var i = 0; i < numData; i++ ) {
-		for ( var j = 0; j < this._data[ i ].length; j++ ) {
-			data[ 0 ].push( this._data[ i ][ j ] );
-		}
-	}
-	this._data = data;
-	return this;
-}; // end METHOD concat()
-
-/**
-* METHOD: amean( accessor )
-*	Aggregate mean across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
-*
-* @param {function} accessor - accessor function used to extract the data to be aggregated
-* @returns {object} instance object
-*/
-Data.prototype.amean = function( accessor ) {
-	var data = this._data, d = [[]], sum = 0,
-		numData = data.length,
-		numDatum = data[ 0 ].length;
-
-	for ( var j = 0; j < numDatum; j++ ) {
-		sum = 0;
-		for ( var i = 0; i < numData; i++ ) {
-			sum += accessor( data[ i ][ j ] );
-		}
-		d[ 0 ].push( sum / numDatum );
-	}
-	this._data = d;
-	return this;
-}; // end METHOD amean()
-
-/**
-* METHOD: asum( accessor )
-*	Aggregate sum across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
-*
-* @param {function} accessor - accessor function used to extract the data to be aggregated
-* @returns {object} instance object
-*/
-Data.prototype.asum = function( accessor ) {
-	var data = this._data, d = [[]], sum = 0,
-		numData = data.length,
-		numDatum = data[ 0 ].length;
-
-	for ( var j = 0; j < numDatum; j++ ) {
-		sum = 0;
-		for ( var i = 0; i < numData; i++ ) {
-			sum += accessor( data[ i ][ j ] );
-		}
-		d[ 0 ].push( sum );
-	}
-	this._data = d;
-	return this;
-}; // end METHOD asum()
-
-/**
-* METHOD: amin( accessor )
-*	Aggregate min across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
-*
-* @param {function} accessor - accessor function used to extract the data to be aggregated
-* @returns {object} instance object
-*/
-Data.prototype.amin = function( accessor ) {
-	var data = this._data, d = [[]], val, min = Number.POSITIVE_INFINITY,
-		numData = data.length,
-		numDatum = data[ 0 ].length;
-
-	for ( var j = 0; j < numDatum; j++ ) {
-		min = Number.POSITIVE_INFINITY;
-		for ( var i = 0; i < numData; i++ ) {
-			val = accessor( data[ i ][ j ] );
-			if ( val < min ) {
-				min = val;
-			}
-		}
-		d[ 0 ].push( min );
-	}
-	this._data = d;
-	return this;
-}; // end METHOD amin()
-
-/**
-* METHOD: amax( accessor )
-*	Aggregate max across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
-*
-* @param {function} accessor - accessor function used to extract the data to be aggregated
-* @returns {object} instance object
-*/
-Data.prototype.amax = function( accessor ) {
-	var data = this._data, d = [[]], val, max = Number.NEGATIVE_INFINITY,
-		numData = data.length,
-		numDatum = data[ 0 ].length;
-
-	for ( var j = 0; j < numDatum; j++ ) {
-		max = Number.NEGATIVE_INFINITY;
-		for ( var i = 0; i < numData; i++ ) {
-			val = accessor( data[ i ][ j ] );
-			if ( val > max ) {
-				max = val;
-			}
-		}
-		d[ 0 ].push( max );
-	}
-	this._data = d;
-	return this;
-}; // end METHOD amax()
-
-/**
-* METHOD: size()
-*	Determine instance data size. (NOTE: we assume homogenous 2d data array)
-*
-* @returns {array} data size: [1d,2d]
-*/
-Data.prototype.size = function() {
-	var size = [];
-	size.push( this._data.length );
-	size.push( this._data[ 0 ].length );
-	return size;
-}; // end METHOD size()
-
-/**
-* METHOD: histc( accessor, edges )
-*	Generates a counts vector where a count represents the number of data points falling in a bin defined by a pair of edges in the edge vector.
-*
-* @param {function} accessor - data accessor specifying the data to bin
-* @param {array} edges - (optional) 1d vector of edges defining bins; if not provided, a default edge vector is created of 21 bins where the start and end edge are defined by the data.
-* @returns {object} data instance
-*/
-Data.prototype.histc = function( accessor, edges ) {
-
-	var data = this._data,
-		min, max, numEdges = 21, binWidth;
-
-	if ( !accessor ) {
-		throw new Error( 'histc()::insufficient input arguments. An data value accessor must be provided.' );
-	}
-
-	// Convert data to standard representation; needed for non-deterministic accessors:
-	data = d3.range( data.length ).map( function ( id ) {
-		return data[ id ].map( function ( d, i ) {
-			return accessor.call( data[ id ], d, i );
-		});
-	});
-
-	if ( !edges.length ) {
-		
-		min = this.min( data, function ( d ) {
-				return d;
-			});
-
-		max = this.max( data, function ( d ) {
-				return d;
-			});
-
-		binWidth = ( max - min ) / ( numEdges - 1 );
-
-		edges = Vector.linspace( min, max+1e-16, binWidth );
-
-	} // end IF (edges)
-
-	// Histogram the data:
-	data = d3.range( data.length ).map( function ( id ) {
-
-		var counts;
-
-		counts = histc( data[ id ], edges );
-
-		// Augment counts to include the edge and binWidth (binWidth is needed in the event of variable bin width ):
-		counts = counts.map( function ( d, i ) {
-			return [
-				edges[ i-1 ],
-				counts[ i ],
-				edges[ i ]
-			];
-		});
-
-		// Drop the first and last bins as these include values which exceeded the lower and upper bounds:
-		return counts.slice( 1, counts.length-1 );
-
-	});
-
-	this._data = data;
-
-	return this;
-
-}; // end METHOD histc()
-
-/**
-* METHOD: hist2c( xValue, yValue, xEdges, yEdges )
-*	Generates a counts array where a count represents the number of data points falling in a pixel defined by a pair of x-edges and a pair of y-edges.
-*
-* @param {function} xValue - data accessor specifying the data to bin along the first dimension
-* @param {function} yValue - data accessor specifying the data to bin along the second dimension
-* @param {array} xEdges - (optional) 1d vector of edges defining bins along the first dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
-* @param {array} yEdges - (optional) 1d vector of edges defining bins along the second dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
-* @returns {object} data instance
-*/
-Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
-
-	var data = this._data,
-		xNumEdges = 101,
-		yNumEdges = 101,
-		min, max;
-
-	if ( !xValue || !yValue ) {
-		throw new Error( 'hist2c()::insufficient input arguments. Both an x-value and y-value accessor must be supplied.' );
-	}
-
-	// Convert data to standard representation; needed for non-deterministic accessors:
-	data = d3.range( data.length ).map( function ( id ) {
-		return data[ id ].map( function ( d, i ) {
-			return [
-				xValue.call( data[ id ], d, i ),
-				yValue.call( data[ id ], d, i )
-			];
-		});
-	});
-
-	if ( !xEdges.length ) {
-		
-		min = this.min( data, function ( d ) {
-				return d[ 0 ];
-			});
-
-		max = this.max( data, function ( d ) {
-				return d[ 0 ];
-			});
-
-		binWidth = ( max - min ) / ( xNumEdges - 1 );
-
-		xEdges = Vector.linspace( min, max+1e-16, binWidth );
-
-	} // end IF (xEdges)
-
-	if ( !yEdges.length ) {
-		
-		min = this.min( data, function ( d ) {
-				return d[ 1 ];
-			});
-
-		max = this.max( data, function ( d ) {
-				return d[ 1 ];
-			});
-
-		binWidth = ( max - min ) / ( yNumEdges - 1 );
-
-		yEdges = Vector.linspace( min, max+1e-16, binWidth );
-
-	} // end IF (yEdges)
-
-	// Histogram the data:
-	data = hist2c( data, xEdges, yEdges );
-
-	// Drop the first and last bins as these include values which exceeded the lower and upper bounds:
-	data = data.map( function ( d, i ) {
-		return data[ i ].slice( 1, data[ i ].length - 1 );
-	});
-
-	this._data = data.slice( 1, data.length-1 );
-
-	return this;
-
-}; // end METHOD hist2c()
-
-/**
-* METHOD: data()
-*	Retrieve instance data.
-*
-* @returns {array} an array of arrays. 
-*/
-Data.prototype.data = function() {
-	return this._data;
-}; // end METHOD data()
-
-/**
-* METHOD: x( fcn )
-*	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
-*
-* @param {function} fcn - x-value accessor
-* @returns {object|function} instance object or x-value accessor
-*/
-Data.prototype.x = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._xValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'x()::invalid input argument.' );
-		}
-		self._xValue = fcn;
-	});
-
-	return this;
-}; // end METHOD x()
-
-/**
-* METHOD: y( fcn )
-*	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
-*
-* @param {function} fcn - y-value accessor
-* @returns {object|function} instance object or y-value accessor
-*/
-Data.prototype.y = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._yValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'y()::invalid input argument.' );
-		}
-		self._yValue = fcn;
-	});
-
-	return this;
-}; // end METHOD y()
-
-/**
-* METHOD: z( fcn )
-*	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
-*
-* @param {function} fcn - z-value accessor
-* @returns {object|function} instance object or z-value accessor
-*/
-Data.prototype.z = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._zValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'z()::invalid input argument.' );
-		}
-		self._zValue = fcn;
-	});
-
-	return this;
-}; // end METHOD z()
-
-/**
-* METHOD: config()
-*	Returns the data configuration as a JSON blob.
-* 
-* @returns {object} configuration blob
-*/
-Data.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-
-
-
-// FIGURE //
-
-/**
-* FUNCTION: Figure()
-*	Figure constructor. Creates a new figure instance.
-*
-* @returns {object} figure instance
-*/
-var Figure = function() {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._config = {};
-	this._parent = undefined;
-	this._root = undefined;
-	this._children = {};
-
-	return this;
-
-}; // end FUNCTION Figure()
-
-/**
-* METHOD: create( selection )
-*	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, a figure is appended to a newly create HTML element; to access the figure parent, use the parent method.
-*
-* @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
-* @returns {object} figure instance
-*/
-Figure.prototype.create = function( selection ) {
-	var figure, elements;
-	if ( !arguments.length ) {
-		selection = document.createElement( 'div' );
-	}
-	this._parent = selection;
-	figure = document.createElement( 'figure' );
-	figure.setAttribute( 'property', 'figure' );
-	figure.className += 'figure';
-	selection.appendChild( figure );
-	elements = selection.querySelectorAll( '.figure' );
-	this._root = elements[ elements.length - 1 ];
-	return this;
-}; // end METHOD create()
-
-/**
-* METHOD: parent()
-*	Returns the figure parent.
-*
-* @returns {object} parent DOM element
-*/
-Figure.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the figure configuration as a JSON blob.
-*
-* @returns {object} configuration blob
-*/
-Figure.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the figure children.
-*
-* @returns {object} figure children
-*/
-Figure.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
 
 // GRAPH //
 
@@ -3505,814 +2840,6 @@ Graph.prototype.config = function() {
 * @returns {object} graph children
 */
 Graph.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
-// Area //
-
-/**
-* FUNCTION: Area( graph )
-*	Area constructor. Creates a new area instance.
-*
-* @param {object} graph - parent graph instance
-* @returns {object} area instance
-*/
-var Area = function( graph ) {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._parent = graph;
-	this._root = undefined;
-	this._children = {};
-	this._config = {
-		"type": "area",
-		"interpolation": {
-			"mode": "linear",
-			"tension": 0.7
-		},
-		"labels": []
-	};
-
-	// DATA //
-
-	this._data = graph._data;
-
-	// TRANSFORMS //
-
-	this._transforms = {
-		'x': function X( d ) {
-			return graph._xScale( d[ 0 ] );
-		},
-		'y0': function Y0( d ) {
-			return graph._yScale( 0 );
-		},
-		'y1': function Y1( d ) {
-			return graph._yScale( 0 + d[ 1 ] );
-		}
-	};
-
-	// GENERATOR //
-
-	this._path = this.path()
-		.x( this._transforms.x )
-		.y0( this._transforms.y0 )
-		.y1( this._transforms.y1 )
-		.interpolate( this._config.interpolation.mode )
-		.tension( this._config.interpolation.tension );
-
-	// REGISTER //
-	if ( graph._config.hasOwnProperty( 'marks' ) ) {
-		graph._config.marks.push( this._config );
-	} else {
-		graph._config.marks = [ this._config ];
-	}
-	if ( graph._children.hasOwnProperty( 'marks' ) ) {
-		graph._children.marks.push( this );
-	} else {
-		graph._children.marks = [ this ];
-	}
-
-	return this;
-
-}; // end FUNCTION Area()
-
-/**
-* METHOD: create()
-*	Creates a new area element.
-*
-* @returns {object} area instance
-*/
-Area.prototype.create = function() {
-
-	var selection = this._parent._root,
-		labels = this._config.labels,
-		paths;
-
-	// Create the marks group:
-	this._root = selection.append( 'svg:g' )
-		.attr( 'property', 'marks' )
-		.attr( 'class', 'marks' )
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
-
-	// Add area paths:
-	paths = this._root.selectAll( '.area' )
-		.data( this._data )
-	  .enter().append( 'svg:path' )
-		.attr( 'property', 'area' )
-		.attr( 'class', 'area' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
-		.attr( 'd', this._path );
-
-	return this;
-
-}; // end METHOD create()
-
-/**
-* METHOD: path()
-*	Retrieves the area path generator.
-*
-* @returns {function} area path generator
-*/
-Area.prototype.path = function() {
-	return d3.svg.area();
-}; // end METHOD path()
-
-
-/**
-* METHOD: interpolation( mode )
-*	Interpolation mode setter and getter. If a mode is supplied, sets the instance interpolation mode. If no mode is supplied, returns the instance interpolation mode.
-*
-* @param {string} mode - interpolation mode; must be one of the following: linear, linear-closed, step, step-before, step-after, basis, basis-open, basis-closed, bundle, cardinal, cardinal-open, cardinal-closed, monotone.
-* @returns {object|string} area instance or interpolation mode
-*/
-Area.prototype.interpolation = function( mode ) {
-
-	var self = this;
-
-		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
-		rules = 'string|matches[linear,linear-closed,step,step-before,step-after,basis,basis-open,basis-closed,bundle,cardinal,cardinal-open,cardinal-closed,monotone]';
-
-	if ( !arguments.length ) {
-		return this._config.interpolation.mode;
-	}
-
-	Validator( mode, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'interpolation()::invalid input argument.' );
-		}
-		self._config.interpolation.mode = mode;
-		self._path.interpolate( mode );
-	});
-	
-	return this;
-
-}; // end METHOD interpolation()
-
-/**
-* METHOD: tension( value )
-*	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
-*
-* @param {number} value - interpolation tension; must reside within the interval [0,1].
-* @returns {object|number} area instance or interpolation tension
-*/
-Area.prototype.tension = function( value ) {
-	var self = this,
-		rules = 'interval[0,1]';
-
-	if ( !arguments.length ) {
-		return this._config.interpolation.tension;
-	}
-	
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'tension()::invalid input argument.' );
-		}
-		self._config.interpolation.tension = value;
-		self._path.tension( value );
-	});
-
-	return this;
-
-}; // end METHOD tension()
-
-/**
-* METHOD: labels( arr )
-*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
-*
-* @param {array} arr - an array of labels (strings)
-* @returns {object|array} area instance or an array of labels
-*/
-Area.prototype.labels = function ( arr ) {
-	var self = this,
-		rules = 'array';
-
-	if ( !arguments.length ) {
-		return this._config.labels;
-	}
-	
-	Validator( arr, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'labels()::invalid input argument.' );
-		}
-		self._config.labels = arr;
-	});
-
-	return this;
-
-}; // end METHOD labels()
-
-
-/**
-* METHOD: parent()
-*	Returns the area parent.
-*
-* @returns {object} area parent
-*/
-Area.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the area configuration as a JSON blob.
-*
-* @returns {object} configuration blob
-*/
-Area.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the area children.
-* 
-* @returns {object} area children
-*/
-Area.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
-// HISTOGRAM //
-
-/**
-* FUNCTION: Histogram( graph )
-*	Histogram constructor. Creates a new histogram instance.
-*
-* @param {object} graph - parent graph instance
-* @returns {object} histogram instance
-*/
-var Histogram = function( graph ) {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._parent = graph;
-	this._root = undefined;
-	this._children = {};
-	this._config = {
-		"padding": "1",
-		"labels": []
-	};
-
-	// DATA //
-
-	this._data = graph._data;
-
-	// TRANSFORMS //
-
-	this._transforms = {
-		'x': function X( d ) {
-			return graph._xScale( d[ 0 ] );
-		},
-		'y': function Y( d ) {
-			return graph._yScale( d[ 1 ] );
-		},
-		'width': function Width( d ) {
-			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
-		},
-		'height': function Height( d ) {
-			return graph._config.height - graph._yScale( d[ 1 ] );
-		}
-	};
-
-	// REGISTER //
-	if ( graph._config.hasOwnProperty( 'marks' ) ) {
-		graph._config.marks.push( this._config );
-	} else {
-		graph._config.marks = [ this._config ];
-	}
-	if ( graph._children.hasOwnProperty( 'marks' ) ) {
-		graph._children.marks.push( this );
-	} else {
-		graph._children.marks = [ this ];
-	}
-
-	return this;
-
-}; // end FUNCTION Histogram()
-
-/**
-* METHOD: create()
-*	Creates a new histogram element.
-*
-* @returns {object} histogram instance
-*/
-Histogram.prototype.create = function() {
-
-	var selection = this._parent._root,
-		labels = this._config.labels,
-		columns;
-
-	// Create a marks group:
-	this._root = selection.selectAll( '.marks' )
-		.data( this._data )
-	  .enter().append( 'svg:g' )
-		.attr( 'property', 'marks' )
-		.attr( 'class', 'marks' )
-		.attr( 'data-label', function( d, i ) { return labels[ i ]; })
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
-
-	// Add columns:
-	columns = this._root.selectAll( '.column' )
-		.data( function ( d ) { return d; })
-	  .enter().append( 'svg:rect' )
-		.attr( 'property', 'column' )
-		.attr( 'class', 'column' )
-		.attr( 'x', this._transforms.x )
-		.attr( 'y', this._transforms.y )
-		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height );
-
-	// Add tooltips:
-	columns.append( 'svg:title' )
-		.attr( 'class', 'tooltip' )
-		.text( function ( d ) {
-			return Math.round( d[ 1 ] );
-		});
-
-	return this;
-
-}; // end METHOD create()
-
-/**
-* METHOD: padding( value )
-*	Column padding setter and getter. If a value is supplied, sets the instance column padding. If no value is supplied, returns the instance column padding.
-*
-* @param {number} value - column padding
-* @returns {object|number} histogram instance or column padding
-*/
-Histogram.prototype.padding = function( value ) {
-	var self = this,
-		rules = 'number';
-
-	if ( !arguments.length ) {
-		return this._config.padding;
-	}
-	
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'padding()::invalid input argument.' );
-		}
-		self._config.padding = value;
-	});
-
-	return this;
-
-}; // end METHOD padding()
-
-/**
-* METHOD: labels( arr )
-*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
-*
-* @param {array} arr - an array of labels (strings)
-* @returns {object|array} histogram instance or an array of labels
-*/
-Histogram.prototype.labels = function ( arr ) {
-	var self = this,
-		rules = 'array';
-
-	if ( !arguments.length ) {
-		return this._config.labels;
-	}
-	
-	Validator( arr, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'labels()::invalid input argument.' );
-		}
-		self._config.labels = arr;
-	});
-
-	return this;
-
-}; // end METHOD labels()
-
-/**
-* METHOD: parent()
-*	Returns the histogram parent.
-*
-* @returns {object} histogram parent
-*/
-Histogram.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the histogram configuration as a JSON blob.
-*
-* @returns {object} configuration blob
-*/
-Histogram.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the histogram children.
-* 
-* @returns {object} histogram children
-*/
-Histogram.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
-// Line //
-
-/**
-* FUNCTION: Line( graph )
-*	Line constructor. Creates a new line instance.
-*
-* @param {object} graph - parent graph instance
-* @returns {object} line instance
-*/
-var Line = function( graph ) {
-
-	// INSTANCE ATTRIBUTES //
-
-	this._parent = graph;
-	this._root = undefined;
-	this._children = {};
-	this._config = {
-		"type": "line",
-		"interpolation": {
-			"mode": "linear",
-			"tension": 0.7
-		},
-		"labels": []
-	};
-
-	// DATA //
-
-	this._data = graph._data;
-
-	// TRANSFORMS //
-
-	this._transforms = {
-		'x': function X( d ) {
-			return graph._xScale( d[ 0 ] );
-		},
-		'y': function Y( d ) {
-			return graph._yScale( d[ 1 ] );
-		}
-	};
-
-	// GENERATOR //
-
-	this._path = this.path()
-		.x( this._transforms.x )
-		.y( this._transforms.y )
-		.interpolate( this._config.interpolation.mode )
-		.tension( this._config.interpolation.tension );
-
-	// REGISTER //
-	if ( graph._config.hasOwnProperty( 'marks' ) ) {
-		graph._config.marks.push( this._config );
-	} else {
-		graph._config.marks = [ this._config ];
-	}
-	if ( graph._children.hasOwnProperty( 'marks' ) ) {
-		graph._children.marks.push( this );
-	} else {
-		graph._children.marks = [ this ];
-	}
-
-	return this;
-
-}; // end FUNCTION Line()
-
-/**
-* METHOD: create()
-*	Creates a new line element.
-*
-* @returns {object} line instance
-*/
-Line.prototype.create = function() {
-
-	var selection = this._parent._root,
-		labels = this._config.labels,
-		paths;
-
-	// Create the marks group:
-	this._root = selection.append( 'svg:g' )
-		.attr( 'property', 'marks' )
-		.attr( 'class', 'marks' )
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
-
-	// Add line paths:
-	paths = this._root.selectAll( '.line' )
-		.data( this._data )
-	  .enter().append( 'svg:path' )
-		.attr( 'property', 'line' )
-		.attr( 'class', 'line' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
-		.attr( 'd', this._path );
-
-	return this;
-
-}; // end METHOD create()
-
-/**
-* METHOD: path()
-*	Retrieves the line path generator.
-*
-* @returns {function} line path generator
-*/
-Line.prototype.path = function() {
-	return d3.svg.line();
-}; // end METHOD path()
-
-
-/**
-* METHOD: interpolation( mode )
-*	Interpolation mode setter and getter. If a mode is supplied, sets the instance interpolation mode. If no mode is supplied, returns the instance interpolation mode.
-*
-* @param {string} mode - interpolation mode; must be one of the following: linear, linear-closed, step, step-before, step-after, basis, basis-open, basis-closed, bundle, cardinal, cardinal-open, cardinal-closed, monotone.
-* @returns {object|string} line instance or interpolation mode
-*/
-Line.prototype.interpolation = function( mode ) {
-
-	var self = this;
-
-		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
-		rules = 'string|matches[linear,linear-closed,step,step-before,step-after,basis,basis-open,basis-closed,bundle,cardinal,cardinal-open,cardinal-closed,monotone]';
-
-	if ( !arguments.length ) {
-		return this._config.interpolation.mode;
-	}
-
-	Validator( mode, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'interpolation()::invalid input argument.' );
-		}
-		self._config.interpolation.mode = mode;
-		self._path.interpolate( mode );
-	});
-	
-	return this;
-
-}; // end METHOD interpolation()
-
-/**
-* METHOD: tension( value )
-*	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
-*
-* @param {number} value - interpolation tension; must reside within the interval [0,1].
-* @returns {object|number} line instance or interpolation tension
-*/
-Line.prototype.tension = function( value ) {
-	var self = this,
-		rules = 'interval[0,1]';
-
-	if ( !arguments.length ) {
-		return this._config.interpolation.tension;
-	}
-	
-	Validator( value, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'tension()::invalid input argument.' );
-		}
-		self._config.interpolation.tension = value;
-		self._path.tension( value );
-	});
-
-	return this;
-
-}; // end METHOD tension()
-
-/**
-* METHOD: labels( arr )
-*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
-*
-* @param {array} arr - an array of labels (strings)
-* @returns {object|array} line instance or an array of labels
-*/
-Line.prototype.labels = function ( arr ) {
-	var self = this,
-		rules = 'array';
-
-	if ( !arguments.length ) {
-		return this._config.labels;
-	}
-	
-	Validator( arr, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'labels()::invalid input argument.' );
-		}
-		self._config.labels = arr;
-	});
-
-	return this;
-
-}; // end METHOD labels()
-
-
-/**
-* METHOD: parent()
-*	Returns the line parent.
-*
-* @returns {object} line parent
-*/
-Line.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the line configuration as a JSON blob.
-*
-* @returns {object} configuration blob
-*/
-Line.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the line children.
-* 
-* @returns {object} line children
-*/
-Line.prototype.children = function() {
-	return this._children;
-}; // end METHOD children()
-
-// TIMESERIES HISTOGRAM //
-
-/**
-* FUNCTION: TimeseriesHistogram( graph )
-*	Timeseries histogram constructor. Creates a new timeseries histogram instance.
-*
-* @param {object} graph - parent graph instance
-* @returns {object} timeseries histogram instance
-*/
-var TimeseriesHistogram = function( graph ) {
-
-	var binHeight = 0;
-
-	// INSTANCE ATTRIBUTES //
-
-	this._parent = graph;
-	this._root = undefined;
-	this._children = {};
-	this._config = {
-		'labels': [],
-		'sort': 'ascending'
-	};
-
-	// DATA //
-
-	this._data = graph._data;
-
-	// TRANSFORMS //
-
-	binHeight = graph._yScale( 0 ) - graph._yScale( 1 );
-
-	this._transforms = {
-		'x': function X( d ) {
-			return graph._xScale( d[ 0 ] );
-		},
-		'y': function Y( d, i ) {
-			return graph._yScale( i ) - binHeight;
-		},
-		'width': function Width( d ) {
-			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
-		},
-		'height': binHeight,
-		'color': function Color( d ) {
-			return graph._zScale( d[ 1 ] );
-		}
-	};
-
-	// REGISTER //
-	if ( graph._config.hasOwnProperty( 'marks' ) ) {
-		graph._config.marks.push( this._config );
-	} else {
-		graph._config.marks = [ this._config ];
-	}
-	if ( graph._children.hasOwnProperty( 'marks' ) ) {
-		graph._children.marks.push( this );
-	} else {
-		graph._children.marks = [ this ];
-	}
-
-	return this;
-
-}; // end FUNCTION TimeseriesHistogram()
-
-/**
-* METHOD: create()
-*	Creates a new timeseries histogram element.
-*
-* @returns {object} timseries histogram instance
-*/
-TimeseriesHistogram.prototype.create = function() {
-
-	var self = this,
-		selection = this._parent._root,
-		labels = this._config.labels,
-		histograms, bins;
-
-	// Create a marks group:
-	this._root = selection.append( 'svg:g' )
-		.attr( 'property', 'marks' )
-		.attr( 'class', 'marks' )
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
-		.attr( 'transform', 'translate( ' + 0 + ', ' + 0 + ')' );
-
-	// Add histograms:
-	histograms = this._root.selectAll( '.histogram' )
-		.data( this._data )
-	  .enter().append( 'svg:g' )
-	  	.attr( 'property', 'histogram' )
-	  	.attr( 'class', 'histogram' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
-		.attr( 'transform', function ( d, i ) {
-			return 'translate( 0,' + self._transforms.y( d, i ) + ' )';
-		});
-
-	// Add bins:
-	bins = histograms.selectAll( '.bin' )
-		.data( function ( d ) {
-			return d;
-		})
-	  .enter().append( 'svg:rect' )
-		.attr( 'property', 'bin' )
-		.attr( 'class', 'bin' )
-		.attr( 'x', this._transforms.x )
-		.attr( 'y', 0 )
-		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height )
-		.style( 'fill', this._transforms.color );
-
-	return this;
-
-}; // end METHOD create()
-
-/**
-* METHOD: labels( arr )
-*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
-*
-* @param {array} arr - an array of labels (strings)
-* @returns {object|array} instance object or an array of labels
-*/
-TimeseriesHistogram.prototype.labels = function ( arr ) {
-	var self = this,
-		rules = 'array';
-
-	if ( !arguments.length ) {
-		return this._config.labels;
-	}
-	
-	Validator( arr, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'labels()::invalid input argument.' );
-		}
-		self._config.labels = arr;
-	});
-
-	return this;
-
-}; // end METHOD labels()
-
-/**
-* METHOD: parent()
-*	Returns the timeseries histogram parent.
-*
-* @returns {object} timeseries histogram parent
-*/
-TimeseriesHistogram.prototype.parent = function() {
-	return this._parent;
-}; // end METHOD parent()
-
-/**
-* METHOD: config()
-*	Returns the timeseries histogram configuration as a JSON blob.
-*
-* @returns {object} configuration blob
-*/
-TimeseriesHistogram.prototype.config = function() {
-	// Prevent direct tampering with the config object:
-	return JSON.parse( JSON.stringify( this._config ) );
-}; // end METHOD config()
-
-/**
-* METHOD: children()
-*	Returns the timeseries histogram children.
-* 
-* @returns {object} timeseries histogram children
-*/
-TimeseriesHistogram.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
 
@@ -5840,6 +4367,694 @@ Multipanel.prototype.config = function() {
 Multipanel.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()
+
+// FIGURE //
+
+/**
+* FUNCTION: Figure()
+*	Figure constructor. Creates a new figure instance.
+*
+* @returns {object} figure instance
+*/
+var Figure = function() {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._config = {};
+	this._parent = undefined;
+	this._root = undefined;
+	this._children = {};
+
+	return this;
+
+}; // end FUNCTION Figure()
+
+/**
+* METHOD: create( selection )
+*	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, a figure is appended to a newly create HTML element; to access the figure parent, use the parent method.
+*
+* @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
+* @returns {object} figure instance
+*/
+Figure.prototype.create = function( selection ) {
+	var figure, elements;
+	if ( !arguments.length ) {
+		selection = document.createElement( 'div' );
+	}
+	this._parent = selection;
+	figure = document.createElement( 'figure' );
+	figure.setAttribute( 'property', 'figure' );
+	figure.className += 'figure';
+	selection.appendChild( figure );
+	elements = selection.querySelectorAll( '.figure' );
+	this._root = elements[ elements.length - 1 ];
+	return this;
+}; // end METHOD create()
+
+/**
+* METHOD: parent()
+*	Returns the figure parent.
+*
+* @returns {object} parent DOM element
+*/
+Figure.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the figure configuration as a JSON blob.
+*
+* @returns {object} configuration blob
+*/
+Figure.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the figure children.
+*
+* @returns {object} figure children
+*/
+Figure.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
+
+
+// DATA //
+
+/**
+* FUNCTION: Data( data )
+*	Data constructor. Creates a new data instance.
+*
+* @param {array} data - input data is expected to be an array of arrays; e.g., [[[0,0],[1,1],...,[N,N]]] or [[{x:0,y:0},{x:1,y:1},...{x:N,y:N}]]. Elements in the outer array are treated as separate datasets.
+* @returns {object} data instance
+*/
+var Data = function( data ) {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._config = {};
+	this._data = data;
+
+	// ACCESSORS:
+	this._xValue = function( d ) { return d[ 0 ]; };
+	this._yValue = function( d ) { return d[ 1 ]; };
+	this._zValue = function( d ) { return d[ 2 ]; };
+
+	return this;
+
+}; // end FUNCTION Data()
+
+/**
+* METHOD: format( dim )
+*	Format raw data into a form amenable to graph generation.
+*
+* @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
+* @returns {object} data instance
+*/
+Data.prototype.format = function( dim ) {
+
+	var data = this._data,
+		fcns = [
+			this._xValue,
+			this._yValue,
+			this._zValue
+		],
+		arr = [];
+
+	if ( !arguments.length ) {
+		throw new Error( 'format()::insufficient input arguments. The number of dimensions to format must be provided.' );
+	}
+	if ( dim < 1 || dim > 3 ) {
+		throw new Error( 'format()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
+	}
+	data = d3.range( data.length ).map( function ( id ) {
+		return data[ id ].map( function ( d, i ) {
+			arr = [];
+			for ( var n = 0; n < dim; n++ ) {
+				arr.push( fcns[ n ].call( data[ id ], d, i ) );
+			}
+			return arr;
+		});
+	});
+
+	this._data = data;
+
+	return this;
+
+}; // end METHOD format()
+
+/**
+* METHOD: min( accessor )
+*	Determines the min data value.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {number} min data value
+*/
+Data.prototype.min = function( accessor ) {
+	return d3.min( this._data, function ( dataset ) {
+		return d3.min( dataset, function ( d ) {
+			return accessor( d );
+		});
+	});
+}; // end METHOD min()
+
+/**
+* METHOD: max( accessor )
+*	Determines the max data value.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {number} max data value
+*/
+Data.prototype.max = function( accessor ) {
+	return d3.max( this._data, function ( dataset ) {
+		return d3.max( dataset, function ( d ) {
+			return accessor( d );
+		});
+	});
+}; // end METHOD max()
+
+/**
+* METHOD: mean( accessor )
+*	Calculates the mean values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of mean values
+*/
+Data.prototype.mean = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.mean( dataset );
+	});
+}; // end METHOD mean()
+
+/**
+* METHOD: variance( accessor )
+*	Calculates sample variance values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of variance values
+*/
+Data.prototype.variance = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.variance( dataset );
+	});
+}; // end METHOD variance()
+
+/**
+* METHOD: stdev( accessor )
+*	Calculates sample standard deviation values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of standard deviation values
+*/
+Data.prototype.stdev = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.stdev( dataset );
+	});
+}; // end METHOD stdev()
+
+/**
+* METHOD: median( accessor )
+*	Calculates the median values for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of median values
+*/
+Data.prototype.median = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.median( dataset );
+	});
+}; // end METHOD median()
+
+/**
+* METHOD: sum( accessor )
+*	Calculates sums for an array of arrays.
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {array} 1d array of sums
+*/
+Data.prototype.sum = function( accessor ) {
+	var d = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return d.map( function ( dataset ) {
+		return Vector.sum( dataset );
+	});
+}; // end METHOD sum()
+
+/**
+* METHOD: reorder( vector )
+*	Reorders the data based on an index vector.
+*
+* @param {array} vector - 1d array of indices
+* @returns {object} instance object
+*/
+Data.prototype.reorder = function( vector ) {
+	var self = this;
+	if ( this._data.length !== vector.length ) {
+		throw new Error( 'reorder()::invalid input argument. Vector length must equal data length.' );
+	}
+	this._data = vector.map( function ( id ) {
+		return self._data[ id ];
+	});
+	return this;
+}; // end METHOD reorder()
+
+/**
+* METHOD: extract( accessor )
+*	Reduce data dimensionality by extracting data feature(s).
+*
+* @param {function} accessor - data accessor specifying how to access data values
+* @returns {object} instance object
+*/
+Data.prototype.extract = function( accessor ) {
+	this._data = this._data.map( function ( dataset ) {
+		return dataset.map( function ( d ) {
+			return accessor( d );
+		});
+	});
+	return this;
+}; // end METHOD extract()
+
+/**
+* METHOD: concat()
+*	Concats each dataset in a multidimensional dataset array into a single dataset array.
+*/
+Data.prototype.concat = function() {
+	var data = [[]], numData = this._data.length;
+	for ( var i = 0; i < numData; i++ ) {
+		for ( var j = 0; j < this._data[ i ].length; j++ ) {
+			data[ 0 ].push( this._data[ i ][ j ] );
+		}
+	}
+	this._data = data;
+	return this;
+}; // end METHOD concat()
+
+/**
+* METHOD: amean( accessor )
+*	Aggregate mean across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amean = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum / numDatum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amean()
+
+/**
+* METHOD: asum( accessor )
+*	Aggregate sum across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.asum = function( accessor ) {
+	var data = this._data, d = [[]], sum = 0,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		sum = 0;
+		for ( var i = 0; i < numData; i++ ) {
+			sum += accessor( data[ i ][ j ] );
+		}
+		d[ 0 ].push( sum );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD asum()
+
+/**
+* METHOD: amin( accessor )
+*	Aggregate min across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amin = function( accessor ) {
+	var data = this._data, d = [[]], val, min = Number.POSITIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		min = Number.POSITIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val < min ) {
+				min = val;
+			}
+		}
+		d[ 0 ].push( min );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amin()
+
+/**
+* METHOD: amax( accessor )
+*	Aggregate max across datasets. The resulting dataset is an array comprising a single vector who length is equal to the length of the first original dataset. NOTE: we assume that the data is a homogeneous data array.
+*
+* @param {function} accessor - accessor function used to extract the data to be aggregated
+* @returns {object} instance object
+*/
+Data.prototype.amax = function( accessor ) {
+	var data = this._data, d = [[]], val, max = Number.NEGATIVE_INFINITY,
+		numData = data.length,
+		numDatum = data[ 0 ].length;
+
+	for ( var j = 0; j < numDatum; j++ ) {
+		max = Number.NEGATIVE_INFINITY;
+		for ( var i = 0; i < numData; i++ ) {
+			val = accessor( data[ i ][ j ] );
+			if ( val > max ) {
+				max = val;
+			}
+		}
+		d[ 0 ].push( max );
+	}
+	this._data = d;
+	return this;
+}; // end METHOD amax()
+
+/**
+* METHOD: size()
+*	Determine instance data size. (NOTE: we assume homogenous 2d data array)
+*
+* @returns {array} data size: [1d,2d]
+*/
+Data.prototype.size = function() {
+	var size = [];
+	size.push( this._data.length );
+	size.push( this._data[ 0 ].length );
+	return size;
+}; // end METHOD size()
+
+/**
+* METHOD: histc( accessor, edges )
+*	Generates a counts vector where a count represents the number of data points falling in a bin defined by a pair of edges in the edge vector.
+*
+* @param {function} accessor - data accessor specifying the data to bin
+* @param {array} edges - (optional) 1d vector of edges defining bins; if not provided, a default edge vector is created of 21 bins where the start and end edge are defined by the data.
+* @returns {object} data instance
+*/
+Data.prototype.histc = function( accessor, edges ) {
+
+	var self = this,
+		min, max, numEdges = 21, binWidth;
+
+	if ( !accessor ) {
+		throw new Error( 'histc()::insufficient input arguments. An data value accessor must be provided.' );
+	}
+
+	// Convert data to standard representation; needed for non-deterministic accessors:
+	this._data = d3.range( this._data.length ).map( function ( id ) {
+		return self._data[ id ].map( function ( d, i ) {
+			return accessor.call( self._data[ id ], d, i );
+		});
+	});
+
+	if ( !edges.length ) {
+		
+		min = this.min( function ( d ) {
+				return d;
+			});
+
+		max = this.max( function ( d ) {
+				return d;
+			});
+
+		binWidth = ( max - min ) / ( numEdges - 1 );
+
+		edges = Vector.linspace( min, max+1e-16, binWidth );
+
+	} // end IF (edges)
+
+	// Histogram the data:
+	this._data = d3.range( this._data.length ).map( function ( id ) {
+
+		var counts;
+
+		counts = histc( self._data[ id ], edges );
+
+		// Augment counts to include the edge and binWidth (binWidth is needed in the event of variable bin width ):
+		counts = counts.map( function ( d, i ) {
+			return [
+				edges[ i-1 ],
+				counts[ i ],
+				edges[ i ]
+			];
+		});
+
+		// Drop the first and last bins as these include values which exceeded the lower and upper bounds:
+		return counts.slice( 1, counts.length-1 );
+
+	});
+
+	return this;
+
+}; // end METHOD histc()
+
+/**
+* METHOD: hist2c( xValue, yValue, xEdges, yEdges )
+*	Generates a counts array where a count represents the number of data points falling in a pixel defined by a pair of x-edges and a pair of y-edges.
+*
+* @param {function} xValue - data accessor specifying the data to bin along the first dimension
+* @param {function} yValue - data accessor specifying the data to bin along the second dimension
+* @param {array} xEdges - (optional) 1d vector of edges defining bins along the first dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
+* @param {array} yEdges - (optional) 1d vector of edges defining bins along the second dimesion; if not provided, a default edge vector is created of 100 bins where the start and end edge are defined by the data.
+* @returns {object} data instance
+*/
+Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
+
+	var self = this,
+		xNumEdges = 101,
+		yNumEdges = 101,
+		min, max;
+
+	if ( !xValue || !yValue ) {
+		throw new Error( 'hist2c()::insufficient input arguments. Both an x-value and y-value accessor must be supplied.' );
+	}
+
+	// Convert data to standard representation; needed for non-deterministic accessors:
+	this._data = d3.range( this._data.length ).map( function ( id ) {
+		return self._data[ id ].map( function ( d, i ) {
+			return [
+				xValue.call( self._data[ id ], d, i ),
+				yValue.call( self._data[ id ], d, i )
+			];
+		});
+	});
+
+	if ( !xEdges.length ) {
+		
+		min = this.min( function ( d ) {
+				return d[ 0 ];
+			});
+
+		max = this.max( function ( d ) {
+				return d[ 0 ];
+			});
+
+		binWidth = ( max - min ) / ( xNumEdges - 1 );
+
+		xEdges = Vector.linspace( min, max+1e-16, binWidth );
+
+	} // end IF (xEdges)
+
+	if ( !yEdges.length ) {
+		
+		min = this.min( function ( d ) {
+				return d[ 1 ];
+			});
+
+		max = this.max( function ( d ) {
+				return d[ 1 ];
+			});
+
+		binWidth = ( max - min ) / ( yNumEdges - 1 );
+
+		yEdges = Vector.linspace( min, max+1e-16, binWidth );
+
+	} // end IF (yEdges)
+
+	// Histogram the data:
+	this._data = hist2c( this._data, xEdges, yEdges );
+
+	// Drop the first and last bins as these include values which exceeded the lower and upper bounds:
+	this._data = this._data.map( function ( d, i ) {
+		return self._data[ i ].slice( 1, self._data[ i ].length - 1 );
+	});
+
+	this._data = this._data.slice( 1, this._data.length-1 );
+
+	return this;
+
+}; // end METHOD hist2c()
+
+/**
+* METHOD: kde( accessor )
+*	Calculates the kernel density estimate for each dataset.
+*
+* @param {function} accessor - data accessor specifying the data over which to calculate the KDE
+*/
+Data.prototype.kde = function( accessor ) {
+	var data = this._data,
+		kde = new KDE();
+
+	// Configure the KDE generator:
+	kde.kernel( pdf.normal( 0, 1 ) )
+		.x( accessor )
+		.min( data.min( accessor ) )
+		.max( data.max( accessor ) )
+		.points( Math.pow( 2, 14 ) );
+
+	// Calculate the bandwidth estimator and evaluate the density:
+	this._data = kde.estimator( data, 'silverman' )
+		.eval( data );
+
+	return this;
+
+}; // end METHOD kde()
+
+/**
+* METHOD: data()
+*	Retrieve instance data.
+*
+* @returns {array} an array of arrays. 
+*/
+Data.prototype.data = function() {
+	return this._data;
+}; // end METHOD data()
+
+/**
+* METHOD: x( fcn )
+*	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
+*
+* @param {function} fcn - x-value accessor
+* @returns {object|function} instance object or x-value accessor
+*/
+Data.prototype.x = function( fcn ) {
+	var self = this,
+		rules = 'function';
+
+	if ( !arguments.length ) {
+		return this._xValue;
+	}
+	
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'x()::invalid input argument.' );
+		}
+		self._xValue = fcn;
+	});
+
+	return this;
+}; // end METHOD x()
+
+/**
+* METHOD: y( fcn )
+*	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
+*
+* @param {function} fcn - y-value accessor
+* @returns {object|function} instance object or y-value accessor
+*/
+Data.prototype.y = function( fcn ) {
+	var self = this,
+		rules = 'function';
+
+	if ( !arguments.length ) {
+		return this._yValue;
+	}
+	
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'y()::invalid input argument.' );
+		}
+		self._yValue = fcn;
+	});
+
+	return this;
+}; // end METHOD y()
+
+/**
+* METHOD: z( fcn )
+*	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
+*
+* @param {function} fcn - z-value accessor
+* @returns {object|function} instance object or z-value accessor
+*/
+Data.prototype.z = function( fcn ) {
+	var self = this,
+		rules = 'function';
+
+	if ( !arguments.length ) {
+		return this._zValue;
+	}
+	
+	Validator( fcn, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'z()::invalid input argument.' );
+		}
+		self._zValue = fcn;
+	});
+
+	return this;
+}; // end METHOD z()
+
+/**
+* METHOD: config()
+*	Returns the data configuration as a JSON blob.
+* 
+* @returns {object} configuration blob
+*/
+Data.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+
+
 /**
 *
 *	HIST2C
@@ -6983,6 +6198,814 @@ Vector.linspace = function( min, max, increment ) {
 
 	return vec;
 }; // end METHOD linspace()
+
+// Area //
+
+/**
+* FUNCTION: Area( graph )
+*	Area constructor. Creates a new area instance.
+*
+* @param {object} graph - parent graph instance
+* @returns {object} area instance
+*/
+var Area = function( graph ) {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._parent = graph;
+	this._root = undefined;
+	this._children = {};
+	this._config = {
+		"type": "area",
+		"interpolation": {
+			"mode": "linear",
+			"tension": 0.7
+		},
+		"labels": []
+	};
+
+	// DATA //
+
+	this._data = graph._data;
+
+	// TRANSFORMS //
+
+	this._transforms = {
+		'x': function X( d ) {
+			return graph._xScale( d[ 0 ] );
+		},
+		'y0': function Y0( d ) {
+			return graph._yScale( 0 );
+		},
+		'y1': function Y1( d ) {
+			return graph._yScale( 0 + d[ 1 ] );
+		}
+	};
+
+	// GENERATOR //
+
+	this._path = this.path()
+		.x( this._transforms.x )
+		.y0( this._transforms.y0 )
+		.y1( this._transforms.y1 )
+		.interpolate( this._config.interpolation.mode )
+		.tension( this._config.interpolation.tension );
+
+	// REGISTER //
+	if ( graph._config.hasOwnProperty( 'marks' ) ) {
+		graph._config.marks.push( this._config );
+	} else {
+		graph._config.marks = [ this._config ];
+	}
+	if ( graph._children.hasOwnProperty( 'marks' ) ) {
+		graph._children.marks.push( this );
+	} else {
+		graph._children.marks = [ this ];
+	}
+
+	return this;
+
+}; // end FUNCTION Area()
+
+/**
+* METHOD: create()
+*	Creates a new area element.
+*
+* @returns {object} area instance
+*/
+Area.prototype.create = function() {
+
+	var selection = this._parent._root,
+		labels = this._config.labels,
+		paths;
+
+	// Create the marks group:
+	this._root = selection.append( 'svg:g' )
+		.attr( 'property', 'marks' )
+		.attr( 'class', 'marks' )
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
+
+	// Add area paths:
+	paths = this._root.selectAll( '.area' )
+		.data( this._data )
+	  .enter().append( 'svg:path' )
+		.attr( 'property', 'area' )
+		.attr( 'class', 'area' )
+		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
+		.attr( 'd', this._path );
+
+	return this;
+
+}; // end METHOD create()
+
+/**
+* METHOD: path()
+*	Retrieves the area path generator.
+*
+* @returns {function} area path generator
+*/
+Area.prototype.path = function() {
+	return d3.svg.area();
+}; // end METHOD path()
+
+
+/**
+* METHOD: interpolation( mode )
+*	Interpolation mode setter and getter. If a mode is supplied, sets the instance interpolation mode. If no mode is supplied, returns the instance interpolation mode.
+*
+* @param {string} mode - interpolation mode; must be one of the following: linear, linear-closed, step, step-before, step-after, basis, basis-open, basis-closed, bundle, cardinal, cardinal-open, cardinal-closed, monotone.
+* @returns {object|string} area instance or interpolation mode
+*/
+Area.prototype.interpolation = function( mode ) {
+
+	var self = this;
+
+		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
+		rules = 'string|matches[linear,linear-closed,step,step-before,step-after,basis,basis-open,basis-closed,bundle,cardinal,cardinal-open,cardinal-closed,monotone]';
+
+	if ( !arguments.length ) {
+		return this._config.interpolation.mode;
+	}
+
+	Validator( mode, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'interpolation()::invalid input argument.' );
+		}
+		self._config.interpolation.mode = mode;
+		self._path.interpolate( mode );
+	});
+	
+	return this;
+
+}; // end METHOD interpolation()
+
+/**
+* METHOD: tension( value )
+*	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
+*
+* @param {number} value - interpolation tension; must reside within the interval [0,1].
+* @returns {object|number} area instance or interpolation tension
+*/
+Area.prototype.tension = function( value ) {
+	var self = this,
+		rules = 'interval[0,1]';
+
+	if ( !arguments.length ) {
+		return this._config.interpolation.tension;
+	}
+	
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'tension()::invalid input argument.' );
+		}
+		self._config.interpolation.tension = value;
+		self._path.tension( value );
+	});
+
+	return this;
+
+}; // end METHOD tension()
+
+/**
+* METHOD: labels( arr )
+*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} area instance or an array of labels
+*/
+Area.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+
+}; // end METHOD labels()
+
+
+/**
+* METHOD: parent()
+*	Returns the area parent.
+*
+* @returns {object} area parent
+*/
+Area.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the area configuration as a JSON blob.
+*
+* @returns {object} configuration blob
+*/
+Area.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the area children.
+* 
+* @returns {object} area children
+*/
+Area.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
+
+// HISTOGRAM //
+
+/**
+* FUNCTION: Histogram( graph )
+*	Histogram constructor. Creates a new histogram instance.
+*
+* @param {object} graph - parent graph instance
+* @returns {object} histogram instance
+*/
+var Histogram = function( graph ) {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._parent = graph;
+	this._root = undefined;
+	this._children = {};
+	this._config = {
+		"padding": "1",
+		"labels": []
+	};
+
+	// DATA //
+
+	this._data = graph._data;
+
+	// TRANSFORMS //
+
+	this._transforms = {
+		'x': function X( d ) {
+			return graph._xScale( d[ 0 ] );
+		},
+		'y': function Y( d ) {
+			return graph._yScale( d[ 1 ] );
+		},
+		'width': function Width( d ) {
+			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
+		},
+		'height': function Height( d ) {
+			return graph._config.height - graph._yScale( d[ 1 ] );
+		}
+	};
+
+	// REGISTER //
+	if ( graph._config.hasOwnProperty( 'marks' ) ) {
+		graph._config.marks.push( this._config );
+	} else {
+		graph._config.marks = [ this._config ];
+	}
+	if ( graph._children.hasOwnProperty( 'marks' ) ) {
+		graph._children.marks.push( this );
+	} else {
+		graph._children.marks = [ this ];
+	}
+
+	return this;
+
+}; // end FUNCTION Histogram()
+
+/**
+* METHOD: create()
+*	Creates a new histogram element.
+*
+* @returns {object} histogram instance
+*/
+Histogram.prototype.create = function() {
+
+	var selection = this._parent._root,
+		labels = this._config.labels,
+		columns;
+
+	// Create a marks group:
+	this._root = selection.selectAll( '.marks' )
+		.data( this._data )
+	  .enter().append( 'svg:g' )
+		.attr( 'property', 'marks' )
+		.attr( 'class', 'marks' )
+		.attr( 'data-label', function( d, i ) { return labels[ i ]; })
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
+
+	// Add columns:
+	columns = this._root.selectAll( '.column' )
+		.data( function ( d ) { return d; })
+	  .enter().append( 'svg:rect' )
+		.attr( 'property', 'column' )
+		.attr( 'class', 'column' )
+		.attr( 'x', this._transforms.x )
+		.attr( 'y', this._transforms.y )
+		.attr( 'width', this._transforms.width )
+		.attr( 'height', this._transforms.height );
+
+	// Add tooltips:
+	columns.append( 'svg:title' )
+		.attr( 'class', 'tooltip' )
+		.text( function ( d ) {
+			return Math.round( d[ 1 ] );
+		});
+
+	return this;
+
+}; // end METHOD create()
+
+/**
+* METHOD: padding( value )
+*	Column padding setter and getter. If a value is supplied, sets the instance column padding. If no value is supplied, returns the instance column padding.
+*
+* @param {number} value - column padding
+* @returns {object|number} histogram instance or column padding
+*/
+Histogram.prototype.padding = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.padding;
+	}
+	
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'padding()::invalid input argument.' );
+		}
+		self._config.padding = value;
+	});
+
+	return this;
+
+}; // end METHOD padding()
+
+/**
+* METHOD: labels( arr )
+*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} histogram instance or an array of labels
+*/
+Histogram.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+
+}; // end METHOD labels()
+
+/**
+* METHOD: parent()
+*	Returns the histogram parent.
+*
+* @returns {object} histogram parent
+*/
+Histogram.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the histogram configuration as a JSON blob.
+*
+* @returns {object} configuration blob
+*/
+Histogram.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the histogram children.
+* 
+* @returns {object} histogram children
+*/
+Histogram.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
+
+// Line //
+
+/**
+* FUNCTION: Line( graph )
+*	Line constructor. Creates a new line instance.
+*
+* @param {object} graph - parent graph instance
+* @returns {object} line instance
+*/
+var Line = function( graph ) {
+
+	// INSTANCE ATTRIBUTES //
+
+	this._parent = graph;
+	this._root = undefined;
+	this._children = {};
+	this._config = {
+		"type": "line",
+		"interpolation": {
+			"mode": "linear",
+			"tension": 0.7
+		},
+		"labels": []
+	};
+
+	// DATA //
+
+	this._data = graph._data;
+
+	// TRANSFORMS //
+
+	this._transforms = {
+		'x': function X( d ) {
+			return graph._xScale( d[ 0 ] );
+		},
+		'y': function Y( d ) {
+			return graph._yScale( d[ 1 ] );
+		}
+	};
+
+	// GENERATOR //
+
+	this._path = this.path()
+		.x( this._transforms.x )
+		.y( this._transforms.y )
+		.interpolate( this._config.interpolation.mode )
+		.tension( this._config.interpolation.tension );
+
+	// REGISTER //
+	if ( graph._config.hasOwnProperty( 'marks' ) ) {
+		graph._config.marks.push( this._config );
+	} else {
+		graph._config.marks = [ this._config ];
+	}
+	if ( graph._children.hasOwnProperty( 'marks' ) ) {
+		graph._children.marks.push( this );
+	} else {
+		graph._children.marks = [ this ];
+	}
+
+	return this;
+
+}; // end FUNCTION Line()
+
+/**
+* METHOD: create()
+*	Creates a new line element.
+*
+* @returns {object} line instance
+*/
+Line.prototype.create = function() {
+
+	var selection = this._parent._root,
+		labels = this._config.labels,
+		paths;
+
+	// Create the marks group:
+	this._root = selection.append( 'svg:g' )
+		.attr( 'property', 'marks' )
+		.attr( 'class', 'marks' )
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
+
+	// Add line paths:
+	paths = this._root.selectAll( '.line' )
+		.data( this._data )
+	  .enter().append( 'svg:path' )
+		.attr( 'property', 'line' )
+		.attr( 'class', 'line' )
+		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
+		.attr( 'd', this._path );
+
+	return this;
+
+}; // end METHOD create()
+
+/**
+* METHOD: path()
+*	Retrieves the line path generator.
+*
+* @returns {function} line path generator
+*/
+Line.prototype.path = function() {
+	return d3.svg.line();
+}; // end METHOD path()
+
+
+/**
+* METHOD: interpolation( mode )
+*	Interpolation mode setter and getter. If a mode is supplied, sets the instance interpolation mode. If no mode is supplied, returns the instance interpolation mode.
+*
+* @param {string} mode - interpolation mode; must be one of the following: linear, linear-closed, step, step-before, step-after, basis, basis-open, basis-closed, bundle, cardinal, cardinal-open, cardinal-closed, monotone.
+* @returns {object|string} line instance or interpolation mode
+*/
+Line.prototype.interpolation = function( mode ) {
+
+	var self = this;
+
+		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
+		rules = 'string|matches[linear,linear-closed,step,step-before,step-after,basis,basis-open,basis-closed,bundle,cardinal,cardinal-open,cardinal-closed,monotone]';
+
+	if ( !arguments.length ) {
+		return this._config.interpolation.mode;
+	}
+
+	Validator( mode, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'interpolation()::invalid input argument.' );
+		}
+		self._config.interpolation.mode = mode;
+		self._path.interpolate( mode );
+	});
+	
+	return this;
+
+}; // end METHOD interpolation()
+
+/**
+* METHOD: tension( value )
+*	Interpolation tension setter and getter. If a value is supplied, sets the instance interpolation tension. If no value is supplied, returns the instance interpolation tension.
+*
+* @param {number} value - interpolation tension; must reside within the interval [0,1].
+* @returns {object|number} line instance or interpolation tension
+*/
+Line.prototype.tension = function( value ) {
+	var self = this,
+		rules = 'interval[0,1]';
+
+	if ( !arguments.length ) {
+		return this._config.interpolation.tension;
+	}
+	
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'tension()::invalid input argument.' );
+		}
+		self._config.interpolation.tension = value;
+		self._path.tension( value );
+	});
+
+	return this;
+
+}; // end METHOD tension()
+
+/**
+* METHOD: labels( arr )
+*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} line instance or an array of labels
+*/
+Line.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+
+}; // end METHOD labels()
+
+
+/**
+* METHOD: parent()
+*	Returns the line parent.
+*
+* @returns {object} line parent
+*/
+Line.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the line configuration as a JSON blob.
+*
+* @returns {object} configuration blob
+*/
+Line.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the line children.
+* 
+* @returns {object} line children
+*/
+Line.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
+
+// TIMESERIES HISTOGRAM //
+
+/**
+* FUNCTION: TimeseriesHistogram( graph )
+*	Timeseries histogram constructor. Creates a new timeseries histogram instance.
+*
+* @param {object} graph - parent graph instance
+* @returns {object} timeseries histogram instance
+*/
+var TimeseriesHistogram = function( graph ) {
+
+	var binHeight = 0;
+
+	// INSTANCE ATTRIBUTES //
+
+	this._parent = graph;
+	this._root = undefined;
+	this._children = {};
+	this._config = {
+		'labels': [],
+		'sort': 'ascending'
+	};
+
+	// DATA //
+
+	this._data = graph._data;
+
+	// TRANSFORMS //
+
+	binHeight = graph._yScale( 0 ) - graph._yScale( 1 );
+
+	this._transforms = {
+		'x': function X( d ) {
+			return graph._xScale( d[ 0 ] );
+		},
+		'y': function Y( d, i ) {
+			return graph._yScale( i ) - binHeight;
+		},
+		'width': function Width( d ) {
+			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
+		},
+		'height': binHeight,
+		'color': function Color( d ) {
+			return graph._zScale( d[ 1 ] );
+		}
+	};
+
+	// REGISTER //
+	if ( graph._config.hasOwnProperty( 'marks' ) ) {
+		graph._config.marks.push( this._config );
+	} else {
+		graph._config.marks = [ this._config ];
+	}
+	if ( graph._children.hasOwnProperty( 'marks' ) ) {
+		graph._children.marks.push( this );
+	} else {
+		graph._children.marks = [ this ];
+	}
+
+	return this;
+
+}; // end FUNCTION TimeseriesHistogram()
+
+/**
+* METHOD: create()
+*	Creates a new timeseries histogram element.
+*
+* @returns {object} timseries histogram instance
+*/
+TimeseriesHistogram.prototype.create = function() {
+
+	var self = this,
+		selection = this._parent._root,
+		labels = this._config.labels,
+		histograms, bins;
+
+	// Create a marks group:
+	this._root = selection.append( 'svg:g' )
+		.attr( 'property', 'marks' )
+		.attr( 'class', 'marks' )
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
+		.attr( 'transform', 'translate( ' + 0 + ', ' + 0 + ')' );
+
+	// Add histograms:
+	histograms = this._root.selectAll( '.histogram' )
+		.data( this._data )
+	  .enter().append( 'svg:g' )
+	  	.attr( 'property', 'histogram' )
+	  	.attr( 'class', 'histogram' )
+		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
+		.attr( 'transform', function ( d, i ) {
+			return 'translate( 0,' + self._transforms.y( d, i ) + ' )';
+		});
+
+	// Add bins:
+	bins = histograms.selectAll( '.bin' )
+		.data( function ( d ) {
+			return d;
+		})
+	  .enter().append( 'svg:rect' )
+		.attr( 'property', 'bin' )
+		.attr( 'class', 'bin' )
+		.attr( 'x', this._transforms.x )
+		.attr( 'y', 0 )
+		.attr( 'width', this._transforms.width )
+		.attr( 'height', this._transforms.height )
+		.style( 'fill', this._transforms.color );
+
+	return this;
+
+}; // end METHOD create()
+
+/**
+* METHOD: labels( arr )
+*	Marks labels setter and getter. If a label array is supplied, sets the marks labels. If no label array is supplied, retrieves the marks labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} instance object or an array of labels
+*/
+TimeseriesHistogram.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+
+}; // end METHOD labels()
+
+/**
+* METHOD: parent()
+*	Returns the timeseries histogram parent.
+*
+* @returns {object} timeseries histogram parent
+*/
+TimeseriesHistogram.prototype.parent = function() {
+	return this._parent;
+}; // end METHOD parent()
+
+/**
+* METHOD: config()
+*	Returns the timeseries histogram configuration as a JSON blob.
+*
+* @returns {object} configuration blob
+*/
+TimeseriesHistogram.prototype.config = function() {
+	// Prevent direct tampering with the config object:
+	return JSON.parse( JSON.stringify( this._config ) );
+}; // end METHOD config()
+
+/**
+* METHOD: children()
+*	Returns the timeseries histogram children.
+* 
+* @returns {object} timeseries histogram children
+*/
+TimeseriesHistogram.prototype.children = function() {
+	return this._children;
+}; // end METHOD children()
 
 xfig.figure = function() {
 	return new Figure();
