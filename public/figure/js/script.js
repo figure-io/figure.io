@@ -57,7 +57,10 @@
 	Multipanel( canvas, width, height*3, 690, 550 );
 
 	// [8] Timeseries Histogram chart:
-	TimeseriesHistogram( canvas, width, width, 90, 1020 );
+	TimeseriesHistogram( canvas, width, width, 90, 1045 );
+
+	// [9] Kernel Density Estimate:
+	KDE( canvas, width, height, 90, 1665 );
 
 
 	// CHARTS //
@@ -312,19 +315,26 @@
 		// Get data:
 		d3.json( 'data/kde.data.json', function ( error, json ) {
 
+			var max;
+
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
 				.x( function ( d ) { return d[ 0 ]; } )
 				.y( function ( d ) { return d[ 1 ]; } );
 
-			// Format the data:
-			data.format( 2 );
+			// Format the data and calculate the KDE:
+			data.format( 2 )
+				.kde( function ( d ) {
+					return d[ 1 ];
+				}, 0, 1 );
 
 			// Bind the data instance to the graph:
+			max = data.max( function ( d ) {
+				return d[ 1 ];
+			});
+			max += max * 0.05;
 			graph.data( data )
-				.yMax( data.max( function ( d ) {
-					return d[ 1 ];
-				}));
+				.yMax( max );
 
 			// [3] Instantiate a new line chart generator and configure:
 			line = xfig.line( graph )
@@ -352,7 +362,7 @@
 				.left( 250 );
 
 			// Add a (sub)title:
-			title.create( 'Subtitle' );
+			title.create( 'KDE' );
 
 			// [5.2] Instantiate a new text instance and configure:
 			text = annotations.text()

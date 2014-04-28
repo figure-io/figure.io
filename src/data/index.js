@@ -490,17 +490,19 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 *	Calculates the kernel density estimate for each dataset.
 *
 * @param {function} accessor - data accessor specifying the data over which to calculate the KDE
+* @param {number} min - value defining the lower bound for the interval over which to calculate the KDE
+* @param {number} max - value defining the upper bound for the interval over which to calculate the KDE
 */
-Data.prototype.kde = function( accessor ) {
+Data.prototype.kde = function( accessor, min, max ) {
 	var data = this._data,
 		kde = new KDE();
 
 	// Configure the KDE generator:
 	kde.kernel( pdf.normal( 0, 1 ) )
 		.x( accessor )
-		.min( data.min( accessor ) )
-		.max( data.max( accessor ) )
-		.points( Math.pow( 2, 14 ) );
+		.min( min )
+		.max( max )
+		.points( Math.pow( 2, 10 ) );
 
 	// Calculate the bandwidth estimator and evaluate the density:
 	this._data = kde.estimator( data, 'silverman' )

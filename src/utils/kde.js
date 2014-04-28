@@ -279,6 +279,7 @@ KDE.prototype.points = function( value ) {
 */
 KDE.prototype.eval = function( data ) {
 	var kde = [], density = [], val,
+		x = this._xValue,
 		pdf = this._kernel,
 		bw = this._config.bandwidth,
 		N = this._config.domain.pts,
@@ -287,8 +288,15 @@ KDE.prototype.eval = function( data ) {
 		edges, interval;
 
 	// Create a sampling vector:
-	interval = (max-min) / N;
+	interval = (max-min) / (N-1);
 	edges = Vector.linspace( min, max, interval );
+
+	// Check if the number of bandwidths matches the data length:
+	if ( data.length !== bw.length ) {
+		for ( var b = 0; b < data.length; b++ ) {
+			bw.push( bw[ 0 ] );
+		}
+	}
 
 	for ( var i = 0; i < data.length; i++ ) {
 
@@ -299,14 +307,14 @@ KDE.prototype.eval = function( data ) {
 		for ( var n = 0; n < N; n++ ) {
 
 			// Initialize the density to zero for this interval point:
-			density[ n ] = 0;
+			density[ n ] = [ edges[n], 0 ];
 
 			// Given a sampling vector, build the density by evaluating the PDF for each datum and summing:
 			for ( var j = 0; j < data[ i ].length; j++ ) {
-				val = ( data[i][j] - edges[n] ) / bw;
-				density[ n ] += pdf( val );
+				val = ( x( data[i][j] ) - edges[n] ) / bw[ i ];
+				density[ n ][ 1 ] += pdf( val );
 			}
-			density[ n ] /= ( bw * N );
+			density[ n ][ 1 ] /= ( bw[ i ] * N );
 
 		} // end FOR j
 
