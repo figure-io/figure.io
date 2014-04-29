@@ -310,7 +310,7 @@
 			.yMin( 0 );
 
 		// Create the graph:
-		graph.create( 'rug' );
+		graph.create( 'kde' );
 
 		// Get data:
 		d3.json( 'data/kde.data.json', function ( error, json ) {
