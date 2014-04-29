@@ -67,6 +67,7 @@ var Rug = function( graph ) {
 Rug.prototype.create = function() {
 
 	var selection = this._parent._root,
+		height = this._parent._config.scales[ 1 ].range.max,
 		labels = this._config.labels,
 		rug, paths,
 		tickSize = this._config.size;
@@ -83,16 +84,15 @@ Rug.prototype.create = function() {
 	  .enter().append( 'svg:g' )
 		.attr( 'property', 'rug' )
 		.attr( 'class', 'rug' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; });
+		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
+		.attr( 'transform', 'translate(0,' + ( height - tickSize ) + ')' );
 
 	// Add rug paths:
 	paths = rug.selectAll( '.line' )
-		.data( function ( d, i ) {
-			console.log( d, i );
-			return [
-				[ d[ 0 ], 0 ],
-				[ d[ 0 ], tickSize ]
-			];
+		.data( function ( d ) {
+			return d.map( function ( d ) {
+				return [ [ d, 0 ], [ d, tickSize ] ];
+			});
 		})
 	  .enter().append( 'svg:path' )
 		.attr( 'property', 'line' )

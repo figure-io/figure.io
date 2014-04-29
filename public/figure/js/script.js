@@ -295,7 +295,7 @@
 
 	function KDE( canvas, width, height, left, top ) {
 
-		var graph, data, line, rug, edges, axes, annotations, title, text;
+		var graph, data, area, rug, edges, axes, annotations, title, text;
 
 		// [1] Instantiate a new graph generator and configure:
 		graph = xfig.graph( canvas )
@@ -310,7 +310,7 @@
 			.yMin( 0 );
 
 		// Create the graph:
-		graph.create( 'line' );
+		graph.create( 'rug' );
 
 		// Get data:
 		d3.json( 'data/kde.data.json', function ( error, json ) {
@@ -336,34 +336,46 @@
 			graph.data( data )
 				.yMax( max );
 
-			// [3] Instantiate a new line chart generator and configure:
-			line = xfig.line( graph )
+			// [3] Instantiate a new area chart generator and configure:
+			area = xfig.area( graph )
 				.labels( [ 'data 0' ] );
 
-			// Create the line chart:
-			line.create();
+			// Create the area chart:
+			area.create();
 
-			// [3.1] Instantiate a new rug chart generator and configure:
+			// [4] Instantiate a new data generator and configure:
+			data = xfig.data( json )
+				.x( function ( d ) { return d[ 0 ]; } )
+				.y( function ( d ) { return d[ 1 ]; } );
+
+			// Format the data:
+			data.format( 2 )
+				.extract( function ( d ) { return d[ 1 ]; });
+
+			// Bind the data instance to the graph:
+			graph.data( data );
+
+			// [5] Instantiate a new rug chart generator and configure:
 			rug = xfig.rug( graph )
 				.labels( [ 'data 0' ] );
 
 			// Create the rug chart:
 			rug.create();
 
-			// [4] Instantiate a new axes generator and configure:
+			// [6] Instantiate a new axes generator and configure:
 			axes = xfig.axes( graph )
 				.yLabel( 'density' );
 
 			// Create the axes:
 			axes.create();
 
-			// [5] Instantiate a new annotations generator and configure:
+			// [7] Instantiate a new annotations generator and configure:
 			annotations = xfig.annotations( graph );
 
 			// Create the annotations element:
 			annotations.create();
 
-			// [5.1] Instantiate a new title instance and configure:
+			// [7.1] Instantiate a new title instance and configure:
 			title = annotations.title()
 				.top( -30 )
 				.left( 250 );
@@ -371,7 +383,7 @@
 			// Add a (sub)title:
 			title.create( 'KDE' );
 
-			// [5.2] Instantiate a new text instance and configure:
+			// [7.2] Instantiate a new text instance and configure:
 			text = annotations.text()
 				.width( 200 )
 				.height( 100 )
