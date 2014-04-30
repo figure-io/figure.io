@@ -66,6 +66,7 @@ body {
 
 .graph .rug .line {
 	stroke: #474747;
+	opacity: 0.33;
 }
 
 .graph .axis path {

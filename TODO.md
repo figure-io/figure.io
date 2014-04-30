@@ -46,7 +46,7 @@ TODO
 2. 	bar
 3.	column
 4. 	gauge
-5. 	rug
+5. 	
 6. 	
 7. 	
 8.	

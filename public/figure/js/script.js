@@ -565,7 +565,7 @@
 			// [4] Instantiate a new axes generator and configure:
 			axes = xfig.axes( graph )
 				.xLabel( 'percent' )
-				.yLabel( 'node' );
+				.yLabel( 'index' );
 
 			// Create the axes:
 			axes.create();
