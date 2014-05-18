@@ -182,7 +182,6 @@ KDE.prototype.min = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD min()
 
 /**
@@ -209,7 +208,6 @@ KDE.prototype.max = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD max()
 
 /**
@@ -238,7 +236,6 @@ KDE.prototype.domain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD domain()
 
 /**
@@ -267,7 +264,6 @@ KDE.prototype.points = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD points()
 
 // TODO: use dfft to speed KDE calculation.

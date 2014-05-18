@@ -4697,6 +4697,8 @@ Multipanel.prototype.create = function( type ) {
 		.attr( 'class', 'multipanel' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
+	// FIXME: make graph height calculation robust.
+
 	// Compute the graph height: (NOTE: 54 is a fudge factor to allow for x-axis ticks and labels; depending on font-size, tick padding, and tick sizes, this may not be correct.)
 	graphHeight = Math.floor( ( height-54-padding*(total-1) ) / total );
 
@@ -6517,7 +6519,6 @@ KDE.prototype.min = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD min()
 
 /**
@@ -6544,7 +6545,6 @@ KDE.prototype.max = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD max()
 
 /**
@@ -6573,7 +6573,6 @@ KDE.prototype.domain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD domain()
 
 /**
@@ -6602,7 +6601,6 @@ KDE.prototype.points = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD points()
 
 // TODO: use dfft to speed KDE calculation.
@@ -7144,7 +7142,6 @@ Vector.median = function( vector ) {
 
 	// Even number of elements, so must take the mean of the two middle values:
 	return ( vec[ id-1 ] + vec[ id ] ) / 2.0;
-
 }; // end METHOD median()
 
 /**
@@ -7216,7 +7213,6 @@ Vector.linspace = function( min, max, increment ) {
 	for ( var i = 1; i < numElements - 1; i++ ) {
 		vec[ i ] = min + increment*i;
 	}
-
 	return vec;
 }; // end METHOD linspace()
 

@@ -89,7 +89,6 @@ Vector.median = function( vector ) {
 
 	// Even number of elements, so must take the mean of the two middle values:
 	return ( vec[ id-1 ] + vec[ id ] ) / 2.0;
-
 }; // end METHOD median()
 
 /**
@@ -161,6 +160,5 @@ Vector.linspace = function( min, max, increment ) {
 	for ( var i = 1; i < numElements - 1; i++ ) {
 		vec[ i ] = min + increment*i;
 	}
-
 	return vec;
 }; // end METHOD linspace()

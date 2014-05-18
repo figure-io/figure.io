@@ -7,7 +7,7 @@ TODO
 2. 	Option to pass in config object at instantiation; e.g., xfig.canvas( figure, {width:600,height:400} ).
 3. 	Method to expose root element
 4. 	Method to clear a graph of all marks: graph.clear()
-5. 	
+5. 	Move server.js to bin directory; make executable. Update app/utils/server.js to include process title; update bin/server.js to set process title
 
 
 ### Subplot
@@ -27,17 +27,17 @@ TODO
 1. 	Z analog to width (x) and height (y) (???)
 2.	Auto-scale domains, if no domain supplied?
 
-### multipanel
+### gridpanel
 
-1.	
-2. 	Add 'multipanel' to meta data terms
+1. 	Create
+2. 	2d generalization of multipanel
 
 
 ### Axes
 
 1. 	tick rotation
 2. 	tick display and axes display boolean validation
-3. 	add 'axes' to meta data terms
+3. 	
 4. 	outerticksize when setting tick direction; probably best to just reduce the outerticksize to match the extent that inner ticks extend out.
 
 ### Marks
@@ -54,7 +54,7 @@ TODO
 ### Data
 
 1. 	
-2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method)
+2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method) --> maybe separate methods; also geometric mean, harmonic mean, etc.
 3. 	Quantiles
 4. 	
 5. 	Mode (mode)
@@ -94,4 +94,11 @@ TODO
 
 1. 	
 2. 	JSLint
+3. 	
+
+
+### Tests
+
+1. 	Mocha/Chai
+2. 	Istanbul code coverage
 3. 	

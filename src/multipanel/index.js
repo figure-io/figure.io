@@ -154,6 +154,8 @@ Multipanel.prototype.create = function( type ) {
 		.attr( 'class', 'multipanel' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
+	// FIXME: make graph height calculation robust.
+
 	// Compute the graph height: (NOTE: 54 is a fudge factor to allow for x-axis ticks and labels; depending on font-size, tick padding, and tick sizes, this may not be correct.)
 	graphHeight = Math.floor( ( height-54-padding*(total-1) ) / total );
 
