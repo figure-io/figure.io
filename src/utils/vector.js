@@ -69,7 +69,7 @@ Vector.stdev = function( vector ) {
 * @returns {number} median value
 */
 Vector.median = function( vector ) {
-	var value, id, vec;
+	var id, vec;
 
 	// Create a copy of the input vector:
 	vec = vector.slice();

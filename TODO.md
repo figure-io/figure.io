@@ -46,21 +46,21 @@ TODO
 2. 	bar
 3.	column
 4. 	gauge
-5. 	
-6. 	
+5. 	contour
+6. 	hist2d
 7. 	
 8.	
 
 ### Data
 
-1. 	
+1. 	logspace (see linspace)
 2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method) --> maybe separate methods; also geometric mean, harmonic mean, etc.
 3. 	Quantiles
 4. 	
 5. 	Mode (mode)
 6.	nanmean, nanmedian, nanvariance, etc, to handle missing values
-7. 	Windowed Mean (wmean)
-8. 	Windowed Variance (wvar )
+7. 	Windowed (moving) Mean (mmean)
+8. 	Windowed (moving) Variance (mvar )
 9. 	Find (return indices)
 10. Filter
 11. Aggregators: median, variance, stdev
