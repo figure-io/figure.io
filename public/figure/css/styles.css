@@ -69,6 +69,18 @@ body {
 	opacity: 0.33;
 }
 
+.panel .graph .area {
+	opacity: 0.35;
+}
+
+.panel .graph .area[data-label="data 0"] {
+	fill: #F17CB0;
+}
+
+.panel .graph .area[data-label="data 1"] {
+	fill: #5DA5DA;
+}
+
 .graph .axis path {
 	fill: none;
 }

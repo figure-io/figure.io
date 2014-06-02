@@ -599,6 +599,7 @@
 			xValue = function( d ) { return d[ 0 ]; },
 			yValue = function( d ) { return d[ 1 ]; },
 			yMax = 0, _yMax,
+			numRows, numCols,
 			graphs, area,
 			annotations, title;
 
@@ -614,23 +615,29 @@
 		// Get data:
 		d3.json( 'data/gridpanel.data.json', function ( error, json ) {
 
+			numRows = json.length;
+			numCols = json.length;
+
 			// [2] For each panel dataset, instantiate a new data generator and configure:
-			for ( var i = 0; i < json.length; i++ ) {
+			for ( var i = 0; i < numRows; i++ ) {
+				for ( var j = 0; j < numCols; j++ ) {
 
-				data.push(
-					xfig.data( [ json[ i ] ] )
-						.x( xValue )
-						.y( yValue )
-				);
+					data.push(
+						xfig.data( [ json[ i ], json[ j ] ] )
+							.x( xValue )
+							.y( yValue )
+					);
 
-				// Compute the yMax:
-				_yMax = data[ i ].max( yValue );
-				yMax = ( yMax < _yMax ) ? _yMax : yMax;
-
+					// Compute the yMax:
+					_yMax = data[ data.length-1 ].max( yValue );
+					yMax = ( yMax < _yMax ) ? _yMax : yMax;
+				} // end FOR j
 			} // end FOR i
 
 			// Bind the data instance to the gridpanel:
 			gridpanel.data( data )
+				.rows( numRows )
+				.cols( numCols )
 				.xMin( 0 )
 				.xMax( 1 )
 				.yMin( 0 )
@@ -656,9 +663,9 @@
 
 			// [4] For each panel graph, instantiate a new area generator and configure:
 			graphs = gridpanel.children().graph;
-			for ( var j = 0; j < graphs.length; j++ ) {
+			for ( var k = 0; k < graphs.length; k++ ) {
 
-				area = xfig.area( graphs[ j ] )
+				area = xfig.area( graphs[ k ] )
 					.labels( [ 'data 0', 'data 1' ] );
 
 				// Create the area:

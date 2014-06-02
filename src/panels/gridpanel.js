@@ -16,6 +16,9 @@ function Gridpanel( canvas ) {
 	this._config.padding.top = 25;
 	this._config.padding.left = 40;
 
+	this._config.rows = 1;
+	this._config.cols = 1;
+
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'gridpanel' ) ) {
 		canvas._config.gridpanel.push( this._config );
@@ -40,72 +43,75 @@ Gridpanel.prototype = Object.create( Panel.prototype );
 Gridpanel.prototype.constructor = Gridpanel;
 
 /**
-* METHOD: create( type )
-*	Creates a new gridpanel element and appends to a canvas element. Option to define the gridpanel graph type.
+* METHOD: create()
+*	Creates a new gridpanel element and appends to a canvas element.
 *
-* @param {string} type - gridpanel type
 * @returns {object} gridpanel instance
 */
-Gridpanel.prototype.create = function( type ) {
+Gridpanel.prototype.create = function() {
 	var config = this._config,
 		selection = this._parent._root,
 		position = config.position,
 		width = config.width,
 		height = config.height,
 		padding = config.padding,
+		numRows = config.rows,
+		numCols = config.cols,
 		graphWidth, graphHeight,
 		left, top,
 		graph, axes,
+		row, col,
 		total = this._data.length,
 		xAxisFLG, yAxisFLG;
 
-	// MULTIPANEL //
+	// Check!
+	if ( total > numRows*numCols ) {
+		throw new Error( 'create()::data number exceeds grid size. Total: ' + total + '; Grid: ' + numRows + 'x' + numCols + '.' );
+	}
 
 	// Create the gridpanel element:
 	this._root = selection.append( 'svg:g' )
-		.attr( 'property', 'gridpanel' )
-		.attr( 'class', 'gridpanel' )
+		.attr( 'property', 'panel' )
+		.attr( 'class', 'panel' )
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
 	// FIXME: make graph dimension calculation robust.
 
 	// Compute graph dimensions: (NOTE: 54 is a fudge factor to allow for ticks and labels; depending on font-size, tick padding, and tick sizes, this may not be correct.)
-	graphWidth = Math.floor( ( width-54-padding.left*(total-1) ) / total );
-	graphHeight = Math.floor( ( height-54-padding.top*(total-1) ) / total );
+	graphWidth = Math.floor( ( width-54-padding.left*(numCols-1) ) / numCols );
+	graphHeight = Math.floor( ( height-54-padding.top*(numRows-1) ) / numRows );
 
 	config.scales[ 0 ].range.max = graphWidth;
 	config.scales[ 1 ].range.max = graphHeight;
 
-	// Create the graphs and axes in an NxN grid...
+	// Create the graphs and axes in an NxM grid...
 	for ( var i = 0; i < total; i++ ) {
 
-		// x-axis formatting flag:
+		// Get the row and column number:
+		row = Math.floor( i / numRows );
+		col = i % numCols;
+
+		// Formatting flags:
 		xAxisFLG = false;
-		if ( i === total-1 ) {
+		if ( row === numRows-1 ) {
 			xAxisFLG = true;
+		}
+		yAxisFLG = false;
+		if ( col === 0 ) {
+			yAxisFLG = true;
 		}
 
 		// Graph vertical position:
-		top = (graphHeight+padding.top) * i;
+		top = (graphHeight+padding.top) * row;
 
-		for ( var j = 0; j < total; j++ ) {
+		// Graph horizontal position:
+		left = (graphWidth+padding.left) * col;
 
-			// y-axis formatting flag:
-			yAxisFLG = false;
-			if ( j === 0 ) {
-				yAxisFLG = true;
-			}
+		// Graph:
+		graph = this._graph( graphWidth, graphHeight, left, top, this._data[ i ] );
 
-			// Graph horizontal position:
-			left = (graphWidth+padding.left) * j;
-
-			// Graph:
-			graph = this._graph( graphWidth, graphHeight, left, top, this._data[ i ] );
-
-			// Axes:
-			axes = this._axes( graph, xAxisFLG, yAxisFLG );
-		} // end FOR j
-
+		// Axes:
+		axes = this._axes( graph, xAxisFLG, yAxisFLG );
 	} // end FOR i
 
 	return this;
@@ -205,3 +211,55 @@ Gridpanel.prototype._axes = function createAxes( graph, xAxisFLG, yAxisFLG ) {
 	// Create the axes:
 	return axes.create();
 }; // end METHOD _axes()
+
+/**
+* METHOD: rows( value )
+*	Number of rows setter and getter. If a value is supplied, defines the number of rows. If no value is supplied, returns the number of rows.
+*
+* @param {number} value - number of rows.
+* @returns {object|number} - panel instance or number of rows
+*/
+Gridpanel.prototype.rows = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.rows;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'rows()::invalid input argument.' );
+		}
+		self._config.rows = value;
+	});
+
+	return this;
+}; // end METHOD rows()
+
+/**
+* METHOD: cols( value )
+*	Number of columns setter and getter. If a value is supplied, defines the number of columns. If no value is supplied, returns the number of columns.
+*
+* @param {number} value - number of columns.
+* @returns {object|number} - panel instance or number of columns
+*/
+Gridpanel.prototype.cols = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.cols;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'cols()::invalid input argument.' );
+		}
+		self._config.cols = value;
+	});
+
+	return this;
+}; // end METHOD cols()

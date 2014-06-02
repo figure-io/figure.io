@@ -115,7 +115,6 @@ function Panel( canvas ) {
 	this._data = null;
 
 	return this;
-
 } // end FUNCTION Panel()
 
 /**
@@ -156,7 +155,6 @@ Panel.prototype.padding = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD padding()
 
 /**
@@ -183,7 +181,6 @@ Panel.prototype.paddingLeft = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD paddingLeft()
 
 /**
@@ -210,7 +207,6 @@ Panel.prototype.paddingTop = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD paddingTop()
 
 /**
@@ -242,7 +238,6 @@ Panel.prototype.width = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -273,7 +268,6 @@ Panel.prototype.height = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -302,9 +296,7 @@ Panel.prototype.xMin = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD xMin()
 
 /**
@@ -333,9 +325,7 @@ Panel.prototype.xMax = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD xMax()
 
 /**
@@ -364,9 +354,7 @@ Panel.prototype.yMin = function( value ) {
 		});
 		
 	}
-	
 	return this;
-
 }; // end METHOD yMin()
 
 /**
@@ -395,9 +383,7 @@ Panel.prototype.yMax = function( value ) {
 		});
 	
 	}
-
 	return this;
-
 }; // end METHOD yMax()
 
 /**
@@ -425,7 +411,6 @@ Panel.prototype.xDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xDomain()
 
 /**
@@ -453,7 +438,6 @@ Panel.prototype.yDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yDomain()
 
 /**
@@ -481,7 +465,6 @@ Panel.prototype.xRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xRange()
 
 /**
@@ -509,7 +492,6 @@ Panel.prototype.yRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yRange()
 
 /**
@@ -546,7 +528,6 @@ Panel.prototype.xScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD xScale()
 
 /**
@@ -583,7 +564,6 @@ Panel.prototype.yScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD yScale()
 
 /**
@@ -596,49 +576,102 @@ Panel.prototype.yScale = function( type, value ) {
 * @returns {object} panel instance
 */
 Panel.prototype.scale = function( type, value, clbk ) {
-	var rules = 'string|matches[linear,log,pow,category10,category20,category20b,category20c]',
-		scales = {
-			'linear': linear,
-			'log': log,
-			'pow': pow,
-			'category10': category10,
-			'category20': category20,
-			'category20b': category20b,
-			'category20c': category20c
-		};
+	var self = this,
+		rules = 'string|matches[linear,log,pow,category10,category20,category20b,category20c]';
 
 	Validator( type, rules, function onErrors( errors ) {
 		if ( errors ) {
 			clbk( errors );
 			return;
 		}
-		clbk( null, scales[ type ]() );
+		clbk( null, self._scales[ type ]() );
 	});
 
 	return this;
-
-	function linear() {
-		return d3.scale.linear();
-	}
-	function log() {
-		return d3.scale.log().base( value );
-	}
-	function pow() {
-		return d3.scale.pow().exponent( value );
-	}
-	function category10() {
-		return d3.scale.category10();
-	}
-	function category20() {
-		return d3.scale.category20();
-	}
-	function category20b() {
-		return d3.scale.category20b();
-	}
-	function category20c() {
-		return d3.scale.category20c();
-	}
 }; // end METHOD scale()
+
+/**
+* PROPERTY: _scales
+*	Collection of scale methods.
+*/
+Panel.prototype._scales = {};
+
+/**
+* METHOD: linear()
+*	Returns a linear scale.
+*
+* @private
+* @returns {function} d3 linear scale
+*/
+Panel.prototype._scales.linear = function() {
+	return d3.scale.linear();
+}; // end METHOD linear()
+
+/**
+* METHOD: log()
+*	Returns a log scale.
+*
+* @private
+* @returns {function} d3 log scale
+*/
+Panel.prototype._scales.log = function() {
+	return d3.scale.log().base( value );
+}; // end METHOD log()
+
+/**
+* METHOD: pow()
+*	Returns a power scale.
+*
+* @private
+* @returns {function} d3 power scale
+*/
+Panel.prototype._scales.pow = function() {
+	return d3.scale.pow().exponent( value );
+}; // end METHOD pow()
+
+/**
+* METHOD: category10()
+*	Returns a categorical (10) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Panel.prototype._scales.category10 = function() {
+	return d3.scale.category10();
+}; // end METHOD category10()
+
+/**
+* METHOD: category20()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Panel.prototype._scales.category20 = function() {
+	return d3.scale.category20();
+}; // end METHOD category20()
+
+/**
+* METHOD: category20b()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Panel.prototype._scales.category20b = function() {
+	return d3.scale.category20b();
+}; // end METHOD category20b()
+
+/**
+* METHOD: category20c()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Panel.prototype._scales.category20c = function() {
+	return d3.scale.category20c();
+}; // end METHOD category20c()
 
 /**
 * METHOD: background( bool )
@@ -665,7 +698,6 @@ Panel.prototype.background = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD background()
 
 /**
@@ -700,13 +732,11 @@ Panel.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -733,7 +763,6 @@ Panel.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -760,7 +789,6 @@ Panel.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**
@@ -793,7 +821,6 @@ Panel.prototype.data = function( data ) {
 	});
 	
 	return this;
-
 }; // end METHOD data()
 
 /**
@@ -820,7 +847,6 @@ Panel.prototype.xLabel = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xLabel()
 
 /**
@@ -847,7 +873,6 @@ Panel.prototype.yLabel = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD yLabel()
 
 /**
@@ -878,7 +903,6 @@ Panel.prototype.xNumTicks = function( value ) {
 	}
 
 	return this;
-
 }; // end METHOD xNumTicks()
 
 /**
@@ -909,7 +933,6 @@ Panel.prototype.yNumTicks = function( value ) {
 	}
 
 	return this;
-
 }; // end METHOD yNumTicks()
 
 /**
@@ -936,7 +959,6 @@ Panel.prototype.xTickPadding = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xTickPadding()
 
 /**
@@ -963,7 +985,6 @@ Panel.prototype.yTickPadding = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD yTickPadding()
 
 /**
@@ -990,7 +1011,6 @@ Panel.prototype.xTickRotation = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xTickRotation()
 
 /**
@@ -1017,7 +1037,6 @@ Panel.prototype.yTickRotation = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xTickRotation()
 
 /**
@@ -1044,7 +1063,6 @@ Panel.prototype.xInnerTickSize = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xInnerTickSize()
 
 /**
@@ -1071,7 +1089,6 @@ Panel.prototype.yInnerTickSize = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xInnerTickSize()
 
 /**
@@ -1098,7 +1115,6 @@ Panel.prototype.xOuterTickSize = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xOuterTickSize()
 
 /**
@@ -1125,7 +1141,6 @@ Panel.prototype.yOuterTickSize = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD yOuterTickSize()
 
 /**
@@ -1160,7 +1175,6 @@ Panel.prototype.xTickFormat = function( value, flg ) {
 	});
 	
 	return this;
-
 }; // end METHOD xTickFormat()
 
 /**
@@ -1195,7 +1209,6 @@ Panel.prototype.yTickFormat = function( value, flg ) {
 	});
 	
 	return this;
-
 }; // end METHOD yTickFormat()
 
 /**
@@ -1223,7 +1236,6 @@ Panel.prototype.xTickDisplay = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD xTickDisplay()
 
 /**
@@ -1251,7 +1263,6 @@ Panel.prototype.yTickDisplay = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD yTickDisplay()
 
 /**
@@ -1278,7 +1289,6 @@ Panel.prototype.xTickDirection = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xTickDirection()
 
 /**
@@ -1305,7 +1315,6 @@ Panel.prototype.yTickDirection = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD yTickDirection()
 
 /**
@@ -1332,7 +1341,6 @@ Panel.prototype.xAxisOrient = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD xAxisOrient()
 
 /**
@@ -1359,7 +1367,6 @@ Panel.prototype.yAxisOrient = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD yAxisOrient()
 
 /**
@@ -1387,7 +1394,6 @@ Panel.prototype.xAxisDisplay = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD xAxisDisplay()
 
 /**
@@ -1415,7 +1421,6 @@ Panel.prototype.yAxisDisplay = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD yAxisDisplay()
 
 /**

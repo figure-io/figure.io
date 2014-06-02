@@ -39,13 +39,12 @@ Multipanel.prototype = Object.create( Panel.prototype );
 Multipanel.prototype.constructor = Multipanel;
 
 /**
-* METHOD: create( type )
-*	Creates a new multipanel element and appends to a canvas element. Option to define the multipanel graph type.
+* METHOD: create()
+*	Creates a new multipanel element and appends to a canvas element.
 *
-* @param {string} type - multipanel type
 * @returns {object} multipanel instance
 */
-Multipanel.prototype.create = function( type ) {
+Multipanel.prototype.create = function() {
 	var config = this._config,
 		selection = this._parent._root,
 		position = config.position,
@@ -55,8 +54,6 @@ Multipanel.prototype.create = function( type ) {
 		graph, axes,
 		total = this._data.length,
 		xAxisFLG;
-
-	// MULTIPANEL //
 
 	// Create the multipanel element:
 	this._root = selection.append( 'svg:g' )
