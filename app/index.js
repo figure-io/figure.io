@@ -45,7 +45,10 @@
 
 	// MODULES //
 
-	var // Express middleware:
+	var // Path module:
+		path = require( 'path' ),
+
+		// Express middleware:
 		express = require( 'express' ),
 
 		// Bootable:
@@ -64,7 +67,7 @@
 	var app = bootable( express() );
 
 	// [1] Execute the initializers:
-	app.phase( bootable.initializers( 'etc/init' ), app );
+	app.phase( bootable.initializers( path.resolve( __dirname, '../etc/init' ) ), app );
 
 	// [2] Bind the application routes:
 	app.phase( routes );
