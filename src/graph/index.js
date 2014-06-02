@@ -5,10 +5,11 @@
 * FUNCTION: Graph( canvas )
 *	Graph constructor. Creates a new graph instance.
 *
+* @constructor
 * @param {object} canvas - parent canvas instance
 * @returns {object} graph instance
 */
-var Graph = function( canvas ) {
+function Graph( canvas ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -110,7 +111,7 @@ var Graph = function( canvas ) {
 
 	return this;
 
-}; // end FUNCTION Graph()
+} // end FUNCTION Graph()
 
 /**
 * METHOD: create( type )

@@ -423,9 +423,11 @@
 			// [2] For each panel dataset, instantiate a new data generator and configure:
 			for ( var i = 0; i < json.length; i++ ) {
 
-				data.push( xfig.data( json[ i ] )
-					.x( xValue )
-					.y( yValue ) );
+				data.push(
+					xfig.data( json[ i ] )
+						.x( xValue )
+						.y( yValue )
+				);
 
 				// Create edges to define our histogram bins:
 				edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );

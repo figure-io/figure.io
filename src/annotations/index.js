@@ -5,10 +5,11 @@
 * FUNCTION: Annotations( parent )
 *	Annotations constructor. Creates a new annotations instance.
 *
+* @constructor
 * @param {object} parent - parent instance (Canvas, Graph)
 * @returns {object} annotations instance
 */
-var Annotations = function( parent ) {
+function Annotations( parent ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -36,7 +37,7 @@ var Annotations = function( parent ) {
 
 	return this;
 
-}; // end FUNCTION Annotations()
+} // end FUNCTION Annotations()
 
 /**
 * METHOD: create()

@@ -5,9 +5,10 @@
 * FUNCTION: Figure()
 *	Figure constructor. Creates a new figure instance.
 *
+* @constructor
 * @returns {object} figure instance
 */
-var Figure = function() {
+function Figure() {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -18,7 +19,7 @@ var Figure = function() {
 
 	return this;
 
-}; // end FUNCTION Figure()
+} // end FUNCTION Figure()
 
 /**
 * METHOD: create( selection )

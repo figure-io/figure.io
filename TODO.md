@@ -8,6 +8,7 @@ TODO
 3. 	Method to expose root element
 4. 	Method to clear a graph of all marks: graph.clear()
 5. 	Move server.js to bin directory; make executable. Update app/utils/server.js to include process title; update bin/server.js to set process title
+6.	Clean-up Utils directory code and how functions are 'exported'. :(
 
 
 ### Subplot
@@ -31,6 +32,7 @@ TODO
 
 1. 	Create
 2. 	2d generalization of multipanel
+3. 	Create a general panel, which defines API; have multipanel and gridpanel inherit and provide additional methods/logic.
 
 
 ### Axes

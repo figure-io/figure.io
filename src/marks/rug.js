@@ -5,10 +5,11 @@
 * FUNCTION: Rug( graph )
 *	Rug plot constructor. Creates a new rug instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} rug instance
 */
-var Rug = function( graph ) {
+function Rug( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -56,7 +57,7 @@ var Rug = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION Rug()
+} // end FUNCTION Rug()
 
 /**
 * METHOD: create()

@@ -5,10 +5,11 @@
 * FUNCTION: Text( annotations )
 *	Text constructor. Creates a new text instance.
 *
+* @constructor
 * @param {object} annotations - annotations instance
 * @returns {object} text instance
 */
-var Text = function( annotations ) {
+function Text( annotations ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -39,7 +40,7 @@ var Text = function( annotations ) {
 
 	return this;
 
-}; // end FUNCTION Text()
+} // end FUNCTION Text()
 
 /**
 * METHOD: create( text )

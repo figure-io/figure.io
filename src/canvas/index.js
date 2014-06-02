@@ -5,10 +5,11 @@
 * FUNCTION: Canvas( figure )
 *	Canvas constructor. Creates a new canvas instance.
 *
+* @constructor
 * @param {object} figure - parent figure instance
 * @returns {object} canvas instance
 */
-var Canvas = function( figure ) {
+function Canvas( figure ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -35,7 +36,7 @@ var Canvas = function( figure ) {
 
 	return this;
 
-}; // end FUNCTION Canvas()
+} // end FUNCTION Canvas()
 
 /**
 * METHOD: create( type )

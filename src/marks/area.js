@@ -5,10 +5,11 @@
 * FUNCTION: Area( graph )
 *	Area constructor. Creates a new area instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} area instance
 */
-var Area = function( graph ) {
+function Area( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -65,7 +66,7 @@ var Area = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION Area()
+} // end FUNCTION Area()
 
 /**
 * METHOD: create()

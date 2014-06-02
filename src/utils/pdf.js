@@ -2,6 +2,9 @@
 
 // PDF //
 
+/**
+* @namespace pdf
+*/
 var pdf = {
 		'version': '0.0.0' // semvar
 	};

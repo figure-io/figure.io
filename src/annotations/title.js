@@ -5,10 +5,11 @@
 * FUNCTION: Title( annotations )
 *	Title constructor. Creates a new title instance.
 *
+* @constructor
 * @param {object} annotations - annotations instance
 * @returns {object} title instance
 */
-var Title = function( annotations ) {
+function Title( annotations ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -39,7 +40,7 @@ var Title = function( annotations ) {
 
 	return this;
 
-}; // end FUNCTION Title()
+} // end FUNCTION Title()
 
 /**
 * METHOD: create( title )

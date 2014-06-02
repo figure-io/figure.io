@@ -5,10 +5,11 @@
 * FUNCTION: TimeseriesHistogram( graph )
 *	Timeseries histogram constructor. Creates a new timeseries histogram instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} timeseries histogram instance
 */
-var TimeseriesHistogram = function( graph ) {
+function TimeseriesHistogram( graph ) {
 
 	var binHeight = 0;
 
@@ -60,7 +61,7 @@ var TimeseriesHistogram = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION TimeseriesHistogram()
+} // end FUNCTION TimeseriesHistogram()
 
 /**
 * METHOD: create()

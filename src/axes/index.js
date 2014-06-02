@@ -5,10 +5,11 @@
 * FUNCTION: Axes( graph )
 *	Axes constructor. Creates a new axes instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} axes instance
 */
-var Axes = function( graph ) {
+function Axes( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -84,7 +85,7 @@ var Axes = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION Axes()
+} // end FUNCTION Axes()
 
 /**
 * METHOD: create()

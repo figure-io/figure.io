@@ -2,7 +2,14 @@
 
 // KDE //
 
-var KDE = function() {
+/**
+* FUNCTION: KDE()
+*	KDE constructor. Creates a new KDE instance.
+*
+* @constructor
+* @returns {object} KDE instance
+*/
+function KDE() {
 
 	this._kernel = pdf.normal( 0, 1 ); // standard normal
 	this._config = {
@@ -20,7 +27,7 @@ var KDE = function() {
 	};
 
 	return this;
-};
+} // end FUNCTION KDE()
 
 /**
 * METHOD: kernel( fcn )

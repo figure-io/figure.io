@@ -5,10 +5,11 @@
 * FUNCTION: Line( graph )
 *	Line constructor. Creates a new line instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} line instance
 */
-var Line = function( graph ) {
+function Line( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -61,7 +62,7 @@ var Line = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION Line()
+} // end FUNCTION Line()
 
 /**
 * METHOD: create()

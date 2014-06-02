@@ -2,6 +2,9 @@
 
 // VECTOR //
 
+/**
+* @namespace Vector
+*/
 var Vector = {
 		'version': '0.0.0' // semvar
 	};

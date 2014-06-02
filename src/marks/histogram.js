@@ -5,10 +5,11 @@
 * FUNCTION: Histogram( graph )
 *	Histogram constructor. Creates a new histogram instance.
 *
+* @constructor
 * @param {object} graph - parent graph instance
 * @returns {object} histogram instance
 */
-var Histogram = function( graph ) {
+function Histogram( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -55,7 +56,7 @@ var Histogram = function( graph ) {
 
 	return this;
 
-}; // end FUNCTION Histogram()
+} // end FUNCTION Histogram()
 
 /**
 * METHOD: create()
