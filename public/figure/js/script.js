@@ -447,6 +447,8 @@
 
 			// Bind the data instance to the multipanel:
 			multipanel.data( data )
+				.rows( 3 )
+				.cols( 1 )
 				.xMin( 0 )
 				.xMax( 1 )
 				.yMin( 0 )
@@ -604,7 +606,7 @@
 			annotations, title;
 
 		// [1] Instantiate a new gridpanel generator and configure:
-		gridpanel = xfig.gridpanel( canvas )
+		gridpanel = xfig.multipanel( canvas )
 			.width( width )
 			.height( height )
 			.position({

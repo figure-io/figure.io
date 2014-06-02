@@ -33,16 +33,6 @@ xfig.multipanel = function( canvas ) {
 	return new Multipanel( canvas );
 };
 
-xfig.gridpanel = function( canvas ) {
-	if ( !canvas ) {
-		throw new Error( 'gridpanel()::canvas not provided. Unable to initialize gridpanel constructor.' );
-	}
-	if ( !( canvas instanceof Canvas ) ) {
-		throw new Error( 'gridpanel()::invalid input parameter. Input argument must be a Canvas instance.' );
-	}
-	return new Gridpanel( canvas );
-};
-
 xfig.data = function( data ) {
 	if ( !data ) {
 		throw new Error( 'data()::data not provided. Unable to initialize data constructor.' );
