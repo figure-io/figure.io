@@ -85,7 +85,7 @@ Canvas.prototype._svg = function() {
 		.attr( 'data-aspect', width / height );
 
 	return canvas;
-}; // end METHOD svg()
+}; // end METHOD _svg()
 
 /**
 * METHOD: width( value )

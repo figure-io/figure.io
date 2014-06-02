@@ -85,89 +85,99 @@ Multipanel.prototype.create = function( type ) {
 		top = (graphHeight+padding) * i;
 
 		// Graph:
-		graph = createGraph( this, graphHeight, top, this._data[ i ] );
+		graph = this._graph( graphHeight, top, this._data[ i ] );
 
 		// Axes:
-		axes = createAxes( graph, xAxisFLG );
-
+		axes = this._axes( graph, xAxisFLG );
 	} // end FOR i
 
 	return this;
-
-	// FUNCTIONS //
-
-	function createGraph( parent, height, top, data ) {
-		var graph = new Graph( parent );
-
-		graph.width( config.width )
-			.height( height )
-			.position({
-				'left': 0,
-				'top': top
-			})
-			.xMin( config.scales[ 0 ].domain.min )
-			.xMax( config.scales[ 0 ].domain.max )
-			.yMin( config.scales[ 1 ].domain.min )
-			.yMax( config.scales[ 1 ].domain.max )
-			.xRange([
-				config.scales[ 0 ].range.min,
-				config.scales[ 0 ].range.max
-			])
-			.yRange([
-				config.scales[ 1 ].range.max,
-				config.scales[ 1 ].range.min
-			])
-			.xScale( config.scales[ 0 ].type )
-			.yScale( config.scales[ 1 ].type )
-			.background( config.background )
-			.data( data );
-
-		return graph.create();
-
-	} // end FUNCTION createGraph()
-
-	function createAxes( graph, xAxisFLG ) {
-		var axes, yTicks;
-
-		axes = new Axes( graph );
-
-		// Configure the axes:
-		axes.yLabel( config.axes[ 1 ].label )
-			.yTickFormat( config.axes[ 1 ].ticks.format )
-			.xNumTicks( config.axes[ 0 ].ticks.num )
-			.yNumTicks( config.axes[ 1 ].ticks.num )
-			.xTickPadding( config.axes[ 0 ].ticks.padding )
-			.yTickPadding( config.axes[ 1 ].ticks.padding )
-			.xTickRotation( config.axes[ 0 ].ticks.rotation )
-			.yTickRotation( config.axes[ 1 ].ticks.rotation )
-			.xInnerTickSize( config.axes[ 0 ].ticks.innerSize )
-			.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
-			.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
-			.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
-			.xTickDirection( config.axes[ 0 ].ticks.direction )
-			.yTickDirection( config.axes[ 1 ].ticks.direction )
-			.xTickDisplay( xAxisFLG )
-			.yTickDisplay( config.axes[ 1 ].ticks.display )
-			.xAxisOrient( config.axes[ 0 ].orient )
-			.yAxisOrient( config.axes[ 1 ].orient )
-			.xAxisDisplay( config.axes[ 0 ].display )
-			.yAxisDisplay( config.axes[ 1 ].display );
-
-		// Show x-axis tick labels:
-		if ( xAxisFLG ) {
-			axes.xLabel( config.axes[ 0 ].label )
-				.xTickFormat( config.axes[ 0 ].ticks.format );
-		} else {
-			axes.xLabel( '' )
-				.xTickFormat( '' );
-		}
-
-		// Create the axes:
-		axes.create();
-
-		return axes;
-
-	} // end FUNCTION createAxes()
-
 }; // end METHOD create()
 
+/**
+* METHOD: _graph( height, top, data )
+*	Creates and configures a graph instance.
+*
+* @private
+* @param {number} height - graph height
+* @param {number} top - vertical displacement
+* @param {Data} data - data instance
+* @returns {Graph} graph instance
+*/
+Multipanel.prototype._graph = function( height, top, data ) {
+	var graph = new Graph( this ),
+		config = this._config;
+
+	graph.width( config.width )
+		.height( height )
+		.position({
+			'left': 0,
+			'top': top
+		})
+		.xMin( config.scales[ 0 ].domain.min )
+		.xMax( config.scales[ 0 ].domain.max )
+		.yMin( config.scales[ 1 ].domain.min )
+		.yMax( config.scales[ 1 ].domain.max )
+		.xRange([
+			config.scales[ 0 ].range.min,
+			config.scales[ 0 ].range.max
+		])
+		.yRange([
+			config.scales[ 1 ].range.max,
+			config.scales[ 1 ].range.min
+		])
+		.xScale( config.scales[ 0 ].type )
+		.yScale( config.scales[ 1 ].type )
+		.background( config.background )
+		.data( data );
+
+	return graph.create();
+}; // end METHOD _graph()
+
+/**
+* METHOD: _axes( parent, FLG )
+*	Creates and configures an axes instance.
+*
+* @private
+* @param {Graph} graph instance
+* @param {boolean} FLG - x-axis flag
+* @returns {Axes} axes instance
+*/
+Multipanel.prototype._axes = function createAxes( parent, FLG ) {
+	var axes = new Axes( parent ),
+		config = this._config;
+
+	// Configure the axes:
+	axes.yLabel( config.axes[ 1 ].label )
+		.yTickFormat( config.axes[ 1 ].ticks.format )
+		.xNumTicks( config.axes[ 0 ].ticks.num )
+		.yNumTicks( config.axes[ 1 ].ticks.num )
+		.xTickPadding( config.axes[ 0 ].ticks.padding )
+		.yTickPadding( config.axes[ 1 ].ticks.padding )
+		.xTickRotation( config.axes[ 0 ].ticks.rotation )
+		.yTickRotation( config.axes[ 1 ].ticks.rotation )
+		.xInnerTickSize( config.axes[ 0 ].ticks.innerSize )
+		.yInnerTickSize( config.axes[ 1 ].ticks.innerSize )
+		.xOuterTickSize( config.axes[ 0 ].ticks.outerSize )
+		.yOuterTickSize( config.axes[ 1 ].ticks.outerSize )
+		.xTickDirection( config.axes[ 0 ].ticks.direction )
+		.yTickDirection( config.axes[ 1 ].ticks.direction )
+		.xTickDisplay( FLG )
+		.yTickDisplay( config.axes[ 1 ].ticks.display )
+		.xAxisOrient( config.axes[ 0 ].orient )
+		.yAxisOrient( config.axes[ 1 ].orient )
+		.xAxisDisplay( config.axes[ 0 ].display )
+		.yAxisDisplay( config.axes[ 1 ].display );
+
+	// Show x-axis tick labels:
+	if ( FLG ) {
+		axes.xLabel( config.axes[ 0 ].label )
+			.xTickFormat( config.axes[ 0 ].ticks.format );
+	} else {
+		axes.xLabel( '' )
+			.xTickFormat( '' );
+	}
+
+	// Create the axes:
+	return axes.create();
+}; // end METHOD _axes()
