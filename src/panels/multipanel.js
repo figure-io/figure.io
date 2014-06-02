@@ -44,8 +44,6 @@ Multipanel.prototype.constructor = Multipanel;
 * @returns {object} multipanel instance
 */
 Multipanel.prototype.create = function( type ) {
-
-	// VARIABLES //
 	var config = this._config,
 		selection = this._parent._root,
 		position = config.position,
@@ -76,7 +74,6 @@ Multipanel.prototype.create = function( type ) {
 
 		// Formatting flags:
 		xAxisFLG = false;
-
 		if ( i === total-1 ) {
 			xAxisFLG = true;
 		}
