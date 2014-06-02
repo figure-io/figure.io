@@ -73,7 +73,7 @@ Gridpanel.prototype.create = function( type ) {
 	config.scales[ 0 ].range.max = graphWidth;
 	config.scales[ 1 ].range.max = graphHeight;
 
-	// Create the graphs and axes...
+	// Create the graphs and axes in an NxN grid...
 	for ( var i = 0; i < total; i++ ) {
 
 		// x-axis formatting flag:

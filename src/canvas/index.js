@@ -46,56 +46,46 @@ function Canvas( figure ) {
 * @returns {object} canvas instance
 */
 Canvas.prototype.create = function( type ) {
-
-	// VARIABLES //
-	var self = this;
-
-	// CHECKS!!!
 	if ( !type ) {
 		type = 'svg';
 	}
 
-	// CANVAS //
-
 	// Create a new canvas based on the specified type...
 	switch ( type ) {
 		case 'svg':
-			this._root = svg();
+			this._root = this._svg();
 			break;
 		default:
 			throw new Error( 'create()::unrecognized canvas type: ' + type );
 	} // end SWITCH (type)
 
 	return this;
-
-	// FUNCTIONS //
-
-	/**
-	* FUNCTION: svg()
-	*	Append an SVG canvas to a parent element.
-	*
-	* @returns {object} SVG element as a D3 selection.
-	*/
-	function svg() {
-		var parent = self._parent._root,
-			width = self._config.width,
-			height = self._config.height,
-			canvas;
-
-		canvas = d3.select( parent ).append( 'svg:svg' )
-			.attr( 'property', 'canvas' )
-			.attr( 'class', 'canvas' )
-			.attr( 'width', width )
-			.attr( 'height', height )
-			.attr( 'viewBox', '0 0 ' + width + ' ' + height )
-			.attr( 'preserveAspectRatio', 'xMidYMid' )
-			.attr( 'data-aspect', width / height );
-
-		return canvas;
-	} // end FUNCTION svg()
-
 }; // end METHOD create()
 
+/**
+* METHOD: _svg()
+*	Appends an SVG canvas to a parent element.
+*
+* @private
+* @returns {object} SVG element as a D3 selection.
+*/
+Canvas.prototype._svg = function() {
+	var parent = this._parent._root,
+		width = this._config.width,
+		height = this._config.height,
+		canvas;
+
+	canvas = d3.select( parent ).append( 'svg:svg' )
+		.attr( 'property', 'canvas' )
+		.attr( 'class', 'canvas' )
+		.attr( 'width', width )
+		.attr( 'height', height )
+		.attr( 'viewBox', '0 0 ' + width + ' ' + height )
+		.attr( 'preserveAspectRatio', 'xMidYMid' )
+		.attr( 'data-aspect', width / height );
+
+	return canvas;
+}; // end METHOD svg()
 
 /**
 * METHOD: width( value )
