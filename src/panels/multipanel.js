@@ -13,6 +13,8 @@ function Multipanel( canvas ) {
 
 	Panel.call( this, canvas );
 
+	this._config.padding.top = 10;
+
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'multipanel' ) ) {
 		canvas._config.multipanel.push( this._config );

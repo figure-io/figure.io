@@ -11,6 +11,11 @@
 */
 function Gridpanel( canvas ) {
 
+	Panel.call( this, canvas );
+
+	this._config.padding.top = 25;
+	this._config.padding.left = 40;
+
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'gridpanel' ) ) {
 		canvas._config.gridpanel.push( this._config );
@@ -88,7 +93,7 @@ Gridpanel.prototype.create = function( type ) {
 			// y-axis formatting flag:
 			yAxisFLG = false;
 			if ( j === 0 ) {
-				yAxisFLG = false;
+				yAxisFLG = true;
 			}
 
 			// Graph horizontal position:

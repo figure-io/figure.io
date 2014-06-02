@@ -117,8 +117,8 @@ xfig.annotations = function( parent ) {
 	if ( !parent ) {
 		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );
 	}
-	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Multipanel ) ) {
-		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Multipanel instance.' );
+	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Panel ) ) {
+		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Panel instance.' );
 	}
 	return new Annotations( parent );
 };

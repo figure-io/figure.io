@@ -62,6 +62,9 @@
 	// [9] Kernel Density Estimate:
 	KDE( canvas, width, height, 90, 1665 );
 
+	// [10] Gridpanel chart:
+	Gridpanel( canvas, 1000, 750, 90, 2285 );
+
 
 	// CHARTS //
 
@@ -589,6 +592,82 @@
 		});
 
 	} // end FUNCTION TimeseriesHistogram()
+
+	function Gridpanel( canvas, width, height, left, top ) {
+		var gridpanel,
+			data = [],
+			xValue = function( d ) { return d[ 0 ]; },
+			yValue = function( d ) { return d[ 1 ]; },
+			yMax = 0, _yMax,
+			graphs, area,
+			annotations, title;
+
+		// [1] Instantiate a new gridpanel generator and configure:
+		gridpanel = xfig.gridpanel( canvas )
+			.width( width )
+			.height( height )
+			.position({
+				'left': left,
+				'top': top
+			});
+
+		// Get data:
+		d3.json( 'data/gridpanel.data.json', function ( error, json ) {
+
+			// [2] For each panel dataset, instantiate a new data generator and configure:
+			for ( var i = 0; i < json.length; i++ ) {
+
+				data.push(
+					xfig.data( [ json[ i ] ] )
+						.x( xValue )
+						.y( yValue )
+				);
+
+				// Compute the yMax:
+				_yMax = data[ i ].max( yValue );
+				yMax = ( yMax < _yMax ) ? _yMax : yMax;
+
+			} // end FOR i
+
+			// Bind the data instance to the gridpanel:
+			gridpanel.data( data )
+				.xMin( 0 )
+				.xMax( 1 )
+				.yMin( 0 )
+				.yMax( yMax )
+				.yLabel( 'density [a.u.]' );
+
+			// Create the gridpanel:
+			gridpanel.create();
+
+			// [3] Instantiate a new annotations generator and configure:
+			annotations = xfig.annotations( gridpanel );
+
+			// Create the annotations element:
+			annotations.create();
+
+			// [3.1] Instantiate a new title instance and configure:
+			title = annotations.title()
+				.top( -30 )
+				.left( 450 );
+
+			// Add a (sub)title:
+			title.create( 'Subtitle' );
+
+			// [4] For each panel graph, instantiate a new area generator and configure:
+			graphs = gridpanel.children().graph;
+			for ( var j = 0; j < graphs.length; j++ ) {
+
+				area = xfig.area( graphs[ j ] )
+					.labels( [ 'data 0', 'data 1' ] );
+
+				// Create the area:
+				area.create();
+			} // end FOR j
+
+		});
+
+	} // end FUNCTION Gridpanel()
 
 })();
 

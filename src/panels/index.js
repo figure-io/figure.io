@@ -25,8 +25,8 @@ function Panel( canvas ) {
 			"left": 90
 		},
 		"padding": {
-			"top": 10,
-			"left": 10
+			"top": 0,
+			"left": 0
 		},
 		"background": false,
 		"scales": [

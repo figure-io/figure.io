@@ -4557,6 +4557,11 @@ TimeseriesHistogram.prototype.children = function() {
 */
 function Gridpanel( canvas ) {
 
+	Panel.call( this, canvas );
+
+	this._config.padding.top = 25;
+	this._config.padding.left = 40;
+
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'gridpanel' ) ) {
 		canvas._config.gridpanel.push( this._config );
@@ -4634,7 +4639,7 @@ Gridpanel.prototype.create = function( type ) {
 			// y-axis formatting flag:
 			yAxisFLG = false;
 			if ( j === 0 ) {
-				yAxisFLG = false;
+				yAxisFLG = true;
 			}
 
 			// Graph horizontal position:
@@ -4773,8 +4778,8 @@ function Panel( canvas ) {
 			"left": 90
 		},
 		"padding": {
-			"top": 10,
-			"left": 10
+			"top": 0,
+			"left": 0
 		},
 		"background": false,
 		"scales": [
@@ -6210,6 +6215,8 @@ Panel.prototype.children = function() {
 function Multipanel( canvas ) {
 
 	Panel.call( this, canvas );
+
+	this._config.padding.top = 10;
 
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'multipanel' ) ) {
@@ -7656,8 +7663,8 @@ xfig.annotations = function( parent ) {
 	if ( !parent ) {
 		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );
 	}
-	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Multipanel ) ) {
-		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Multipanel instance.' );
+	if ( !( parent instanceof Canvas ) && !( parent instanceof Graph ) && !( parent instanceof Panel ) ) {
+		throw new Error( 'annotations()::invalid input parameter. Input argument must be ether a Canvas, Graph, or Panel instance.' );
 	}
 	return new Annotations( parent );
 };
