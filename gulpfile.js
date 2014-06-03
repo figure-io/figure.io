@@ -53,6 +53,7 @@ var jshint = require( 'gulp-jshint' ),
 	stripDebug = require( 'gulp-strip-debug' ),
 	uglify = require( 'gulp-uglify' ),
 	concat = require( 'gulp-concat' ),
+	rename = require( 'gulp-rename' ),
 	minifyHTML = require( 'gulp-minify-html' ),
 	minifyCSS = require( 'gulp-minify-css' ),
 	autoprefix = require( 'gulp-autoprefixer' ),
@@ -76,9 +77,10 @@ gulp.task( 'jshint', function() {
 gulp.task( 'library.build', function() {
 	gulp.src( [ './src/start.js', './src/*/*.js', './src/xfig.js', './src/end.js' ] )
 		.pipe( concat( 'xfig.js' ) )
-		.pipe( gulp.dest( './build/' ) );
-	gulp.src( [ './src/start.js', './src/*/*.js', './src/xfig.js', './src/end.js' ] )
-		.pipe( concat( 'xfig.min.js' ) )
+		.pipe( gulp.dest( './build/' ) )
+		.pipe( rename( 'index.js' ) )
+		.pipe( gulp.dest( './lib/' ) )
+		.pipe( rename( 'xfig.min.js' ) )
 		.pipe( stripDebug() )
 		.pipe( uglify() )
 		.pipe( gulp.dest( './build/' ) );
