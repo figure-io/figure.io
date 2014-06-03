@@ -613,6 +613,7 @@
 		gridpanel = xfig.multipanel( canvas )
 			.width( width )
 			.height( height )
+			.gutter( 120 )
 			.position({
 				'left': left,
 				'top': top

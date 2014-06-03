@@ -6011,8 +6011,6 @@ function Multipanel( canvas ) {
 	this._config.padding.top = 25;
 	this._config.padding.left = 40;
 
-	this._config.gutter = 120;
-
 	this._config.rows = 1;
 	this._config.cols = 1;
 
