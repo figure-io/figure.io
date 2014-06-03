@@ -18,7 +18,7 @@
 	figure = xfig.figure();
 
 	// Create the figure:
-	figure.create( _selection );
+	figure.create( document, _selection );
 
 	// [2] Instantiate a new canvas generator and configure:
 	canvas = xfig.canvas( figure )

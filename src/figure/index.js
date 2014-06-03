@@ -22,15 +22,16 @@ function Figure() {
 } // end FUNCTION Figure()
 
 /**
-* METHOD: create( selection )
+* METHOD: create( document, selection )
 *	Creates a new figure element. If a selection is supplied, appends a figure element to a selection. If no selection is supplied, a figure is appended to a newly create HTML element; to access the figure parent, use the parent method.
 *
-* @param {object} selection - DOM element selection, e.g., document.querySelector( '.main' )
+* @param {Document} document - document object
+* @param {object} selection - (optional) DOM element selection, e.g., document.querySelector( '.main' )
 * @returns {object} figure instance
 */
-Figure.prototype.create = function( selection ) {
+Figure.prototype.create = function( document, selection ) {
 	var figure, elements;
-	if ( !arguments.length ) {
+	if ( arguments.length < 2 ) {
 		selection = document.createElement( 'div' );
 	}
 	this._parent = selection;
