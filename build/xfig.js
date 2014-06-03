@@ -6225,6 +6225,7 @@ Multipanel.prototype._axes = function createAxes( graph, xAxisFLG, yAxisFLG ) {
 * METHOD: _headers( width )
 *	Creates column headers.
 *
+* @private
 * @param {number} width - graph width
 * @returns {object} object instance
 */
@@ -6266,6 +6267,7 @@ Multipanel.prototype._headers = function( width ) {
 * METHOD: _labels( height )
 *	Creates row labels.
 *
+* @private
 * @param {number} height - graph height
 * @returns {object} object instance
 */
