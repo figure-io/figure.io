@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
 *
 *	SERVER
@@ -45,27 +46,26 @@
 	// MODULES //
 
 	var // Main application:
-		app = require( './app' );
+		app = require( './../app' ),
+
+		// Package information:
+		pkginfo = require( 'pkginfo' );
 
 	// PROCESS //
 
-	console.info( 'INFO:node process id: ' + process.pid + '...' );
+	process.title = pkginfo.read( require.main ).package.name;
+	console.info( 'INFO:' + process.title + ':node process id: ' + process.pid + '...' );
 
 	// BOOT //
 
 	// Boot the application...
-	app.boot( function ( error ) {
-
+	app.boot( function onError( error ) {
 		// Check if we encountered an error while booting...
 		if ( error ) {
-
 			console.log( error.message );
 			console.log( error.stack );
-
 			return process.exit( -1 );
-
 		}
-
 	});
 
 })();

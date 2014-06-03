@@ -1,14 +1,43 @@
 {
   "name": "figure.io",
   "version": "0.0.0",
-  "description": "",
-  "main": "",
+  "description": "Figure generator.",
+  "author": {
+    "name": "Athan Reines",
+    "email": "athan@nodeprime.com"
+  },
+  "contributors": [
+    {}
+  ],
+  "bin": {
+    "figure.io": "./bin/server.js"
+  },
+  "scripts": {
+    "start": "node bin/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kgryte/figure.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kgryte/figure.io/issues"
+  },
+  "keywords": [
+    "figure",
+    "d3",
+    "data visualization",
+    "chart",
+    "graph"
+  ],
   "dependencies": {
     "bootable": "~0.2.1",
     "electrolyte": "0.0.2",
     "express": "~3.4.6",
     "lodash": "~2.4.1",
-    "d3": "~3.4.6"
+    "d3": "~3.4.6",
+    "pkginfo": "~0.3.0"
   },
   "devDependencies": {
     "gulp": "~3.6.0",
@@ -21,16 +50,10 @@
     "gulp-autoprefixer": "0.0.6",
     "gulp-jsonminify": "0.0.1"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/kgryte/figure.io.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/kgryte/figure.io/issues"
-  }
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ]
 }

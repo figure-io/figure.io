@@ -1,4 +1,4 @@
 figure.io
 =========
 
-Figure layout generator.
+Figure generator.

@@ -4,4 +4,4 @@ if ( typeof define === "function" && define.amd ) {
 	module.exports = xfig;
 } else {
 	this.xfig = xfig;
-}}( d3, _ );
+}}();

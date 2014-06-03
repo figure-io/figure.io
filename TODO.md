@@ -10,7 +10,7 @@ TODO
 5. 	Move server.js to bin directory; make executable. Update app/utils/server.js to include process title; update bin/server.js to set process title
 6.	Clean-up Utils directory code and how functions are 'exported'. :(
 7. 	Compile with custom D3 build
-8. 	!!!!npm build
+8. 	
 9. 
 
 
