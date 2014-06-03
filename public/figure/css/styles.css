@@ -81,6 +81,12 @@ body {
 	fill: #5DA5DA;
 }
 
+.panel .col-header {
+	display: block;
+	width: 100%;
+	text-align: center;
+}
+
 .graph .axis path {
 	fill: none;
 }

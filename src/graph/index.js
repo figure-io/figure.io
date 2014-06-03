@@ -121,16 +121,12 @@ function Graph( canvas ) {
 * @returns {object} graph instance
 */
 Graph.prototype.create = function( type ) {
-
-	// VARIABLES //
 	var selection = this._parent._root,
 		position = this._config.position,
 		width = this._config.width,
 		height = this._config.height,
 		clipPath, background,
 		id = Date.now();
-
-	// GRAPH //
 
 	// Create the clip-path:
 	clipPath = selection.append( 'svg:defs' )

@@ -65,7 +65,6 @@ function Area( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Area()
 
 /**
@@ -75,7 +74,6 @@ function Area( graph ) {
 * @returns {object} area instance
 */
 Area.prototype.create = function() {
-
 	var selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
@@ -96,7 +94,6 @@ Area.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -118,7 +115,6 @@ Area.prototype.path = function() {
 * @returns {object|string} area instance or interpolation mode
 */
 Area.prototype.interpolation = function( mode ) {
-
 	var self = this;
 
 		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
@@ -138,7 +134,6 @@ Area.prototype.interpolation = function( mode ) {
 	});
 	
 	return this;
-
 }; // end METHOD interpolation()
 
 /**
@@ -166,7 +161,6 @@ Area.prototype.tension = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD tension()
 
 /**
@@ -193,9 +187,7 @@ Area.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
-
 
 /**
 * METHOD: parent()

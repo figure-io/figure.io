@@ -308,11 +308,8 @@ Text.prototype.width = function( value ) {
 			}
 			self._config.width = value;
 		});
-	
 	}
-	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -340,11 +337,8 @@ Text.prototype.height = function( value ) {
 			}
 			self._config.height = value;
 		});
-	
 	}
-	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -369,7 +363,6 @@ Text.prototype.position = function( value ) {
 			console.error( errors );
 			throw new Error( 'position()::invalid input argument.' );
 		}
-
 		for ( var key in value ) {
 			if ( value.hasOwnProperty( key ) ) {
 				errors = Validator( value[ key ], rules );
@@ -379,13 +372,11 @@ Text.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -412,7 +403,6 @@ Text.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -439,7 +429,6 @@ Text.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**
@@ -524,7 +513,6 @@ function Title( annotations ) {
 * @returns {object} title instance
 */
 Title.prototype.create = function( title ) {
-
 	var selection = this._parent._root,
 		width = this._config.width,
 		height = this._config.height,
@@ -545,7 +533,6 @@ Title.prototype.create = function( title ) {
 		.html( title );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -575,9 +562,7 @@ Title.prototype.width = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -607,9 +592,7 @@ Title.prototype.height = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -644,13 +627,11 @@ Title.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -677,7 +658,6 @@ Title.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -704,7 +684,6 @@ Title.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**
@@ -2673,16 +2652,12 @@ function Graph( canvas ) {
 * @returns {object} graph instance
 */
 Graph.prototype.create = function( type ) {
-
-	// VARIABLES //
 	var selection = this._parent._root,
 		position = this._config.position,
 		width = this._config.width,
 		height = this._config.height,
 		clipPath, background,
 		id = Date.now();
-
-	// GRAPH //
 
 	// Create the clip-path:
 	clipPath = selection.append( 'svg:defs' )
@@ -3598,7 +3573,6 @@ function Area( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Area()
 
 /**
@@ -3608,7 +3582,6 @@ function Area( graph ) {
 * @returns {object} area instance
 */
 Area.prototype.create = function() {
-
 	var selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
@@ -3629,7 +3602,6 @@ Area.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -3651,7 +3623,6 @@ Area.prototype.path = function() {
 * @returns {object|string} area instance or interpolation mode
 */
 Area.prototype.interpolation = function( mode ) {
-
 	var self = this;
 
 		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
@@ -3671,7 +3642,6 @@ Area.prototype.interpolation = function( mode ) {
 	});
 	
 	return this;
-
 }; // end METHOD interpolation()
 
 /**
@@ -3699,7 +3669,6 @@ Area.prototype.tension = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD tension()
 
 /**
@@ -3726,9 +3695,7 @@ Area.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
-
 
 /**
 * METHOD: parent()
@@ -4574,6 +4541,7 @@ function Panel( canvas ) {
 			"top": 0,
 			"left": 0
 		},
+		"gutter": 0,
 		"background": false,
 		"scales": [
 			{
@@ -4754,6 +4722,32 @@ Panel.prototype.paddingTop = function( value ) {
 
 	return this;
 }; // end METHOD paddingTop()
+
+/**
+* METHOD: gutter( value )
+*	Gutter setter and getter. If a value is supplied, defines the panel gutter. If no value is supplied, returns the panel gutter.
+*
+* @param {number} value - desired panel gutter.
+* @returns {object|number} - panel instance or gutter value
+*/
+Panel.prototype.gutter = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.gutter;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'gutter()::invalid input argument.' );
+		}
+		self._config.gutter = value;
+	});
+
+	return this;
+}; // end METHOD gutter()
 
 /**
 * METHOD: width( value )
@@ -6017,8 +6011,13 @@ function Multipanel( canvas ) {
 	this._config.padding.top = 25;
 	this._config.padding.left = 40;
 
+	this._config.gutter = 120;
+
 	this._config.rows = 1;
 	this._config.cols = 1;
+
+	this._config.headers = [];
+	this._config.labels = [];
 
 	// REGISTER //
 	if ( canvas._config.hasOwnProperty( 'panel' ) ) {
@@ -6056,6 +6055,7 @@ Multipanel.prototype.create = function() {
 		width = config.width,
 		height = config.height,
 		padding = config.padding,
+		gutter = config.gutter,
 		numRows = config.rows,
 		numCols = config.cols,
 		graphWidth, graphHeight,
@@ -6079,7 +6079,7 @@ Multipanel.prototype.create = function() {
 	// FIXME: make graph dimension calculation robust.
 
 	// Compute graph dimensions: (NOTE: 54 is a fudge factor to allow for ticks and labels; depending on font-size, tick padding, and tick sizes, this may not be correct.)
-	graphWidth = Math.floor( ( width-padding.left*(numCols-1) ) / numCols );
+	graphWidth = Math.floor( ( width-gutter-padding.left*(numCols-1) ) / numCols );
 	graphHeight = Math.floor( ( height-54-padding.top*(numRows-1) ) / numRows );
 
 	config.scales[ 0 ].range.max = graphWidth;
@@ -6114,6 +6114,14 @@ Multipanel.prototype.create = function() {
 		// Axes:
 		axes = this._axes( graph, xAxisFLG, yAxisFLG );
 	} // end FOR i
+
+	// Create column headers and row labels:
+	if ( config.headers.length ) {
+		this._headers( graphWidth );
+	}
+	if ( config.labels.length ) {
+		this._labels( graphHeight );
+	}
 
 	return this;
 }; // end METHOD create()
@@ -6214,6 +6222,90 @@ Multipanel.prototype._axes = function createAxes( graph, xAxisFLG, yAxisFLG ) {
 }; // end METHOD _axes()
 
 /**
+* METHOD: _headers( width )
+*	Creates column headers.
+*
+* @param {number} width - graph width
+* @returns {object} object instance
+*/
+Multipanel.prototype._headers = function( width ) {
+	var config = this._config,
+		numCols = config.cols,
+		headers = config.headers,
+		padding = config.padding.left,
+		annotations, label;
+
+	// Check!!
+	if ( numCols !== headers.length ) {
+		console.warn( 'create()::column number does not equal header number.' );
+		numCols = Math.min( numCols, headers.length );
+	}
+
+	// Instantiate a new annotations generator and configure:
+	annotations = new Annotations( this );
+
+	// Create the annotations element:
+	annotations.create();
+
+	for ( var i = 0; i < numCols; i++ ) {
+		// Instantiate a new text instance and configure:
+		label = annotations.text()
+			.width( width )
+			.height( 100 )
+			.top( -35 )
+			.left( (width+padding)*i );
+
+		// Add a text annotation:
+		label.create( '<span class="col-header">' + headers[ i ] + '</span>');
+	} // end FOR i
+
+	return this;
+}; // end FUNCTION _headers()
+
+/**
+* METHOD: _labels( height )
+*	Creates row labels.
+*
+* @param {number} height - graph height
+* @returns {object} object instance
+*/
+Multipanel.prototype._labels = function( height ) {
+	var config = this._config,
+		numRows = config.rows,
+		labels = config.labels,
+		width = config.width,
+		padding = config.padding.top,
+		gutter = config.gutter,
+		annotations, label;
+
+	// Check!!
+	if ( numRows !== labels.length ) {
+		console.warn( 'create()::row number does not equal label number.' );
+		numRows = Math.min( numRows, labels.length );
+	}
+
+	// Instantiate a new annotations generator and configure:
+	annotations = new Annotations( this );
+
+	// Create the annotations element:
+	annotations.create();
+
+	for ( var i = 0; i < numRows; i++ ) {
+		// Instantiate a new text instance and configure:
+		label = annotations.text()
+			.width( gutter-20 )
+			.height( 100 )
+			.top( height*(i+0.5) + padding*i )
+			.left( width-gutter+20 );
+
+		// Add a text annotation:
+		label.create( '<span class="row-label">'+ labels[ i ] + '</span>');
+	} // end FOR i
+
+	return this;
+}; // end FUNCTION _headers()
+
+/**
 * METHOD: rows( value )
 *	Number of rows setter and getter. If a value is supplied, defines the number of rows. If no value is supplied, returns the number of rows.
 *
@@ -6264,6 +6356,58 @@ Multipanel.prototype.cols = function( value ) {
 
 	return this;
 }; // end METHOD cols()
+
+/**
+* METHOD: headers( arr )
+*	Column headers setter and getter. If a header array is supplied, sets the column headers. If no header array is supplied, retrieves the column headers.
+*
+* @param {array} arr - an array of headers (strings)
+* @returns {object|array} object instance or an array of headers
+*/
+Multipanel.prototype.headers = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.headers;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'headers()::invalid input argument.' );
+		}
+		self._config.headers = arr;
+	});
+
+	return this;
+}; // end METHOD headers()
+
+/**
+* METHOD: labels( arr )
+*	Row labels setter and getter. If a label array is supplied, sets the row labels. If no label array is supplied, retrieves the row labels.
+*
+* @param {array} arr - an array of labels (strings)
+* @returns {object|array} object instance or an array of labels
+*/
+Multipanel.prototype.labels = function ( arr ) {
+	var self = this,
+		rules = 'array';
+
+	if ( !arguments.length ) {
+		return this._config.labels;
+	}
+	
+	Validator( arr, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'labels()::invalid input argument.' );
+		}
+		self._config.labels = arr;
+	});
+
+	return this;
+}; // end METHOD labels()
 /**
 *
 *	HIST2C

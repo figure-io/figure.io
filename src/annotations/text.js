@@ -99,11 +99,8 @@ Text.prototype.width = function( value ) {
 			}
 			self._config.width = value;
 		});
-	
 	}
-	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -131,11 +128,8 @@ Text.prototype.height = function( value ) {
 			}
 			self._config.height = value;
 		});
-	
 	}
-	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -160,7 +154,6 @@ Text.prototype.position = function( value ) {
 			console.error( errors );
 			throw new Error( 'position()::invalid input argument.' );
 		}
-
 		for ( var key in value ) {
 			if ( value.hasOwnProperty( key ) ) {
 				errors = Validator( value[ key ], rules );
@@ -170,13 +163,11 @@ Text.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -203,7 +194,6 @@ Text.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -230,7 +220,6 @@ Text.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**

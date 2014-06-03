@@ -28,6 +28,7 @@ function Panel( canvas ) {
 			"top": 0,
 			"left": 0
 		},
+		"gutter": 0,
 		"background": false,
 		"scales": [
 			{
@@ -208,6 +209,32 @@ Panel.prototype.paddingTop = function( value ) {
 
 	return this;
 }; // end METHOD paddingTop()
+
+/**
+* METHOD: gutter( value )
+*	Gutter setter and getter. If a value is supplied, defines the panel gutter. If no value is supplied, returns the panel gutter.
+*
+* @param {number} value - desired panel gutter.
+* @returns {object|number} - panel instance or gutter value
+*/
+Panel.prototype.gutter = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.gutter;
+	}
+
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'gutter()::invalid input argument.' );
+		}
+		self._config.gutter = value;
+	});
+
+	return this;
+}; // end METHOD gutter()
 
 /**
 * METHOD: width( value )

@@ -50,7 +50,6 @@ function Title( annotations ) {
 * @returns {object} title instance
 */
 Title.prototype.create = function( title ) {
-
 	var selection = this._parent._root,
 		width = this._config.width,
 		height = this._config.height,
@@ -71,7 +70,6 @@ Title.prototype.create = function( title ) {
 		.html( title );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -101,9 +99,7 @@ Title.prototype.width = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -133,9 +129,7 @@ Title.prototype.height = function( value ) {
 		});
 	
 	}
-	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -170,13 +164,11 @@ Title.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -203,7 +195,6 @@ Title.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -230,7 +221,6 @@ Title.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**

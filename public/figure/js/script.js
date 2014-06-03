@@ -63,7 +63,7 @@
 	KDE( canvas, width, height, 90, 1665 );
 
 	// [10] Gridpanel chart:
-	Gridpanel( canvas, 1000, 750, 90, 2285 );
+	Gridpanel( canvas, 1000, 600, 90, 2285 );
 
 
 	// CHARTS //
@@ -401,7 +401,6 @@
 	} // end FUNCTION KDE()
 
 	function Multipanel( canvas, width, height, left, top ) {
-
 		var multipanel,
 			data = [],
 			edges,
@@ -505,7 +504,6 @@
 	} // end FUNCTION Multipanel()
 
 	function TimeseriesHistogram( canvas, width, height, left, top ) {
-
 		var graph, data, histogram, edges, axes, annotations, title, text, means;
 
 		// [1] Instantiate a new graph generator and configure:
@@ -603,6 +601,12 @@
 			yMax = 0, _yMax,
 			numRows, numCols,
 			graphs, area,
+			headers = [
+				'Condition 1: really long description which goes on and on',
+				'Condition 2',
+				'Condition 3'
+			],
+			labels = headers,
 			annotations, title;
 
 		// [1] Instantiate a new gridpanel generator and configure:
@@ -644,7 +648,9 @@
 				.xMax( 1 )
 				.yMin( 0 )
 				.yMax( yMax )
-				.yLabel( 'density [a.u.]' );
+				.yLabel( 'density [a.u.]' )
+				.headers( headers )
+				.labels( labels );
 
 			// Create the gridpanel:
 			gridpanel.create();
@@ -657,7 +663,7 @@
 
 			// [3.1] Instantiate a new title instance and configure:
 			title = annotations.title()
-				.top( -30 )
+				.top( -80 )
 				.left( 450 );
 
 			// Add a (sub)title:
@@ -666,13 +672,12 @@
 			// [4] For each panel graph, instantiate a new area generator and configure:
 			graphs = gridpanel.children().graph;
 			for ( var k = 0; k < graphs.length; k++ ) {
-
 				area = xfig.area( graphs[ k ] )
 					.labels( [ 'data 0', 'data 1' ] );
 
 				// Create the area:
 				area.create();
-			} // end FOR j
+			} // end FOR k
 
 		});
 
