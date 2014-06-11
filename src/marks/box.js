@@ -31,13 +31,13 @@ function Box( graph ) {
 			return graph._xScale( d[ 0 ] );
 		},
 		'y': function Y( d ) {
-			return graph._yScale( d[ 1 ] );
+			return graph._yScale( d );
 		},
 		'width': function Width( d ) {
-			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
+			return graph._xScale( 1 );
 		},
 		'height': function Height( d ) {
-			return graph._yScale( d[ 2 ] ) - graph._xScale( d[ 1 ]);
+			return graph._yScale( d[ 1 ] ) - graph._xScale( d[ 0 ]);
 		}
 	};
 
@@ -76,14 +76,31 @@ Box.prototype.create = function() {
 
 	// Add box groups:
 	boxes = this._root.selectAll( '.box-and-whisker' )
-		.data( this._data )
+		.data( this._data[ 0 ] )
 	  .enter().append( 'svg:g' )
 	  	.attr( 'property', 'box-and-whisker' )
 	  	.attr( 'class', 'box-and-whisker' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
-		.attr( 'transform', function ( d, i ) {
-			return 'translate( 0,' + self._transforms.y( d ) + ' )';
+		.attr( 'data-label', function ( d, i ) {
+			return labels[ i ];
+		})
+		.attr( 'transform', function ( d ) {
+			return 'translate( ' + self._transforms.x( d ) + ', 0 )';
 		});
+
+	// Add medians:
+	medians = boxes.selectAll( '.median' )
+		.data( function ( d ) {
+			return d;
+		})
+	  .enter().append( 'svg:rect' )
+		.attr( 'property', 'line' )
+		.attr( 'class', 'median' )
+		.attr( 'x', 0 )
+		.attr( 'y', function ( d ) {
+			return this._transforms.height( d[1][0] ) / 2;
+		})
+		.attr( 'width', this._transforms.width )
+		.attr( 'height', 1 );
 
 	// Add quartiles:
 	quartiles = boxes.selectAll( '.quartiles' )
@@ -93,26 +110,28 @@ Box.prototype.create = function() {
 	  .enter().append( 'svg:rect' )
 		.attr( 'property', 'rectangle' )
 		.attr( 'class', 'quartiles' )
-		.attr( 'x', this._transforms.x )
+		.attr( 'x', 0 )
 		.attr( 'y', 0 )
 		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height );
+		.attr( 'height', function ( d ) {
+			var dat = [ d[1][1], d[1][2] ];
+			return this._transforms.height( dat );
+		});
 
-	// Add medians:
-	medians = boxes.selectAll( '.median' )
+	// Add whiskers:
+	whiskers = boxes.selectAll( '.whisker' )
 		.data( function ( d ) {
 			return d;
 		})
-	  .enter().append( 'svg:line' )
-		.attr( 'property', 'line' )
-		.attr( 'class', 'median' )
+	  .enter().append( 'svg:rect' )
+		.attr( 'property', 'rectangle' )
+		.attr( 'class', 'whiskers' )
 		.attr( 'x', 0 )
-		.attr( 'y', this._transforms.height / 2 )
+		.attr( 'y', function ( d ) {
+			return this.transforms.y( d[1][3] );
+		})
 		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height );
-
-	// Add whiskers:
-	whiskers = boxes.selectAll( '.whisker' );
+		.attr( 'height', 1 );
 
 	// Add outliers:
 	outliers = boxes.selectAll( '.outlier' )
@@ -122,7 +141,7 @@ Box.prototype.create = function() {
 	  .enter().append( 'svg:circle' )
 		.attr( 'property', 'circle' )
 		.attr( 'class', 'outlier' )
-		.attr( 'cx', this._transforms.x )
+		.attr( 'cx', this._transforms.width / 2 )
 		.attr( 'cy', 0 )
 		.attr( 'r', 3 );
 
