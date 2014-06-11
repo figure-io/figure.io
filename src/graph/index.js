@@ -110,7 +110,6 @@ function Graph( canvas ) {
 	}
 
 	return this;
-
 } // end FUNCTION Graph()
 
 /**
@@ -157,7 +156,6 @@ Graph.prototype.create = function( type ) {
 	} // end IF (background)
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -193,7 +191,6 @@ Graph.prototype.width = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -229,7 +226,6 @@ Graph.prototype.height = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -265,7 +261,6 @@ Graph.prototype.xMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD xMin()
 
 /**
@@ -301,7 +296,6 @@ Graph.prototype.xMax = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD xMax()
 
 /**
@@ -337,7 +331,6 @@ Graph.prototype.yMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD yMin()
 
 /**
@@ -373,7 +366,6 @@ Graph.prototype.yMax = function( value ) {
 	}
 
 	return this;
-
 }; // end METHOD yMax()
 
 /**
@@ -409,7 +401,6 @@ Graph.prototype.zMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD zMin()
 
 /**
@@ -445,7 +436,6 @@ Graph.prototype.zMax = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD zMax()
 
 /**
@@ -476,7 +466,6 @@ Graph.prototype.xDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xDomain()
 
 /**
@@ -507,7 +496,6 @@ Graph.prototype.yDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yDomain()
 
 /**
@@ -538,7 +526,6 @@ Graph.prototype.zDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD zDomain()
 
 /**
@@ -569,7 +556,6 @@ Graph.prototype.xRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xRange()
 
 /**
@@ -600,7 +586,6 @@ Graph.prototype.yRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yRange()
 
 /**
@@ -631,7 +616,6 @@ Graph.prototype.zRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD zRange()
 
 /**
@@ -668,7 +652,6 @@ Graph.prototype.xScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD xScale()
 
 /**
@@ -705,7 +688,6 @@ Graph.prototype.yScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD yScale()
 
 /**
@@ -742,7 +724,6 @@ Graph.prototype.zScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD zScale()
 
 /**
@@ -771,33 +752,96 @@ Graph.prototype.scale = function( type, value, clbk ) {
 			clbk( errors );
 			return;
 		}
-		clbk( null, scales[ type ]() );
+		clbk( null, self._scales[ type ]( value ) );
 	});
 
 	return this;
-
-	function linear() {
-		return d3.scale.linear();
-	}
-	function log() {
-		return d3.scale.log().base( value );
-	}
-	function pow() {
-		return d3.scale.pow().exponent( value );
-	}
-	function category10() {
-		return d3.scale.category10();
-	}
-	function category20() {
-		return d3.scale.category20();
-	}
-	function category20b() {
-		return d3.scale.category20b();
-	}
-	function category20c() {
-		return d3.scale.category20c();
-	}
 }; // end METHOD scale()
+
+/**
+* PROPERTY: _scales
+*	Collection of scale methods.
+*/
+Graph.prototype._scales = {};
+
+/**
+* METHOD: linear()
+*	Returns a linear scale.
+*
+* @private
+* @returns {function} d3 linear scale
+*/
+Graph.prototype._scales.linear = function() {
+	return d3.scale.linear();
+}; // end METHOD linear()
+
+/**
+* METHOD: log( base )
+*	Returns a log scale.
+*
+* @private
+* @param {number} base - log base
+* @returns {function} d3 log scale
+*/
+Graph.prototype._scales.log = function( value ) {
+	return d3.scale.log().base( value );
+}; // end METHOD log()
+
+/**
+* METHOD: pow( exp )
+*	Returns a power scale.
+*
+* @private
+* @param {number} exp - exponent value
+* @returns {function} d3 power scale
+*/
+Graph.prototype._scales.pow = function( value ) {
+	return d3.scale.pow().exponent( value );
+}; // end METHOD pow()
+
+/**
+* METHOD: category10()
+*	Returns a categorical (10) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category10 = function() {
+	return d3.scale.category10();
+}; // end METHOD category10()
+
+/**
+* METHOD: category20()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20 = function() {
+	return d3.scale.category20();
+}; // end METHOD category20()
+
+/**
+* METHOD: category20b()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20b = function() {
+	return d3.scale.category20b();
+}; // end METHOD category20b()
+
+/**
+* METHOD: category20c()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20c = function() {
+	return d3.scale.category20c();
+}; // end METHOD category20c()
 
 /**
 * METHOD: background( bool )
@@ -824,7 +868,6 @@ Graph.prototype.background = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD background()
 
 /**
@@ -859,13 +902,11 @@ Graph.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -892,7 +933,6 @@ Graph.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -919,7 +959,6 @@ Graph.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**
@@ -930,7 +969,6 @@ Graph.prototype.top = function( value ) {
 * @returns {object|object} - graph instance or current active dataset
 */
 Graph.prototype.data = function( data ) {
-
 	if ( !arguments.length ) {
 		return this._data;
 	}
@@ -942,7 +980,6 @@ Graph.prototype.data = function( data ) {
 	this._data = data._data;
 
 	return this;
-
 }; // end METHOD data()
 
 /**

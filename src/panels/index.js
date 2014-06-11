@@ -611,7 +611,7 @@ Panel.prototype.scale = function( type, value, clbk ) {
 			clbk( errors );
 			return;
 		}
-		clbk( null, self._scales[ type ]() );
+		clbk( null, self._scales[ type ]( value ) );
 	});
 
 	return this;
@@ -635,24 +635,26 @@ Panel.prototype._scales.linear = function() {
 }; // end METHOD linear()
 
 /**
-* METHOD: log()
+* METHOD: log( base )
 *	Returns a log scale.
 *
 * @private
+* @param {number} base - log base
 * @returns {function} d3 log scale
 */
-Panel.prototype._scales.log = function() {
+Panel.prototype._scales.log = function( value ) {
 	return d3.scale.log().base( value );
 }; // end METHOD log()
 
 /**
-* METHOD: pow()
+* METHOD: pow( exp )
 *	Returns a power scale.
 *
 * @private
+* @param {number} exp - exponent value
 * @returns {function} d3 power scale
 */
-Panel.prototype._scales.pow = function() {
+Panel.prototype._scales.pow = function( value ) {
 	return d3.scale.pow().exponent( value );
 }; // end METHOD pow()
 

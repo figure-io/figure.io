@@ -54,7 +54,6 @@ function Box( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Box()
 
 /**
@@ -73,8 +72,7 @@ Box.prototype.create = function() {
 	this._root = selection.append( 'svg:g' )
 		.attr( 'property', 'marks' )
 		.attr( 'class', 'marks' )
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
-		.attr( 'transform', 'translate( ' + 0 + ', ' + 0 + ')' );
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
 
 	// Add box groups:
 	boxes = this._root.selectAll( '.box-and-whisker' )
@@ -93,7 +91,7 @@ Box.prototype.create = function() {
 			return d;
 		})
 	  .enter().append( 'svg:rect' )
-		.attr( 'property', 'rect' )
+		.attr( 'property', 'rectangle' )
 		.attr( 'class', 'quartiles' )
 		.attr( 'x', this._transforms.x )
 		.attr( 'y', 0 )
