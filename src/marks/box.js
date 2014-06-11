@@ -64,10 +64,10 @@ function Box( graph ) {
 * @returns {object} box instance
 */
 Box.prototype.create = function() {
-
 	var self = this,
 		selection = this._parent._root,
-		labels = this._config.labels;
+		labels = this._config.labels,
+		boxes, quartiles, medians, whiskers, outliers;
 
 	// Create a marks group:
 	this._root = selection.append( 'svg:g' )
@@ -76,33 +76,59 @@ Box.prototype.create = function() {
 		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
 		.attr( 'transform', 'translate( ' + 0 + ', ' + 0 + ')' );
 
-	// Add histograms:
-	histograms = this._root.selectAll( '.histogram' )
+	// Add box groups:
+	boxes = this._root.selectAll( '.box-and-whisker' )
 		.data( this._data )
 	  .enter().append( 'svg:g' )
-	  	.attr( 'property', 'histogram' )
-	  	.attr( 'class', 'histogram' )
+	  	.attr( 'property', 'box-and-whisker' )
+	  	.attr( 'class', 'box-and-whisker' )
 		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
 		.attr( 'transform', function ( d, i ) {
-			return 'translate( 0,' + self._transforms.y( d, i ) + ' )';
+			return 'translate( 0,' + self._transforms.y( d ) + ' )';
 		});
 
-	// Add bins:
-	bins = histograms.selectAll( '.bin' )
+	// Add quartiles:
+	quartiles = boxes.selectAll( '.quartiles' )
 		.data( function ( d ) {
 			return d;
 		})
 	  .enter().append( 'svg:rect' )
-		.attr( 'property', 'bin' )
-		.attr( 'class', 'bin' )
+		.attr( 'property', 'rect' )
+		.attr( 'class', 'quartiles' )
 		.attr( 'x', this._transforms.x )
 		.attr( 'y', 0 )
 		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height )
-		.style( 'fill', this._transforms.color );
+		.attr( 'height', this._transforms.height );
+
+	// Add medians:
+	medians = boxes.selectAll( '.median' )
+		.data( function ( d ) {
+			return d;
+		})
+	  .enter().append( 'svg:line' )
+		.attr( 'property', 'line' )
+		.attr( 'class', 'median' )
+		.attr( 'x', 0 )
+		.attr( 'y', this._transforms.height / 2 )
+		.attr( 'width', this._transforms.width )
+		.attr( 'height', this._transforms.height );
+
+	// Add whiskers:
+	whiskers = boxes.selectAll( '.whisker' );
+
+	// Add outliers:
+	outliers = boxes.selectAll( '.outlier' )
+		.data( function ( d ) {
+			return d;
+		})
+	  .enter().append( 'svg:circle' )
+		.attr( 'property', 'circle' )
+		.attr( 'class', 'outlier' )
+		.attr( 'cx', this._transforms.x )
+		.attr( 'cy', 0 )
+		.attr( 'r', 3 );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
