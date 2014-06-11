@@ -39,7 +39,6 @@ function Title( annotations ) {
 	}
 
 	return this;
-
 } // end FUNCTION Title()
 
 /**

@@ -36,7 +36,6 @@ function Annotations( parent ) {
 	}
 
 	return this;
-
 } // end FUNCTION Annotations()
 
 /**
@@ -57,7 +56,6 @@ Annotations.prototype.create = function() {
 		.attr( 'transform', 'translate(' + position.left + ',' + position.top + ')' );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -98,7 +96,6 @@ Annotations.prototype.position = function( value ) {
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -125,7 +122,6 @@ Annotations.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -152,7 +148,6 @@ Annotations.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**

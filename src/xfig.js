@@ -103,6 +103,16 @@ xfig.timeserieshistogram = function( graph ) {
 	return new TimeseriesHistogram( graph );
 };
 
+xfig.box = function( graph ) {
+	if ( !graph ) {
+		throw new Error( 'box()::graph not provided. Unable to initialize box constructor.' );
+	}
+	if ( !( graph instanceof Graph ) ) {
+		throw new Error( 'box()::invalid input parameter. Input argument must be a Graph instance.' );
+	}
+	return new Box( graph );
+};
+
 xfig.annotations = function( parent ) {
 	if ( !parent ) {
 		throw new Error( 'annotations()::parent instance not provided. Unable to initialize annotations constructor.' );

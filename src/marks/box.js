@@ -1,17 +1,15 @@
 
-// TIMESERIES HISTOGRAM //
+// BOX AND WHISKER //
 
 /**
-* FUNCTION: TimeseriesHistogram( graph )
-*	Timeseries histogram constructor. Creates a new timeseries histogram instance.
+* FUNCTION: Box( graph )
+*	Box and whisker constructor. Creates a new box and whisker instance.
 *
 * @constructor
 * @param {object} graph - parent graph instance
-* @returns {object} timeseries histogram instance
+* @returns {object} box and whisker instance
 */
-function TimeseriesHistogram( graph ) {
-
-	var binHeight = 0;
+function Box( graph ) {
 
 	// INSTANCE ATTRIBUTES //
 
@@ -28,21 +26,18 @@ function TimeseriesHistogram( graph ) {
 
 	// TRANSFORMS //
 
-	binHeight = graph._yScale( 0 ) - graph._yScale( 1 );
-
 	this._transforms = {
 		'x': function X( d ) {
 			return graph._xScale( d[ 0 ] );
 		},
-		'y': function Y( d, i ) {
-			return graph._yScale( i ) - binHeight;
+		'y': function Y( d ) {
+			return graph._yScale( d[ 1 ] );
 		},
 		'width': function Width( d ) {
 			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
 		},
-		'height': binHeight,
-		'color': function Color( d ) {
-			return graph._zScale( d[ 1 ] );
+		'height': function Height( d ) {
+			return graph._yScale( d[ 2 ] ) - graph._xScale( d[ 1 ]);
 		}
 	};
 
@@ -60,20 +55,19 @@ function TimeseriesHistogram( graph ) {
 
 	return this;
 
-} // end FUNCTION TimeseriesHistogram()
+} // end FUNCTION Box()
 
 /**
 * METHOD: create()
-*	Creates a new timeseries histogram element.
+*	Creates a new box and whisker plot element.
 *
-* @returns {object} timseries histogram instance
+* @returns {object} box instance
 */
-TimeseriesHistogram.prototype.create = function() {
+Box.prototype.create = function() {
 
 	var self = this,
 		selection = this._parent._root,
-		labels = this._config.labels,
-		histograms, bins;
+		labels = this._config.labels;
 
 	// Create a marks group:
 	this._root = selection.append( 'svg:g' )
@@ -118,7 +112,7 @@ TimeseriesHistogram.prototype.create = function() {
 * @param {array} arr - an array of labels (strings)
 * @returns {object|array} instance object or an array of labels
 */
-TimeseriesHistogram.prototype.labels = function ( arr ) {
+Box.prototype.labels = function ( arr ) {
 	var self = this,
 		rules = 'array';
 
@@ -135,36 +129,35 @@ TimeseriesHistogram.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 /**
 * METHOD: parent()
-*	Returns the timeseries histogram parent.
+*	Returns the box and whisker parent.
 *
-* @returns {object} timeseries histogram parent
+* @returns {object} box parent
 */
-TimeseriesHistogram.prototype.parent = function() {
+Box.prototype.parent = function() {
 	return this._parent;
 }; // end METHOD parent()
 
 /**
 * METHOD: config()
-*	Returns the timeseries histogram configuration as a JSON blob.
+*	Returns the box and whisker configuration as a JSON blob.
 *
 * @returns {object} configuration blob
 */
-TimeseriesHistogram.prototype.config = function() {
+Box.prototype.config = function() {
 	// Prevent direct tampering with the config object:
 	return JSON.parse( JSON.stringify( this._config ) );
 }; // end METHOD config()
 
 /**
 * METHOD: children()
-*	Returns the timeseries histogram children.
+*	Returns the box children.
 * 
-* @returns {object} timeseries histogram children
+* @returns {object} box children
 */
-TimeseriesHistogram.prototype.children = function() {
+Box.prototype.children = function() {
 	return this._children;
 }; // end METHOD children()

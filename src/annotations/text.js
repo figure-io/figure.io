@@ -39,7 +39,6 @@ function Text( annotations ) {
 	}
 
 	return this;
-
 } // end FUNCTION Text()
 
 /**
@@ -71,7 +70,6 @@ Text.prototype.create = function( text ) {
 		.html( text );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
