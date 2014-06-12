@@ -735,8 +735,8 @@
 				'left': left,
 				'top': top
 			})
-			.xMin( 0 )
-			.xMax( 5 )
+			.xMin( -0.5 )
+			.xMax( 4.5 )
 			.yMin( 0 )
 			.yMax( 1 );
 
@@ -773,7 +773,7 @@
 			// [3] Instantiate a new box chart generator and configure:
 			box = xfig.box( graph )
 				.radius( 5 )
-				.width( 0.8 )
+				.width( 0.2 )
 				.labels([
 					'data 0',
 					'data 1',

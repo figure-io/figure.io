@@ -32,42 +32,24 @@ function Box( graph ) {
 
 	this._accessors = {
 		'median': function median( d ) {
-			var width = self._config.width;
-			return [
-				[
-					0, d[1],
-					width, d[1]
-				]
-			];
+			return [ [ d[1], d[1] ] ];
 		},
 		'quartiles': function quartiles( d ) {
 			return [ d[2] ];
 		},
 		'centers': function centers( d ) {
-			var x = self._config.width / 2,
-				_d = d[ 3 ],
+			var _d = d[ 3 ],
 				arr = [];
 			for ( var i = 0; i < _d.length; i++ ) {
-				arr.push(
-					[
-						x, _d[i],
-						x, d[1]
-					]
-				);
+				arr.push( [ _d[i], d[1] ] );
 			}
 			return arr;
 		},
 		'whiskers': function whiskers( d ) {
-			var arr = [],
-				width = self._config.width;
+			var arr = [];
 			d = d[ 3 ];
 			for ( var i = 0; i < d.length; i++ ) {
-				arr.push(
-					[
-						0, d[i],
-						width, d[i]
-					]
-				);
+				arr.push( [ d[i], d[i] ] );
 			}
 			return arr;
 		},
@@ -83,33 +65,21 @@ function Box( graph ) {
 
 	this._transforms = {
 		'group': {
-			'x': function X( d ) {
-				return graph._xScale( d[ 0 ] );
+			'x': function X( d, w ) {
+				return graph._xScale( d[ 0 ] ) - w;
 			}
 		},
 		'line': {
-			'x1': function X1( d ) {
-				return graph._xScale( d[ 0 ] );
-			},
-			'x2': function X2( d ) {
-				return graph._xScale( d[ 2 ] );
-			},
 			'y1': function Y1( d ) {
-				return graph._yScale( d[ 1 ] );
+				return graph._yScale( d[ 0 ] );
 			},
 			'y2': function Y2( d ) {
-				return graph._yScale( d[ 3 ] );
+				return graph._yScale( d[ 1 ] );
 			}
 		},
 		'rect': {
-			'x': function X() {
-				return 0;
-			},
 			'y': function Y( d ) {
 				return graph._yScale( d[ 1 ] );
-			},
-			'width': function Width() {
-				return graph._xScale( self._config.width );
 			},
 			'height': function Height( d ) {
 				var height = graph._yScale( d[ 0 ] ) - graph._yScale( d[ 1 ] );
@@ -117,9 +87,6 @@ function Box( graph ) {
 			}
 		},
 		'circle': {
-			'cx': function X() {
-				return graph._xScale( self._config.width/2 );
-			},
 			'cy': function Y( d ) {
 				return graph._yScale( d );
 			},
@@ -153,12 +120,17 @@ function Box( graph ) {
 Box.prototype.create = function() {
 	var self = this,
 		selection = this._parent._root,
+		xScale = this._parent._xScale,
 		gTransforms = self._transforms.group,
 		rTransforms = self._transforms.rect,
 		lTransforms = self._transforms.line,
 		cTransforms = self._transforms.circle,
+		width,
 		labels = this._config.labels,
 		boxes, line, quartiles, medians, whiskers, outliers;
+
+	// Compute the marks width in pixel units:
+	width = xScale( this._config.width ) - xScale( 0 );
 
 	// Create a marks group:
 	this._root = selection.append( 'svg:g' )
@@ -176,7 +148,7 @@ Box.prototype.create = function() {
 			return labels[ i ];
 		})
 		.attr( 'transform', function ( d ) {
-			return 'translate( ' + gTransforms.x( d ) + ', 0 )';
+			return 'translate( ' + gTransforms.x( d, width/2 ) + ', 0 )';
 		});
 
 	// Add whiskers:
@@ -187,18 +159,18 @@ Box.prototype.create = function() {
 		.data( this._accessors.centers )
 	  .enter().append( 'svg:line' )
 		.attr( 'class', 'center-line' )
-		.attr( 'x1', lTransforms.x1 )
+		.attr( 'x1', width / 2 )
 		.attr( 'y1', lTransforms.y1 )
-		.attr( 'x2', lTransforms.x2 )
+		.attr( 'x2', width / 2 )
 		.attr( 'y2', lTransforms.y2 );
 
 	whiskers.selectAll( '.whisker' )
 		.data( this._accessors.whiskers )
 	  .enter().append( 'svg:line' )
 		.attr( 'class', 'whisker' )
-		.attr( 'x1', lTransforms.x1 )
+		.attr( 'x1', 0 )
 		.attr( 'y1', lTransforms.y1 )
-		.attr( 'x2', lTransforms.x2 )
+		.attr( 'x2', width )
 		.attr( 'y2', lTransforms.y2 );
 
 	// Add outliers:
@@ -208,7 +180,7 @@ Box.prototype.create = function() {
 			.data( this._accessors.outliers )
 		  .enter().append( 'svg:circle' )
 			.attr( 'class', 'outlier' )
-			.attr( 'cx', cTransforms.cx )
+			.attr( 'cx', width / 2 )
 			.attr( 'cy', cTransforms.cy )
 			.attr( 'r', cTransforms.r );
 
@@ -217,9 +189,9 @@ Box.prototype.create = function() {
 		.data( this._accessors.quartiles )
 	  .enter().append( 'svg:rect' )
 			.attr( 'class', 'quartile' )
-			.attr( 'x', rTransforms.x )
+			.attr( 'x', 0 )
 			.attr( 'y', rTransforms.y )
-			.attr( 'width', rTransforms.width )
+			.attr( 'width', width )
 			.attr( 'height', rTransforms.height );
 
 	// Add medians:
@@ -227,9 +199,9 @@ Box.prototype.create = function() {
 		.data( this._accessors.median )
 	  .enter().append( 'svg:line' )
 			.attr( 'class', 'median' )
-			.attr( 'x1', lTransforms.x1 )
+			.attr( 'x1', 0 )
 			.attr( 'y1', lTransforms.y1 )
-			.attr( 'x2', lTransforms.x2 )
+			.attr( 'x2', width )
 			.attr( 'y2', lTransforms.y2 );
 
 	return this;
@@ -265,7 +237,7 @@ Box.prototype.labels = function ( arr ) {
 * METHOD: radius( value )
 *	Outlier radius setter and getter. If a value is supplied, sets the outlier radius. If no value is supplied, returns the outlier radius.
 *
-* @param {number} value - outlier radius
+* @param {number} value - outlier radius (in pixels)
 * @returns {object|number} instance object or outlier radius
 */
 Box.prototype.radius = function( value ) {
@@ -291,7 +263,7 @@ Box.prototype.radius = function( value ) {
 * METHOD: width( value )
 *	Box width setter and getter. If a value is supplied, sets the box width. If no value is supplied, returns the box width.
 *
-* @param {number} value - box width
+* @param {number} value - box width (in data units)
 * @returns {object|number} instance object or box width
 */
 Box.prototype.width = function( value ) {
