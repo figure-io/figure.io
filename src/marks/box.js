@@ -120,11 +120,11 @@ function Box( graph ) {
 Box.prototype.create = function() {
 	var self = this,
 		selection = this._parent._root,
-		xScale = this._parent._xScale,
 		gTransforms = self._transforms.group,
 		rTransforms = self._transforms.rect,
 		lTransforms = self._transforms.line,
 		cTransforms = self._transforms.circle,
+		xScale = this._parent._xScale,
 		width,
 		labels = this._config.labels,
 		boxes, line, quartiles, medians, whiskers, outliers;
