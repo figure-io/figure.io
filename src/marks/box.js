@@ -21,7 +21,7 @@ function Box( graph ) {
 		'type': 'box-and-whisker',
 		'labels': [],
 		'radius': 3,
-		'width': 1-.2
+		'width': 1
 	};
 
 	// DATA //
@@ -40,28 +40,34 @@ function Box( graph ) {
 				]
 			];
 		},
-		'center': function center( d ) {
-			var width = self._config.width;
-			d = d[ 3 ];
-			return [
-				[
-					width/2, d[0],
-					width/2, d[1]
-				]
-			];
-		},
 		'quartiles': function quartiles( d ) {
 			return [ d[2] ];
+		},
+		'centers': function centers( d ) {
+			var x = self._config.width / 2,
+				_d = d[ 3 ],
+				arr = [];
+			for ( var i = 0; i < _d.length; i++ ) {
+				arr.push(
+					[
+						x, _d[i],
+						x, d[1]
+					]
+				);
+			}
+			return arr;
 		},
 		'whiskers': function whiskers( d ) {
 			var arr = [],
 				width = self._config.width;
 			d = d[ 3 ];
 			for ( var i = 0; i < d.length; i++ ) {
-				arr.push([
-					0, d[i],
-					width, d[i]
-				]);
+				arr.push(
+					[
+						0, d[i],
+						width, d[i]
+					]
+				);
 			}
 			return arr;
 		},
@@ -173,15 +179,38 @@ Box.prototype.create = function() {
 			return 'translate( ' + gTransforms.x( d ) + ', 0 )';
 		});
 
-	// Add a center vertical line spanning the whisker values:
-	line = boxes.selectAll( '.center-line' )
-		.data( this._accessors.center )
+	// Add whiskers:
+	whiskers = boxes.append( 'svg:g' )
+		.attr( 'class', 'whiskers' );
+
+	whiskers.selectAll( '.center-line' )
+		.data( this._accessors.centers )
 	  .enter().append( 'svg:line' )
-			.attr( 'class', 'center-line' )
-			.attr( 'x1', lTransforms.x1 )
-			.attr( 'y1', lTransforms.y1 )
-			.attr( 'x2', lTransforms.x2 )
-			.attr( 'y2', lTransforms.y2 );
+		.attr( 'class', 'center-line' )
+		.attr( 'x1', lTransforms.x1 )
+		.attr( 'y1', lTransforms.y1 )
+		.attr( 'x2', lTransforms.x2 )
+		.attr( 'y2', lTransforms.y2 );
+
+	whiskers.selectAll( '.whisker' )
+		.data( this._accessors.whiskers )
+	  .enter().append( 'svg:line' )
+		.attr( 'class', 'whisker' )
+		.attr( 'x1', lTransforms.x1 )
+		.attr( 'y1', lTransforms.y1 )
+		.attr( 'x2', lTransforms.x2 )
+		.attr( 'y2', lTransforms.y2 );
+
+	// Add outliers:
+	outliers = boxes.append( 'svg:g' )
+		.attr( 'class', 'outliers' )
+		.selectAll( '.outlier' )
+			.data( this._accessors.outliers )
+		  .enter().append( 'svg:circle' )
+			.attr( 'class', 'outlier' )
+			.attr( 'cx', cTransforms.cx )
+			.attr( 'cy', cTransforms.cy )
+			.attr( 'r', cTransforms.r );
 
 	// Add quartiles:
 	quartiles = boxes.selectAll( '.quartile' )
@@ -202,29 +231,6 @@ Box.prototype.create = function() {
 			.attr( 'y1', lTransforms.y1 )
 			.attr( 'x2', lTransforms.x2 )
 			.attr( 'y2', lTransforms.y2 );
-
-	// Add whiskers:
-	whiskers = boxes.append( 'svg:g' )
-		.attr( 'class', 'whiskers' )
-		.selectAll( '.whisker' )
-			.data( this._accessors.whiskers )
-		  .enter().append( 'svg:line' )
-			.attr( 'class', 'whisker' )
-			.attr( 'x1', lTransforms.x1 )
-			.attr( 'y1', lTransforms.y1 )
-			.attr( 'x2', lTransforms.x2 )
-			.attr( 'y2', lTransforms.y2 );
-
-	// Add outliers:
-	outliers = boxes.append( 'svg:g' )
-		.attr( 'class', 'outliers' )
-		.selectAll( '.outlier' )
-			.data( this._accessors.outliers )
-		  .enter().append( 'svg:circle' )
-			.attr( 'class', 'outlier' )
-			.attr( 'cx', cTransforms.cx )
-			.attr( 'cy', cTransforms.cy )
-			.attr( 'r', cTransforms.r );
 
 	return this;
 }; // end METHOD create()

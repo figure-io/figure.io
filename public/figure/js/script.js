@@ -773,6 +773,7 @@
 			// [3] Instantiate a new box chart generator and configure:
 			box = xfig.box( graph )
 				.radius( 5 )
+				.width( 0.8 )
 				.labels([
 					'data 0',
 					'data 1',
