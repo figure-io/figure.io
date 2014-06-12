@@ -69,7 +69,6 @@ function TimeseriesHistogram( graph ) {
 * @returns {object} timseries histogram instance
 */
 TimeseriesHistogram.prototype.create = function() {
-
 	var self = this,
 		selection = this._parent._root,
 		labels = this._config.labels,
@@ -108,7 +107,6 @@ TimeseriesHistogram.prototype.create = function() {
 		.style( 'fill', this._transforms.color );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -135,7 +133,6 @@ TimeseriesHistogram.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 /**

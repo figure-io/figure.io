@@ -16,43 +16,53 @@ function Data( data ) {
 	this._config = {};
 	this._data = data;
 
-	// ACCESSORS:
-	this._xValue = function( d ) { return d[ 0 ]; };
-	this._yValue = function( d ) { return d[ 1 ]; };
-	this._zValue = function( d ) { return d[ 2 ]; };
+	// ACCESSORS //
+
+	// Opinionated defaults...
+	this._accessors = {
+		x: function( d ) {
+			return d[ 0 ];
+		},
+		y: function( d ) {
+			return d[ 1 ];
+		},
+		z: function( d ) {
+			return d[ 2 ];
+		}
+	};
 
 	return this;
-
 } // end FUNCTION Data()
 
 /**
-* METHOD: format( dim )
+* METHOD: format( keys )
 *	Format raw data into a form amenable to graph generation.
 *
-* @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
+* @param {array} keys - accessor keys defining dimensionality; .e.g, ['y' ] formats the data as a one dimensional array using the 'y' accessor. [ 'x', 'y', 'z' ] formats the data as a three dimensional array using the 'x', 'y', 'z' accessors.
 * @returns {object} data instance
 */
-Data.prototype.format = function( dim ) {
-
+Data.prototype.format = function( keys ) {
 	var data = this._data,
-		fcns = [
-			this._xValue,
-			this._yValue,
-			this._zValue
-		],
+		accessors = this._accessors,
+		names = Object.keys( accessors ),
 		arr = [];
 
 	if ( !arguments.length ) {
 		throw new Error( 'format()::insufficient input arguments. The number of dimensions to format must be provided.' );
 	}
-	if ( dim < 1 || dim > 3 ) {
-		throw new Error( 'format()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
+	if ( keys.length > names.length ) {
+		throw new Error( 'format()::invalid input argument. Requested dimensionality is greater than total accessors. Accessors: ' + JSON.stringify( names ) + '; Dim: ' + keys.length + '.' );
+	}
+	for ( var i = 0; i < keys.length; i++ ) {
+		if ( !accessors.hasOwnProperty( keys[ i ] ) ) {
+			throw new Error( 'format()::invalid input argument. Accessor name not found: ' + keys[ i ] + '. Available accessors: ' + JSON.stringify( names ) + '.' );
+		}
 	}
 	data = d3.range( data.length ).map( function ( id ) {
 		return data[ id ].map( function ( d, i ) {
 			arr = [];
-			for ( var n = 0; n < dim; n++ ) {
-				arr.push( fcns[ n ].call( data[ id ], d, i ) );
+			for ( var n = 0; n < keys.length; n++ ) {
+				arr.push( accessors[ keys[ n ] ].call( data[ id ], d, i ) );
 			}
 			return arr;
 		});
@@ -61,7 +71,6 @@ Data.prototype.format = function( dim ) {
 	this._data = data;
 
 	return this;
-
 }; // end METHOD format()
 
 /**
@@ -353,7 +362,6 @@ Data.prototype.size = function() {
 * @returns {object} data instance
 */
 Data.prototype.histc = function( accessor, edges ) {
-
 	var self = this,
 		min, max, numEdges = 21, binWidth;
 
@@ -406,7 +414,6 @@ Data.prototype.histc = function( accessor, edges ) {
 	});
 
 	return this;
-
 }; // end METHOD histc()
 
 /**
@@ -483,7 +490,6 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	this._data = this._data.slice( 1, this._data.length-1 );
 
 	return this;
-
 }; // end METHOD hist2c()
 
 // TODO: permit other kernels; ability to specify number of points; ability to specify estimator.
@@ -525,82 +531,44 @@ Data.prototype.data = function() {
 }; // end METHOD data()
 
 /**
-* METHOD: x( fcn )
-*	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
+* METHOD: accessors( name, fcn )
+*	Value accessor setter and getter. If an accessor name and function are supplied, sets the value accessor. If no function is supplied, returns the value accessor. If neither a name or function are supplied, returns all accessors.
 *
-* @param {function} fcn - x-value accessor
-* @returns {object|function} instance object or x-value accessor
+* @param {string} name - accessor name
+* @param {function} fcn - value accessor
+* @returns {object|function|object} instance object, value accessor, or accessors
 */
-Data.prototype.x = function( fcn ) {
+Data.prototype.accessors = function( name, fcn ) {
 	var self = this,
-		rules = 'function';
+		names = Object.keys( this._accessors ),
+		accessors = {},
+		rules = ['string', 'function'];
 
 	if ( !arguments.length ) {
-		return this._xValue;
+		for ( var i = 0; i < names.length; i++ ) {
+			accessors[ names[ i ] ] = this._accessors[ names[ i ] ];
+		}
+		return accessors;
 	}
-	
-	Validator( fcn, rules, function set( errors ) {
+	if ( arguments.length === 1 ) {
+		return this._accessors[ name ];
+	}
+	Validator( name, rules[ 0 ], function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			throw new Error( 'x()::invalid input argument.' );
+			throw new Error( 'accessors()::invalid input argument. First argument is not a string.' );
 		}
-		self._xValue = fcn;
+		Validator( fcn, rules[ 1 ], function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'accessors()::invalid input argument. Second argument is not a function.' );
+			}
+			self._accessors[ name ] = fcn;
+		});
 	});
 
 	return this;
-}; // end METHOD x()
-
-/**
-* METHOD: y( fcn )
-*	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
-*
-* @param {function} fcn - y-value accessor
-* @returns {object|function} instance object or y-value accessor
-*/
-Data.prototype.y = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._yValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'y()::invalid input argument.' );
-		}
-		self._yValue = fcn;
-	});
-
-	return this;
-}; // end METHOD y()
-
-/**
-* METHOD: z( fcn )
-*	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
-*
-* @param {function} fcn - z-value accessor
-* @returns {object|function} instance object or z-value accessor
-*/
-Data.prototype.z = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._zValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'z()::invalid input argument.' );
-		}
-		self._zValue = fcn;
-	});
-
-	return this;
-}; // end METHOD z()
+}; // end METHOD accessors()
 
 /**
 * METHOD: config()

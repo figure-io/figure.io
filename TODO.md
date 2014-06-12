@@ -60,7 +60,7 @@ TODO
 1. 	logspace (see linspace)
 2. 	Weighted Mean: wmean. data.wmean( accessor, [vector|matrix|function] ) --> make this part of data.mean (additional args; not separate method) --> maybe separate methods; also geometric mean, harmonic mean, etc.
 3. 	Quantiles
-4. 	
+4. 	Unify data requirement: datasets as arrays, so timeseries histogram --> data[ 0 ]
 5. 	Mode (mode)
 6.	nanmean, nanmedian, nanvariance, etc, to handle missing values
 7. 	Windowed (moving) Mean (mmean)
@@ -68,7 +68,7 @@ TODO
 9. 	Find (return indices)
 10. Filter
 11. Aggregators: median, variance, stdev
-12. 
+12. Allow arbitrary accessors; currently, only support x,y,z. Should be able to support any and just iterate through accessor keys; reset: {} new object; add: fcn, key
 
 
 ### Annotations

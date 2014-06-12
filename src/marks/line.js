@@ -61,7 +61,6 @@ function Line( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Line()
 
 /**
@@ -71,7 +70,6 @@ function Line( graph ) {
 * @returns {object} line instance
 */
 Line.prototype.create = function() {
-
 	var selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
@@ -92,7 +90,6 @@ Line.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -114,7 +111,6 @@ Line.prototype.path = function() {
 * @returns {object|string} line instance or interpolation mode
 */
 Line.prototype.interpolation = function( mode ) {
-
 	var self = this;
 
 		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
@@ -134,7 +130,6 @@ Line.prototype.interpolation = function( mode ) {
 	});
 	
 	return this;
-
 }; // end METHOD interpolation()
 
 /**
@@ -162,7 +157,6 @@ Line.prototype.tension = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD tension()
 
 /**
@@ -189,7 +183,6 @@ Line.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 

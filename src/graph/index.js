@@ -736,16 +736,8 @@ Graph.prototype.zScale = function( type, value ) {
 * @returns {object} graph instance
 */
 Graph.prototype.scale = function( type, value, clbk ) {
-	var rules = 'string|matches[linear,log,pow,category10,category20,category20b,category20c]',
-		scales = {
-			'linear': linear,
-			'log': log,
-			'pow': pow,
-			'category10': category10,
-			'category20': category20,
-			'category20b': category20b,
-			'category20c': category20c
-		};
+	var self = this,
+		rules = 'string|matches[' + Object.keys( this._scales ).join( ',' ) + ']';
 
 	Validator( type, rules, function onErrors( errors ) {
 		if ( errors ) {

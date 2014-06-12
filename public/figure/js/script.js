@@ -92,11 +92,15 @@
 
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Format the data:
-			data.format( 2 );
+			data.format( [ 'x', 'y' ] );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -170,11 +174,15 @@
 
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Format the data:
-			data.format( 2 );
+			data.format( [ 'x', 'y' ] );
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -238,15 +246,24 @@
 
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Create edges to define our histogram bins:
 			edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 			// Format the data and histogram the data:
-			data.format( 2 )
-				.histc( function ( d ) { return d[ 1 ]; }, edges );
+			data.format( [ 'x', 'y' ] )
+				.histc(
+					function ( d ) {
+						return d[ 1 ];
+					},
+					edges
+				);
 
 			// Bind the data instance to the graph:
 			graph.data( data )
@@ -322,14 +339,20 @@
 
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Format the data and calculate the KDE:
-			data.format( 2 )
-				.kde( function ( d ) {
-					return d[ 1 ];
-				}, 0, 1 );
+			data.format( [ 'x', 'y' ] )
+				.kde(
+					function ( d ) {
+						return d[ 1 ];
+					}, 0, 1
+				);
 
 			// Bind the data instance to the graph:
 			max = data.max( function ( d ) {
@@ -348,12 +371,18 @@
 
 			// [4] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Format the data:
-			data.format( 2 )
-				.extract( function ( d ) { return d[ 1 ]; });
+			data.format( [ 'x', 'y' ] )
+				.extract( function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Bind the data instance to the graph:
 			graph.data( data );
@@ -427,15 +456,15 @@
 
 				data.push(
 					xfig.data( json[ i ] )
-						.x( xValue )
-						.y( yValue )
+						.accessors( 'x', xValue )
+						.accessors( 'y', yValue )
 				);
 
 				// Create edges to define our histogram bins:
 				edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 				// Format the data and histogram the data:
-				data[ i ].format( 2 )
+				data[ i ].format( [ 'x', 'y' ] )
 					.histc( yValue, edges );
 
 				// Compute the yMax:
@@ -525,18 +554,26 @@
 
 			// [2] Instantiate a new data generator and configure:
 			data = xfig.data( json )
-				.x( function ( d ) { return d[ 0 ]; } )
-				.y( function ( d ) { return d[ 1 ]; } );
+				.accessors( 'x', function ( d ) {
+					return d[ 0 ];
+				})
+				.accessors( 'y', function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Create edges to define our histogram bins:
 			edges = xfig.vector.linspace( -0.025, 1.025, 0.05 );
 			
 			// Format the data and extract the data to histogram:
-			data.format( 2 )
-				.extract( function ( d ) { return d[ 1 ]; });
+			data.format( [ 'x', 'y' ] )
+				.extract( function ( d ) {
+					return d[ 1 ];
+				});
 
 			// Calculate each dataset's mean value and sort the datasets based on their means:
-			means = data.mean( function ( d ) { return d; });
+			means = data.mean( function ( d ) {
+				return d;
+			});
 			means = means.map( function ( d, i ) {
 				return [ d, i ];
 			});
@@ -631,8 +668,8 @@
 
 					data.push(
 						xfig.data( [ json[ i ], json[ j ] ] )
-							.x( xValue )
-							.y( yValue )
+							.accessors( 'x', xValue )
+							.accessors( 'y', yValue )
 					);
 
 					// Compute the yMax:

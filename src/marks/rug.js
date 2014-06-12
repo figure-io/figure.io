@@ -56,7 +56,6 @@ function Rug( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Rug()
 
 /**
@@ -66,7 +65,6 @@ function Rug( graph ) {
 * @returns {object} instance object
 */
 Rug.prototype.create = function() {
-
 	var selection = this._parent._root,
 		height = this._parent._config.scales[ 1 ].range.max,
 		labels = this._config.labels,
@@ -101,7 +99,6 @@ Rug.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -138,7 +135,6 @@ Rug.prototype.size = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD size()
 
 /**
@@ -165,7 +161,6 @@ Rug.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 

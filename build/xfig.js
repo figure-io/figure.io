@@ -1868,43 +1868,53 @@ function Data( data ) {
 	this._config = {};
 	this._data = data;
 
-	// ACCESSORS:
-	this._xValue = function( d ) { return d[ 0 ]; };
-	this._yValue = function( d ) { return d[ 1 ]; };
-	this._zValue = function( d ) { return d[ 2 ]; };
+	// ACCESSORS //
+
+	// Opinionated defaults...
+	this._accessors = {
+		x: function( d ) {
+			return d[ 0 ];
+		},
+		y: function( d ) {
+			return d[ 1 ];
+		},
+		z: function( d ) {
+			return d[ 2 ];
+		}
+	};
 
 	return this;
-
 } // end FUNCTION Data()
 
 /**
-* METHOD: format( dim )
+* METHOD: format( keys )
 *	Format raw data into a form amenable to graph generation.
 *
-* @param {number} dim - data dimensionality; e.g., if 1-dimensional, say, for a histogram, then dim=1.
+* @param {array} keys - accessor keys defining dimensionality; .e.g, ['y' ] formats the data as a one dimensional array using the 'y' accessor. [ 'x', 'y', 'z' ] formats the data as a three dimensional array using the 'x', 'y', 'z' accessors.
 * @returns {object} data instance
 */
-Data.prototype.format = function( dim ) {
-
+Data.prototype.format = function( keys ) {
 	var data = this._data,
-		fcns = [
-			this._xValue,
-			this._yValue,
-			this._zValue
-		],
+		accessors = this._accessors,
+		names = Object.keys( accessors ),
 		arr = [];
 
 	if ( !arguments.length ) {
 		throw new Error( 'format()::insufficient input arguments. The number of dimensions to format must be provided.' );
 	}
-	if ( dim < 1 || dim > 3 ) {
-		throw new Error( 'format()::invalid input argument. Dimensionality must be an integer on the interval: [1,3].' );
+	if ( keys.length > names.length ) {
+		throw new Error( 'format()::invalid input argument. Requested dimensionality is greater than total accessors. Accessors: ' + JSON.stringify( names ) + '; Dim: ' + keys.length + '.' );
+	}
+	for ( var i = 0; i < keys.length; i++ ) {
+		if ( !accessors.hasOwnProperty( keys[ i ] ) ) {
+			throw new Error( 'format()::invalid input argument. Accessor name not found: ' + keys[ i ] + '. Available accessors: ' + JSON.stringify( names ) + '.' );
+		}
 	}
 	data = d3.range( data.length ).map( function ( id ) {
 		return data[ id ].map( function ( d, i ) {
 			arr = [];
-			for ( var n = 0; n < dim; n++ ) {
-				arr.push( fcns[ n ].call( data[ id ], d, i ) );
+			for ( var n = 0; n < keys.length; n++ ) {
+				arr.push( accessors[ keys[ n ] ].call( data[ id ], d, i ) );
 			}
 			return arr;
 		});
@@ -1913,7 +1923,6 @@ Data.prototype.format = function( dim ) {
 	this._data = data;
 
 	return this;
-
 }; // end METHOD format()
 
 /**
@@ -2205,7 +2214,6 @@ Data.prototype.size = function() {
 * @returns {object} data instance
 */
 Data.prototype.histc = function( accessor, edges ) {
-
 	var self = this,
 		min, max, numEdges = 21, binWidth;
 
@@ -2258,7 +2266,6 @@ Data.prototype.histc = function( accessor, edges ) {
 	});
 
 	return this;
-
 }; // end METHOD histc()
 
 /**
@@ -2335,7 +2342,6 @@ Data.prototype.hist2c = function( xValue, yValue, xEdges, yEdges ) {
 	this._data = this._data.slice( 1, this._data.length-1 );
 
 	return this;
-
 }; // end METHOD hist2c()
 
 // TODO: permit other kernels; ability to specify number of points; ability to specify estimator.
@@ -2377,82 +2383,44 @@ Data.prototype.data = function() {
 }; // end METHOD data()
 
 /**
-* METHOD: x( fcn )
-*	x-value accessor setter and getter. If a function is supplied, sets the x-value accessor. If no function is supplied, returns the x-value accessor.
+* METHOD: accessors( name, fcn )
+*	Value accessor setter and getter. If an accessor name and function are supplied, sets the value accessor. If no function is supplied, returns the value accessor. If neither a name or function are supplied, returns all accessors.
 *
-* @param {function} fcn - x-value accessor
-* @returns {object|function} instance object or x-value accessor
+* @param {string} name - accessor name
+* @param {function} fcn - value accessor
+* @returns {object|function|object} instance object, value accessor, or accessors
 */
-Data.prototype.x = function( fcn ) {
+Data.prototype.accessors = function( name, fcn ) {
 	var self = this,
-		rules = 'function';
+		names = Object.keys( this._accessors ),
+		accessors = {},
+		rules = ['string', 'function'];
 
 	if ( !arguments.length ) {
-		return this._xValue;
+		for ( var i = 0; i < names.length; i++ ) {
+			accessors[ names[ i ] ] = this._accessors[ names[ i ] ];
+		}
+		return accessors;
 	}
-	
-	Validator( fcn, rules, function set( errors ) {
+	if ( arguments.length === 1 ) {
+		return this._accessors[ name ];
+	}
+	Validator( name, rules[ 0 ], function set( errors ) {
 		if ( errors ) {
 			console.error( errors );
-			throw new Error( 'x()::invalid input argument.' );
+			throw new Error( 'accessors()::invalid input argument. First argument is not a string.' );
 		}
-		self._xValue = fcn;
+		Validator( fcn, rules[ 1 ], function set( errors ) {
+			if ( errors ) {
+				console.error( errors );
+				throw new Error( 'accessors()::invalid input argument. Second argument is not a function.' );
+			}
+			self._accessors[ name ] = fcn;
+		});
 	});
 
 	return this;
-}; // end METHOD x()
-
-/**
-* METHOD: y( fcn )
-*	y-value accessor setter and getter. If a function is supplied, sets the y-value accessor. If no function is supplied, returns the y-value accessor.
-*
-* @param {function} fcn - y-value accessor
-* @returns {object|function} instance object or y-value accessor
-*/
-Data.prototype.y = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._yValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'y()::invalid input argument.' );
-		}
-		self._yValue = fcn;
-	});
-
-	return this;
-}; // end METHOD y()
-
-/**
-* METHOD: z( fcn )
-*	z-value accessor setter and getter. If a function is supplied, sets the z-value accessor. If no function is supplied, returns the z-value accessor.
-*
-* @param {function} fcn - z-value accessor
-* @returns {object|function} instance object or z-value accessor
-*/
-Data.prototype.z = function( fcn ) {
-	var self = this,
-		rules = 'function';
-
-	if ( !arguments.length ) {
-		return this._zValue;
-	}
-	
-	Validator( fcn, rules, function set( errors ) {
-		if ( errors ) {
-			console.error( errors );
-			throw new Error( 'z()::invalid input argument.' );
-		}
-		self._zValue = fcn;
-	});
-
-	return this;
-}; // end METHOD z()
+}; // end METHOD accessors()
 
 /**
 * METHOD: config()
@@ -2656,7 +2624,6 @@ function Graph( canvas ) {
 	}
 
 	return this;
-
 } // end FUNCTION Graph()
 
 /**
@@ -2703,7 +2670,6 @@ Graph.prototype.create = function( type ) {
 	} // end IF (background)
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -2739,7 +2705,6 @@ Graph.prototype.width = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD width()
 
 /**
@@ -2775,7 +2740,6 @@ Graph.prototype.height = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD height()
 
 /**
@@ -2811,7 +2775,6 @@ Graph.prototype.xMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD xMin()
 
 /**
@@ -2847,7 +2810,6 @@ Graph.prototype.xMax = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD xMax()
 
 /**
@@ -2883,7 +2845,6 @@ Graph.prototype.yMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD yMin()
 
 /**
@@ -2919,7 +2880,6 @@ Graph.prototype.yMax = function( value ) {
 	}
 
 	return this;
-
 }; // end METHOD yMax()
 
 /**
@@ -2955,7 +2915,6 @@ Graph.prototype.zMin = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD zMin()
 
 /**
@@ -2991,7 +2950,6 @@ Graph.prototype.zMax = function( value ) {
 	}
 	
 	return this;
-
 }; // end METHOD zMax()
 
 /**
@@ -3022,7 +2980,6 @@ Graph.prototype.xDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xDomain()
 
 /**
@@ -3053,7 +3010,6 @@ Graph.prototype.yDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yDomain()
 
 /**
@@ -3084,7 +3040,6 @@ Graph.prototype.zDomain = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD zDomain()
 
 /**
@@ -3115,7 +3070,6 @@ Graph.prototype.xRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD xRange()
 
 /**
@@ -3146,7 +3100,6 @@ Graph.prototype.yRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD yRange()
 
 /**
@@ -3177,7 +3130,6 @@ Graph.prototype.zRange = function( arr ) {
 	});
 	
 	return this;
-
 }; // end METHOD zRange()
 
 /**
@@ -3214,7 +3166,6 @@ Graph.prototype.xScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD xScale()
 
 /**
@@ -3251,7 +3202,6 @@ Graph.prototype.yScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD yScale()
 
 /**
@@ -3288,7 +3238,6 @@ Graph.prototype.zScale = function( type, value ) {
 	});
 
 	return this;
-
 }; // end METHOD zScale()
 
 /**
@@ -3301,49 +3250,104 @@ Graph.prototype.zScale = function( type, value ) {
 * @returns {object} graph instance
 */
 Graph.prototype.scale = function( type, value, clbk ) {
-	var rules = 'string|matches[linear,log,pow,category10,category20,category20b,category20c]',
-		scales = {
-			'linear': linear,
-			'log': log,
-			'pow': pow,
-			'category10': category10,
-			'category20': category20,
-			'category20b': category20b,
-			'category20c': category20c
-		};
+	var self = this,
+		rules = 'string|matches[' + Object.keys( this._scales ).join( ',' ) + ']';
 
 	Validator( type, rules, function onErrors( errors ) {
 		if ( errors ) {
 			clbk( errors );
 			return;
 		}
-		clbk( null, scales[ type ]() );
+		clbk( null, self._scales[ type ]( value ) );
 	});
 
 	return this;
-
-	function linear() {
-		return d3.scale.linear();
-	}
-	function log() {
-		return d3.scale.log().base( value );
-	}
-	function pow() {
-		return d3.scale.pow().exponent( value );
-	}
-	function category10() {
-		return d3.scale.category10();
-	}
-	function category20() {
-		return d3.scale.category20();
-	}
-	function category20b() {
-		return d3.scale.category20b();
-	}
-	function category20c() {
-		return d3.scale.category20c();
-	}
 }; // end METHOD scale()
+
+/**
+* PROPERTY: _scales
+*	Collection of scale methods.
+*/
+Graph.prototype._scales = {};
+
+/**
+* METHOD: linear()
+*	Returns a linear scale.
+*
+* @private
+* @returns {function} d3 linear scale
+*/
+Graph.prototype._scales.linear = function() {
+	return d3.scale.linear();
+}; // end METHOD linear()
+
+/**
+* METHOD: log( base )
+*	Returns a log scale.
+*
+* @private
+* @param {number} base - log base
+* @returns {function} d3 log scale
+*/
+Graph.prototype._scales.log = function( value ) {
+	return d3.scale.log().base( value );
+}; // end METHOD log()
+
+/**
+* METHOD: pow( exp )
+*	Returns a power scale.
+*
+* @private
+* @param {number} exp - exponent value
+* @returns {function} d3 power scale
+*/
+Graph.prototype._scales.pow = function( value ) {
+	return d3.scale.pow().exponent( value );
+}; // end METHOD pow()
+
+/**
+* METHOD: category10()
+*	Returns a categorical (10) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category10 = function() {
+	return d3.scale.category10();
+}; // end METHOD category10()
+
+/**
+* METHOD: category20()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20 = function() {
+	return d3.scale.category20();
+}; // end METHOD category20()
+
+/**
+* METHOD: category20b()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20b = function() {
+	return d3.scale.category20b();
+}; // end METHOD category20b()
+
+/**
+* METHOD: category20c()
+*	Returns a categorical (20) scale.
+*
+* @private
+* @returns {function} d3 category scale
+*/
+Graph.prototype._scales.category20c = function() {
+	return d3.scale.category20c();
+}; // end METHOD category20c()
 
 /**
 * METHOD: background( bool )
@@ -3370,7 +3374,6 @@ Graph.prototype.background = function( bool ) {
 	})();
 
 	return this;
-
 }; // end METHOD background()
 
 /**
@@ -3405,13 +3408,11 @@ Graph.prototype.position = function( value ) {
 				}
 			}
 		}
-
 		// Set the value:
 		self._config.position = value;
 	});
 	
 	return this;
-
 }; // end METHOD position()
 
 /**
@@ -3438,7 +3439,6 @@ Graph.prototype.left = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD left()
 
 /**
@@ -3465,7 +3465,6 @@ Graph.prototype.top = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD top()
 
 /**
@@ -3476,7 +3475,6 @@ Graph.prototype.top = function( value ) {
 * @returns {object|object} - graph instance or current active dataset
 */
 Graph.prototype.data = function( data ) {
-
 	if ( !arguments.length ) {
 		return this._data;
 	}
@@ -3488,7 +3486,6 @@ Graph.prototype.data = function( data ) {
 	this._data = data._data;
 
 	return this;
-
 }; // end METHOD data()
 
 /**
@@ -3754,6 +3751,8 @@ Area.prototype.children = function() {
 * @returns {object} box and whisker instance
 */
 function Box( graph ) {
+	var self = this,
+		height = graph._config.height;
 
 	// INSTANCE ATTRIBUTES //
 
@@ -3761,27 +3760,101 @@ function Box( graph ) {
 	this._root = undefined;
 	this._children = {};
 	this._config = {
-		'labels': []
+		'labels': [],
+		'radius': 3,
+		'width': 1
 	};
 
 	// DATA //
 
 	this._data = graph._data;
 
+	// ACCESSORS //
+
+	this._accessors = {
+		'median': function median( d ) {
+			var width = self._config.width;
+			return [
+				[ 0, d[1] ],
+				[ width, d[1] ]
+			];
+		},
+		'center': function center( d ) {
+			var width = self._config.width;
+			return [
+				width/2, d[3][0],
+				width/2, d[3][1]
+			];
+		},
+		'quartiles': function quartiles( d ) {
+			return d[2];
+		},
+		'whiskers': function whiskers( d ) {
+			var arr = [],
+				width = self._config.width;
+			d = d[3];
+			for ( var i = 0; i < d.length; i++ ) {
+				arr.push([
+					0, d[i],
+					width, d[i]
+				]);
+			}
+			return arr;
+		},
+		'outliers': function outliers( d ) {
+			if ( d.length === 4 ) {
+				return d[ 4 ];
+			}
+			return [];
+		}
+	};
+
 	// TRANSFORMS //
 
 	this._transforms = {
-		'x': function X( d ) {
-			return graph._xScale( d[ 0 ] );
+		'group': {
+			'x': function X( d ) {
+				return graph._xScale( d[ 0 ] );
+			}
 		},
-		'y': function Y( d ) {
-			return graph._yScale( d[ 1 ] );
+		'line': {
+			'x1': function X1( d ) {
+				return graph._xScale( d[ 0 ] );
+			},
+			'x2': function X2( d ) {
+				return graph._xScale( d[ 2 ] );
+			},
+			'y1': function Y1( d ) {
+				return graph._yScale( d[ 1 ] );
+			},
+			'y2': function Y2( d ) {
+				return graph._yScale( d[ 3 ] );
+			}
 		},
-		'width': function Width( d ) {
-			return graph._xScale( d[ 2 ] ) - graph._xScale( d[ 0 ]);
+		'rect': {
+			'x': function X() {
+				return 0;
+			},
+			'y': function Y( d ) {
+				return height - graph._yScale( d[ 0 ] );
+			},
+			'width': function Width() {
+				return graph._xScale( self._config.width );
+			},
+			'height': function Height( d ) {
+				return height - graph._yScale( d[ 1 ] );
+			}
 		},
-		'height': function Height( d ) {
-			return graph._yScale( d[ 2 ] ) - graph._xScale( d[ 1 ]);
+		'circle': {
+			'cx': function X() {
+				return graph._xScale( self._config.width/2 );
+			},
+			'cy': function Y( d ) {
+				return graph._yScale( d );
+			},
+			'r': function R( d ) {
+				return self._config.radius;
+			}
 		}
 	};
 
@@ -3798,7 +3871,6 @@ function Box( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Box()
 
 /**
@@ -3808,45 +3880,92 @@ function Box( graph ) {
 * @returns {object} box instance
 */
 Box.prototype.create = function() {
-
 	var self = this,
 		selection = this._parent._root,
-		labels = this._config.labels;
+		gTransforms = self._transforms.group,
+		rTransforms = self._transforms.rect,
+		lTransforms = self._transforms.line,
+		cTransforms = self._transforms.circle,
+		labels = this._config.labels,
+		boxes, line, quartiles, medians, whiskers, outliers;
 
 	// Create a marks group:
 	this._root = selection.append( 'svg:g' )
 		.attr( 'property', 'marks' )
 		.attr( 'class', 'marks' )
-		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' )
-		.attr( 'transform', 'translate( ' + 0 + ', ' + 0 + ')' );
+		.attr( 'clip-path', 'url(#' + selection.attr( 'data-clipPath' ) + ')' );
 
-	// Add histograms:
-	histograms = this._root.selectAll( '.histogram' )
-		.data( this._data )
+	// Add box groups:
+	boxes = this._root.selectAll( '.box-and-whisker' )
+		.data( this._data[ 0 ] )
 	  .enter().append( 'svg:g' )
-	  	.attr( 'property', 'histogram' )
-	  	.attr( 'class', 'histogram' )
-		.attr( 'data-label', function ( d, i ) { return labels[ i ]; })
-		.attr( 'transform', function ( d, i ) {
-			return 'translate( 0,' + self._transforms.y( d, i ) + ' )';
+		.attr( 'property', 'box-and-whisker' )
+		.attr( 'class', 'box-and-whisker' )
+		.attr( 'data-label', function ( d, i ) {
+			return labels[ i ];
+		})
+		.attr( 'transform', function ( d ) {
+			return 'translate( ' + gTransforms.x( d ) + ', 0 )';
 		});
 
-	// Add bins:
-	bins = histograms.selectAll( '.bin' )
-		.data( function ( d ) {
-			return d;
-		})
-	  .enter().append( 'svg:rect' )
-		.attr( 'property', 'bin' )
-		.attr( 'class', 'bin' )
-		.attr( 'x', this._transforms.x )
-		.attr( 'y', 0 )
-		.attr( 'width', this._transforms.width )
-		.attr( 'height', this._transforms.height )
-		.style( 'fill', this._transforms.color );
+	// Add medians:
+	medians = boxes.selectAll( '.median' )
+		.data( this._accessors.median )
+		.append( 'svg:path' )
+			.attr( 'property', 'line' )
+			.attr( 'class', 'median' )
+			.attr( 'x1', lTransforms.x1 )
+			.attr( 'y1', lTransforms.y1 )
+			.attr( 'x2', lTransforms.x2 )
+			.attr( 'y2', lTransforms.y2 );
+
+	// Add a center vertical line spanning the whisker values:
+	line = boxes.selectAll( '.center-line' )
+		.data( this._accessors.center_line )
+		.append( 'svg:path' )
+			.attr( 'class', 'center-line' )
+			.attr( 'x1', lTransforms.x1 )
+			.attr( 'y1', lTransforms.y1 )
+			.attr( 'x2', lTransforms.x2 )
+			.attr( 'y2', lTransforms.y2 );
+
+	// Add quartiles:
+	quartiles = boxes.selectAll( '.quartiles' )
+		.data( this._accessors.quartiles )
+		.append( 'svg:rect' )
+			.attr( 'property', 'rectangle' )
+			.attr( 'class', 'quartiles' )
+			.attr( 'x', rTransforms.x )
+			.attr( 'y', rTransforms.y )
+			.attr( 'width', rTransforms.width )
+			.attr( 'height', rTransforms.height );
+
+	// Add whiskers:
+	whiskers = boxes.append( 'svg:g' )
+		.attr( 'class', 'whiskers' )
+		.selectAll( '.whisker' )
+			.data( this._accessors.whiskers )
+		  .enter().append( 'svg:path' )
+			.attr( 'property', 'line' )
+			.attr( 'class', 'whisker' )
+			.attr( 'x1', lTransforms.x1 )
+			.attr( 'y1', lTransforms.y1 )
+			.attr( 'x2', lTransforms.x2 )
+			.attr( 'y2', lTransforms.y2 );
+
+	// Add outliers:
+	outliers = boxes.append( 'svg:g' )
+		.attr( 'class', 'outliers' )
+		.selectAll( '.outlier' )
+			.data( this._accessors.outliers )
+		  .enter().append( 'svg:circle' )
+			.attr( 'property', 'circle' )
+			.attr( 'class', 'outlier' )
+			.attr( 'cx', cTransforms.cx )
+			.attr( 'cy', cTransforms.cy )
+			.attr( 'r', cTransforms.r );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -4155,7 +4274,6 @@ function Line( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Line()
 
 /**
@@ -4165,7 +4283,6 @@ function Line( graph ) {
 * @returns {object} line instance
 */
 Line.prototype.create = function() {
-
 	var selection = this._parent._root,
 		labels = this._config.labels,
 		paths;
@@ -4186,7 +4303,6 @@ Line.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -4208,7 +4324,6 @@ Line.prototype.path = function() {
 * @returns {object|string} line instance or interpolation mode
 */
 Line.prototype.interpolation = function( mode ) {
-
 	var self = this;
 
 		// https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-line_interpolate
@@ -4228,7 +4343,6 @@ Line.prototype.interpolation = function( mode ) {
 	});
 	
 	return this;
-
 }; // end METHOD interpolation()
 
 /**
@@ -4256,7 +4370,6 @@ Line.prototype.tension = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD tension()
 
 /**
@@ -4283,7 +4396,6 @@ Line.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 
@@ -4375,7 +4487,6 @@ function Rug( graph ) {
 	}
 
 	return this;
-
 } // end FUNCTION Rug()
 
 /**
@@ -4385,7 +4496,6 @@ function Rug( graph ) {
 * @returns {object} instance object
 */
 Rug.prototype.create = function() {
-
 	var selection = this._parent._root,
 		height = this._parent._config.scales[ 1 ].range.max,
 		labels = this._config.labels,
@@ -4420,7 +4530,6 @@ Rug.prototype.create = function() {
 		.attr( 'd', this._path );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -4457,7 +4566,6 @@ Rug.prototype.size = function( value ) {
 	});
 
 	return this;
-
 }; // end METHOD size()
 
 /**
@@ -4484,7 +4592,6 @@ Rug.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 
@@ -4589,7 +4696,6 @@ function TimeseriesHistogram( graph ) {
 * @returns {object} timseries histogram instance
 */
 TimeseriesHistogram.prototype.create = function() {
-
 	var self = this,
 		selection = this._parent._root,
 		labels = this._config.labels,
@@ -4628,7 +4734,6 @@ TimeseriesHistogram.prototype.create = function() {
 		.style( 'fill', this._transforms.color );
 
 	return this;
-
 }; // end METHOD create()
 
 /**
@@ -4655,7 +4760,6 @@ TimeseriesHistogram.prototype.labels = function ( arr ) {
 	});
 
 	return this;
-
 }; // end METHOD labels()
 
 /**
@@ -5301,7 +5405,7 @@ Panel.prototype.scale = function( type, value, clbk ) {
 			clbk( errors );
 			return;
 		}
-		clbk( null, self._scales[ type ]() );
+		clbk( null, self._scales[ type ]( value ) );
 	});
 
 	return this;
@@ -5325,24 +5429,26 @@ Panel.prototype._scales.linear = function() {
 }; // end METHOD linear()
 
 /**
-* METHOD: log()
+* METHOD: log( base )
 *	Returns a log scale.
 *
 * @private
+* @param {number} base - log base
 * @returns {function} d3 log scale
 */
-Panel.prototype._scales.log = function() {
+Panel.prototype._scales.log = function( value ) {
 	return d3.scale.log().base( value );
 }; // end METHOD log()
 
 /**
-* METHOD: pow()
+* METHOD: pow( exp )
 *	Returns a power scale.
 *
 * @private
+* @param {number} exp - exponent value
 * @returns {function} d3 power scale
 */
-Panel.prototype._scales.pow = function() {
+Panel.prototype._scales.pow = function( value ) {
 	return d3.scale.pow().exponent( value );
 }; // end METHOD pow()
 
