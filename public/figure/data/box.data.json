@@ -1,0 +1,34 @@
+[
+	[
+		{
+			"median": 0.5,
+			"quartiles": [ 0.3, 0.65 ],
+			"whiskers": [ 0.25, 0.8 ],
+			"outliers": []
+		},
+		{
+			"median": 0.54,
+			"quartiles": [ 0.2, 0.55 ],
+			"whiskers": [ 0.14, 0.55 ],
+			"outliers": [ 0.1 ]
+		},
+		{
+			"median": 0.35,
+			"quartiles": [ 0.3, 0.65 ],
+			"whiskers": [ 0.25, 0.8 ],
+			"outliers": [ 0.9, 0.95, 0.96 ]
+		},
+		{
+			"median": 0.465,
+			"quartiles": [ 0.23, 0.5 ],
+			"whiskers": [ 0.23, 0.8 ],
+			"outliers": [ 0.1, 0.12, 0.99 ]
+		},
+		{
+			"median": 0.85,
+			"quartiles": [ 0.3, 0.95 ],
+			"whiskers": [],
+			"outliers": []
+		}
+	]
+]

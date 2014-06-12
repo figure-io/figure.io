@@ -87,6 +87,35 @@ body {
 	text-align: center;
 }
 
+.graph .box-and-whisker .quartile {
+	fill: #fff;
+	stroke: #474747;
+	stroke-width: 2;
+	stroke-opacity: 0.3;
+}
+
+.graph .box-and-whisker .median,
+.graph .box-and-whisker .whisker,
+.graph .box-and-whisker .center-line {
+	stroke: #474747;
+	stroke-width: 2;
+}
+
+.graph .box-and-whisker .whisker,
+.graph .box-and-whisker .center-line {
+	stroke-opacity: 0.3;
+}
+
+.graph .box-and-whisker .center-line {
+	stroke-dasharray: 3,3;
+}
+
+.graph .box-and-whisker .outlier {
+	fill: #474747;
+	fill-opacity: 0.2;
+	stroke: none;
+}
+
 .graph .axis path {
 	fill: none;
 }

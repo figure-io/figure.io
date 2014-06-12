@@ -725,7 +725,7 @@
 	} // end FUNCTION Gridpanel()
 
 	function Box( canvas, width, height, left, top ) {
-		var graph, axes, data, box, annotations, title, text;
+		var graph, axes, data, box, annotations, title;
 
 		// [1] Instantiate a new graph generator and configure:
 		graph = xfig.graph( canvas )
@@ -772,7 +772,14 @@
 
 			// [3] Instantiate a new box chart generator and configure:
 			box = xfig.box( graph )
-				.labels( [ 'data 0' ] );
+				.radius( 5 )
+				.labels([
+					'data 0',
+					'data 1',
+					'data 2',
+					'data 3',
+					'data 4'
+				]);
 
 			// Create the box chart:
 			box.create();
@@ -796,16 +803,6 @@
 
 			// Add a (sub)title:
 			title.create( 'Subtitle' );
-
-			// [5.2] Instantiate a new text instance and configure:
-			text = annotations.text()
-				.width( 200 )
-				.height( 100 )
-				.top( 100 )
-				.left( 310 );
-
-			// Add a text annotation:
-			text.create( 'This is my text annotation, which may run multiple lines.' );
 
 		});
 
