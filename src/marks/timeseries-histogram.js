@@ -19,6 +19,7 @@ function TimeseriesHistogram( graph ) {
 	this._root = undefined;
 	this._children = {};
 	this._config = {
+		'type': 'timeseries-histogram',
 		'labels': []
 	};
 

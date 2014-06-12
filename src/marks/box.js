@@ -19,6 +19,7 @@ function Box( graph ) {
 	this._root = undefined;
 	this._children = {};
 	this._config = {
+		'type': 'box-and-whisker',
 		'labels': [],
 		'radius': 3,
 		'width': 1
@@ -252,6 +253,58 @@ Box.prototype.labels = function ( arr ) {
 
 	return this;
 }; // end METHOD labels()
+
+/**
+* METHOD: radius( value )
+*	Outlier radius setter and getter. If a value is supplied, sets the outlier radius. If no value is supplied, returns the outlier radius.
+*
+* @param {number} value - outlier radius
+* @returns {object|number} instance object or outlier radius
+*/
+Box.prototype.radius = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.radius;
+	}
+	
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'radius()::invalid input argument.' );
+		}
+		self._config.radius = value;
+	});
+
+	return this;
+}; // end METHOD radius()
+
+/**
+* METHOD: width( value )
+*	Box width setter and getter. If a value is supplied, sets the box width. If no value is supplied, returns the box width.
+*
+* @param {number} value - box width
+* @returns {object|number} instance object or box width
+*/
+Box.prototype.width = function( value ) {
+	var self = this,
+		rules = 'number';
+
+	if ( !arguments.length ) {
+		return this._config.width;
+	}
+	
+	Validator( value, rules, function set( errors ) {
+		if ( errors ) {
+			console.error( errors );
+			throw new Error( 'width()::invalid input argument.' );
+		}
+		self._config.width = value;
+	});
+
+	return this;
+}; // end METHOD width()
 
 /**
 * METHOD: parent()

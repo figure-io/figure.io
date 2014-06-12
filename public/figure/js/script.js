@@ -65,6 +65,9 @@
 	// [10] Gridpanel chart:
 	Gridpanel( canvas, 1000, 600, 90, 2285 );
 
+	// [11] Box and whisker chart:
+	Box( canvas, width, height, 90, 3000 );
+
 
 	// CHARTS //
 
@@ -720,6 +723,93 @@
 		});
 
 	} // end FUNCTION Gridpanel()
+
+	function Box( canvas, width, height, left, top ) {
+		var graph, axes, data, box, annotations, title, text;
+
+		// [1] Instantiate a new graph generator and configure:
+		graph = xfig.graph( canvas )
+			.width( width )
+			.height( height )
+			.position({
+				'left': left,
+				'top': top
+			})
+			.xMin( 0 )
+			.xMax( 5 )
+			.yMin( 0 )
+			.yMax( 1 );
+
+		// Create the graph:
+		graph.create( 'box' );
+
+		// Get data:
+		d3.json( 'data/box.data.json', function ( error, json ) {
+
+			// [2] Instantiate a new data generator and configure:
+			data = xfig.data( json )
+				.accessors( 'x', function ( d, i ) {
+					return i;
+				})
+				.accessors( 'median', function ( d ) {
+					return d.median;
+				})
+				.accessors( 'quartiles', function ( d ) {
+					return d.quartiles;
+				})
+				.accessors( 'whiskers', function (d ) {
+					return d.whiskers;
+				})
+				.accessors( 'outliers', function ( d ) {
+					return d.outliers;
+				});
+
+			// Format the data:
+			data.format( [ 'x', 'median', 'quartiles', 'whiskers', 'outliers' ] );
+
+			// Bind the data instance to the graph:
+			graph.data( data );
+
+			// [3] Instantiate a new box chart generator and configure:
+			box = xfig.box( graph )
+				.labels( [ 'data 0' ] );
+
+			// Create the box chart:
+			box.create();
+
+			// [4] Instantiate a new axes generator and configure:
+			axes = xfig.axes( graph );
+
+			// Create the axes:
+			axes.create();
+
+			// [5] Instantiate a new annotations generator and configure, but this time do so for a graph element:
+			annotations = xfig.annotations( graph );
+
+			// Create the annotations element:
+			annotations.create();
+
+			// [5.1] Instantiate a new title instance and configure:
+			title = annotations.title()
+				.top( -30 )
+				.left( 0 );
+
+			// Add a (sub)title:
+			title.create( 'Subtitle' );
+
+			// [5.2] Instantiate a new text instance and configure:
+			text = annotations.text()
+				.width( 200 )
+				.height( 100 )
+				.top( 100 )
+				.left( 310 );
+
+			// Add a text annotation:
+			text.create( 'This is my text annotation, which may run multiple lines.' );
+
+		});
+
+	} // end FUNCTION Box()
 
 })();
 
