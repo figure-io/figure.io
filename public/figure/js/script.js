@@ -760,12 +760,15 @@
 				.accessors( 'whiskers', function (d ) {
 					return d.whiskers;
 				})
-				.accessors( 'outliers', function ( d ) {
-					return d.outliers;
+				.accessors( 'outliers.mild', function ( d ) {
+					return d.outliers.mild;
+				})
+				.accessors( 'outliers.extreme', function ( d ) {
+					return d.outliers.extreme;
 				});
 
 			// Format the data:
-			data.format( [ 'x', 'median', 'quartiles', 'whiskers', 'outliers' ] );
+			data.format( [ 'x', 'median', 'quartiles', 'whiskers', 'outliers.mild', 'outliers.extreme' ] );
 
 			// Bind the data instance to the graph:
 			graph.data( data );

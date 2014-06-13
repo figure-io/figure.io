@@ -4,31 +4,46 @@
 			"median": 0.5,
 			"quartiles": [ 0.3, 0.65 ],
 			"whiskers": [ 0.25, 0.8 ],
-			"outliers": []
+			"outliers": {
+				"mild": [],
+				"extreme": [ 0.9 ]
+			}
 		},
 		{
 			"median": 0.54,
 			"quartiles": [ 0.2, 0.55 ],
 			"whiskers": [ 0.14, 0.55 ],
-			"outliers": [ 0.1 ]
+			"outliers": {
+				"mild": [ 0.1 ],
+				"extreme": []
+			}
 		},
 		{
 			"median": 0.35,
 			"quartiles": [ 0.3, 0.65 ],
 			"whiskers": [ 0.25, 0.8 ],
-			"outliers": [ 0.9, 0.95, 0.96 ]
+			"outliers": {
+				"mild": [ 0.9, 0.95, 0.96 ],
+				"extreme": [ 0.15 ]
+			}
 		},
 		{
 			"median": 0.465,
 			"quartiles": [ 0.23, 0.5 ],
 			"whiskers": [ 0.23, 0.8 ],
-			"outliers": [ 0.1, 0.12, 0.99 ]
+			"outliers": {
+				"mild": [ 0.1, 0.12, 0.99 ],
+				"extreme": [ 0.04, 0.05, 0.066, 0.088 ]
+			}
 		},
 		{
 			"median": 0.85,
 			"quartiles": [ 0.3, 0.95 ],
 			"whiskers": [],
-			"outliers": []
+			"outliers": {
+				"mild": [],
+				"extreme": []
+			}
 		}
 	]
 ]

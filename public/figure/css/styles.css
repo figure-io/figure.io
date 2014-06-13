@@ -110,10 +110,17 @@ body {
 	stroke-dasharray: 3,3;
 }
 
-.graph .box-and-whisker .outlier {
+.graph .box-and-whisker .mild .outlier {
 	fill: #474747;
 	fill-opacity: 0.2;
 	stroke: none;
+}
+
+.graph .box-and-whisker .extreme .outlier {
+	fill: none;
+	stroke: #474747;
+	stroke-width: 1;
+	stroke-opacity: 0.2;
 }
 
 .graph .axis path {

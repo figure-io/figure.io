@@ -52,7 +52,7 @@ TODO
 4. 	gauge
 5. 	contour
 6. 	hist2d
-7. 	box
+7. 	box --> extreme outliers
 8.	
 
 ### Data

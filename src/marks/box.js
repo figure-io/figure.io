@@ -53,9 +53,15 @@ function Box( graph ) {
 			}
 			return arr;
 		},
-		'outliers': function outliers( d ) {
+		'mOutliers': function outliers( d ) {
 			if ( d.length > 4 && d[ 4 ].length ) {
 				return d[4];
+			}
+			return [];
+		},
+		'eOutliers': function outliers( d ) {
+			if ( d.length > 5 && d[ 5 ].length ) {
+				return d[5];
 			}
 			return [];
 		}
@@ -127,7 +133,7 @@ Box.prototype.create = function() {
 		xScale = this._parent._xScale,
 		width,
 		labels = this._config.labels,
-		boxes, line, quartiles, medians, whiskers, outliers;
+		boxes, line, quartiles, medians, whiskers, mOutliers, eOutliers;
 
 	// Compute the marks width in pixel units:
 	width = xScale( this._config.width ) - xScale( 0 );
@@ -173,11 +179,22 @@ Box.prototype.create = function() {
 		.attr( 'x2', width )
 		.attr( 'y2', lTransforms.y2 );
 
-	// Add outliers:
-	outliers = boxes.append( 'svg:g' )
-		.attr( 'class', 'outliers' )
+	// Add mild outliers:
+	mOutliers = boxes.append( 'svg:g' )
+		.attr( 'class', 'mild outliers' )
 		.selectAll( '.outlier' )
-			.data( this._accessors.outliers )
+			.data( this._accessors.mOutliers )
+		  .enter().append( 'svg:circle' )
+			.attr( 'class', 'outlier' )
+			.attr( 'cx', width / 2 )
+			.attr( 'cy', cTransforms.cy )
+			.attr( 'r', cTransforms.r );
+
+	// Add extreme outliers:
+	eOutliers = boxes.append( 'svg:g' )
+		.attr( 'class', 'extreme outliers' )
+		.selectAll( '.outlier' )
+			.data( this._accessors.eOutliers )
 		  .enter().append( 'svg:circle' )
 			.attr( 'class', 'outlier' )
 			.attr( 'cx', width / 2 )
