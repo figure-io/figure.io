@@ -11,7 +11,7 @@ TODO
 6.	Clean-up Utils directory code and how functions are 'exported'. :(
 7. 	Compile with custom D3 build
 8. 	Favicon
-9. 
+9. 	npm publish
 
 
 ### Subplot
@@ -52,7 +52,7 @@ TODO
 4. 	gauge
 5. 	contour
 6. 	hist2d
-7. 	box --> extreme outliers
+7. 	
 8.	
 
 ### Data
