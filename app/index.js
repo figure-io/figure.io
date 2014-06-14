@@ -67,7 +67,7 @@
 	var app = bootable( express() );
 
 	// [1] Execute the initializers:
-	app.phase( bootable.initializers( path.resolve( __dirname, '../etc/init' ) ), app );
+	app.phase( bootable.initializers( path.join( __dirname, 'init' ) ), app );
 
 	// [2] Bind the application routes:
 	app.phase( routes );
