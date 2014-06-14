@@ -7,7 +7,7 @@ TODO
 2. 	Option to pass in config object at instantiation; e.g., xfig.canvas( figure, {width:600,height:400} ).
 3. 	Method to expose root element
 4. 	Method to clear a graph of all marks: graph.clear()
-5. 	Update app/utils/server.js to include process title; update bin/server.js to set process title
+5. 	
 6.	Clean-up Utils directory code and how functions are 'exported'. :(
 7. 	Compile with custom D3 build
 8. 	Favicon
