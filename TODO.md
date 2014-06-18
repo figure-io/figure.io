@@ -68,7 +68,7 @@ TODO
 9. 	Find (return indices)
 10. Filter
 11. Aggregators: median, variance, stdev
-12. Allow arbitrary accessors; currently, only support x,y,z. Should be able to support any and just iterate through accessor keys; reset: {} new object; add: fcn, key
+12. 
 
 
 ### Annotations
