@@ -12,6 +12,7 @@ TODO
 7. 	Compile with custom D3 build
 8. 	Favicon
 9. 	npm publish
+10. split into separate modules
 
 
 ### Subplot
