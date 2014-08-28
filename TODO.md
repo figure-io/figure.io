@@ -13,6 +13,7 @@ TODO
 8. 	Favicon
 9. 	npm publish
 10. split into separate modules
+11. Use peer dependency for D3 and use loose versioning: 3.x.x, etc.
 
 
 ### Subplot
@@ -32,6 +33,7 @@ TODO
 1. 	Z analog to width (x) and height (y) (???)
 2.	Auto-scale domains, if no domain supplied?
 
+
 ### Gridpanel
 
 1. 	If height is not specified, autocompute height using graph width and golden ratio (approx)
@@ -44,6 +46,7 @@ TODO
 2. 	tick display and axes display boolean validation
 3. 	
 4. 	outerticksize when setting tick direction; probably best to just reduce the outerticksize to match the extent that inner ticks extend out.
+
 
 ### Marks
 
@@ -77,6 +80,8 @@ TODO
 1. 	Legend
 2. 	Caption 
 3. 	Allow text positioning to be specified in data units (?) --> annotations --> text would need access to graph x,y scales
+4. 	Units method setter/getter to specify how to position the annotations (either in 'data' or 'pixel' units)
+
 
 ### Utils
 
