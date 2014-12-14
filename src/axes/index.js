@@ -542,7 +542,7 @@ Axes.prototype.yOuterTickSize = function( value ) {
 }; // end METHOD yOuterTickSize()
 
 /**
-* METHOD: xTickFormat( value, flg )
+* METHOD: xTickFormat( value )
 *	x-axis tick format setter and getter. If a format is supplied, sets the x-axis tick format. If no format is supplied, gets the x-axis tick format. 
 *
 * @param {string} value - x-axis tick format; available time formatting: %Y, %B, %b, %a, %d, %I, %p, %M, %S, %L.
